@@ -1,0 +1,63 @@
+export const estadosDoBrasil = [
+  { value: "AC", label: "Acre" },
+  { value: "AL", label: "Alagoas" },
+  { value: "AP", label: "Amapá" },
+  { value: "AM", label: "Amazonas" },
+  { value: "BA", label: "Bahia" },
+  { value: "CE", label: "Ceará" },
+  { value: "DF", label: "Distrito Federal" },
+  { value: "ES", label: "Espírito Santo" },
+  { value: "GO", label: "Goiás" },
+  { value: "MA", label: "Maranhão" },
+  { value: "MT", label: "Mato Grosso" },
+  { value: "MS", label: "Mato Grosso do Sul" },
+  { value: "MG", label: "Minas Gerais" },
+  { value: "PA", label: "Pará" },
+  { value: "PB", label: "Paraíba" },
+  { value: "PR", label: "Paraná" },
+  { value: "PE", label: "Pernambuco" },
+  { value: "PI", label: "Piauí" },
+  { value: "RJ", label: "Rio de Janeiro" },
+  { value: "RN", label: "Rio Grande do Norte" },
+  { value: "RS", label: "Rio Grande do Sul" },
+  { value: "RO", label: "Rondônia" },
+  { value: "RR", label: "Roraima" },
+  { value: "SC", label: "Santa Catarina" },
+  { value: "SP", label: "São Paulo" },
+  { value: "SE", label: "Sergipe" },
+  { value: "TO", label: "Tocantins" },
+]
+
+export const carColors = [
+  { value: "BLK", label: "Preto" },
+  { value: "WHI", label: "Branco" },
+  { value: "GRY", label: "Cinza" },
+  { value: "SIL", label: "Prata" },
+  { value: "RED", label: "Vermelho" },
+  { value: "BLU", label: "Azul" },
+  { value: "GRN", label: "Verde" },
+  { value: "YEL", label: "Amarelo" },
+  { value: "GLD", label: "Dourado" },
+  { value: "BRZ", label: "Bronze" },
+  { value: "BRN", label: "Marrom" },
+  { value: "ORN", label: "Laranja" },
+  { value: "PUR", label: "Roxo" },
+  { value: "BEI", label: "Bege" },
+  { value: "PNK", label: "Rosa" },
+  { value: "TEA", label: "Turquesa" },
+  { value: "CHR", label: "Cromado" },
+  { value: "OTH", label: "Outra" },
+]
+
+export const dialogueTypes = [
+  { label: "Denúncia", value: 1 },
+  { label: "Reclamação", value: 2 },
+  { label: "Solicitação", value: 3 },
+  { label: "Sugestão", value: 4 },
+  { label: "Elogio", value: 5 },
+]
+
+export enum servicoEnvioMsgEnum {
+  Email = 1,
+  whatsapp = 2,
+}
