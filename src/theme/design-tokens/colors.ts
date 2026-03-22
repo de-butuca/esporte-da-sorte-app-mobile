@@ -1,5 +1,5 @@
 export const lightColors = {
-	primary: '#f5c542',
+	primary: '#023697',
 	onPrimary: 'black',
 
 	secondary: '#625B71',
