@@ -1,37 +1,36 @@
 {
 	"expo": {
-		"name": "hytale-network",
-		"slug": "hytale-network",
+		"name": "Esportes da Sorte",
+		"slug": "EDScript",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
-		"newArchEnabled": true,
 		"splash": {
 			"image": "./assets/splash-icon.png",
 			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
+			"backgroundColor": "#023697"
 		},
 		"ios": {
-			"supportsTablet": true
+			"supportsTablet": true,
+			"bundleIdentifier": "com.brcneto.edscript"
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
+				"backgroundColor": "#023697"
 			},
-			"edgeToEdgeEnabled": true,
 			"predictiveBackGestureEnabled": false,
-			"package": "com.drailer.hytalenetwork"
+			"package": "com.brcneto.edscript"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
 		},
-		"plugins": ["expo-secure-store", "expo-font"],
 		"extra": {
 			"eas": {
-				"projectId": "30796ee2-2100-4af6-aa20-1a0118cb8e98"
+				"projectId": "69bc9be9-04b9-4b6c-94db-e4db2bec307f"
 			}
-		}
+		},
+		"owner": "brcneto"
 	}
 }
