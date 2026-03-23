@@ -6,6 +6,7 @@ import {
 	Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
 import * as SplashScreen from 'expo-splash-screen';
 import AnimatedSplash from './components/AnimatedSplash';
@@ -13,8 +14,6 @@ import AnimatedSplash from './components/AnimatedSplash';
 interface IAppInitializerProps {
 	children: React.ReactNode;
 }
-
-SplashScreen.preventAutoHideAsync();
 
 export function AppInitializer({ children }: IAppInitializerProps) {
 	const [isReady, setIsReady] = useState(false);
@@ -52,7 +51,8 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 	}
 
 	if (!isReady || !fontsLoaded) {
-		return null;
+		// Tela azul enquanto carrega (mesmo fundo da splash)
+		return <View style={{ flex: 1, backgroundColor: '#023697' }} />;
 	}
 
 	return children;
