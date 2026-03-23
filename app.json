@@ -7,13 +7,13 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#023697"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.brcneto.edscript"
+      "bundleIdentifier": "com.brcneto.edscript",
+      "appleTeamId": "9HZC728P5D"
     },
     "android": {
       "adaptiveIcon": {
@@ -39,12 +39,9 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#023697",
-          "image": "./assets/splash-icon.png",
           "dark": {
-            "image": "./assets/splash-icon.png",
             "backgroundColor": "#023697"
-          },
-          "imageWidth": 200
+          }
         }
       ],
       "expo-image"

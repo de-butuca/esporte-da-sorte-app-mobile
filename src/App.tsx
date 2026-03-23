@@ -6,11 +6,11 @@ import { AppInitializer } from './AppInitializer';
 
 export default function App() {
 	return (
-		<AppProviders>
-			{/* <VariantTestScreen /> */}
-			<AppInitializer>
+		<AppInitializer>
+			<AppProviders>
+				{/* <VariantTestScreen /> */}
 				<RootNavigator />
-			</AppInitializer>
-		</AppProviders>
+			</AppProviders>
+		</AppInitializer>
 	);
 }
