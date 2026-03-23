@@ -1,36 +1,36 @@
 export interface Size {
 	/** 4px */
-	s1: number
+	s1: number;
 	/** 8px */
-	s2: number
+	s2: number;
 	/** 12px */
-	s3: number
+	s3: number;
 	/** 16px */
-	s4: number
+	s4: number;
 	/** 20px */
-	s5: number
+	s5: number;
 	/** 24px */
-	s6: number
+	s6: number;
 	/** 28px */
-	s7: number
+	s7: number;
 	/** 32px */
-	s8: number
+	s8: number;
 	/** 40px */
-	s10: number
+	s10: number;
 	/** 48px */
-	s12: number
+	s12: number;
 	/** 56px */
-	s14: number
+	s14: number;
 	/** 64px */
-	s16: number
+	s16: number;
 	/** 80px */
-	s20: number
+	s20: number;
 	/** 96px */
-	s24: number
+	s24: number;
 	/** 112px */
-	s28: number
+	s28: number;
 	/** 128px */
-	s32: number
+	s32: number;
 }
 
 /**
@@ -59,4 +59,4 @@ export const size: Size = {
 	s24: 96,
 	s28: 112,
 	s32: 128,
-}
+};

@@ -2,11 +2,11 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TextStyle } from 'react-native';
 
-/** Fontes Orbitron disponíveis */
+/** Fontes Inter disponíveis */
 export const fontFamily = {
-	regular: 'Orbitron_400Regular',
-	medium: 'Orbitron_500Medium',
-	bold: 'Orbitron_700Bold',
+	regular: 'Inter_400Regular',
+	medium: 'Inter_500Medium',
+	bold: 'Inter_700Bold',
 } as const;
 
 export const typography = {

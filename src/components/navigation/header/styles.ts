@@ -5,8 +5,7 @@ const Container = Styled.View({
 		position: 'relative',
 		backgroundColor: theme.colors.background,
 		height: 60,
-		alignItems: 'center',
-		justifyContent: 'center',
+		...theme.shadows.level2,
 	}),
 });
 const ContainerBackIcon = Styled.TouchableOpacity({
@@ -19,17 +18,43 @@ const ContainerBackIcon = Styled.TouchableOpacity({
 });
 
 const Body = Styled.View({
-	style: ({ theme }) => ({
+	style: () => ({
+		flexDirection: 'row',
+		width: '100%',
 		alignItems: 'center',
+	}),
+});
+
+const BodyStart = Styled.View({
+	style: ({ theme }) => ({
+		width: '25%',
+		padding: theme.size.s4,
 		justifyContent: 'center',
+		alignItems: 'flex-start',
+	}),
+});
+
+const BodyMiddle = Styled.View({
+	style: () => ({
+		width: '50%',
+		justifyContent: 'center',
+		alignItems: 'center',
+	}),
+});
+
+const BodyEnd = Styled.View({
+	style: () => ({
+		width: '25%',
+		justifyContent: 'center',
+		alignItems: 'flex-end',
 	}),
 });
 
 const Logo = Styled.Image({
 	style: ({ theme }) => ({
-		height: 240,
-		width: '100%',
-		// backgroundColor: 'red',
+		height: 40,
+		width: 40,
+		backgroundColor: 'red',
 		// marginBottom: 40,
 	}),
 	attrs: {
@@ -44,4 +69,4 @@ const Text = Styled.Text({
 	}),
 });
 
-export const HeaderStyles = { Container, Body, ContainerBackIcon, Text };
+export const HeaderStyles = { Logo, Container, Body, BodyStart, BodyMiddle, BodyEnd, ContainerBackIcon, Text };

@@ -5,6 +5,9 @@ export const lightColors = {
 	secondary: '#625B71',
 	onSecondary: '#FFFFFF',
 
+	background: '#1B3C89',
+	onBackground: '#FFFFFF',
+
 	label: '#fff',
 	inputText: '#000000',
 	inputPlaceholder: '#a0a0a0',
@@ -15,9 +18,6 @@ export const lightColors = {
 
 	surface: '#FFFBFE',
 	onSurface: '#1C1B1F',
-
-	background: '#111827',
-	onBackground: '#FFFBFE',
 
 	error: '#B3261E',
 	onError: '#FFFFFF',

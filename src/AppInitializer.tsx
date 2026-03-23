@@ -1,40 +1,61 @@
-import { useFonts, Orbitron_400Regular, Orbitron_500Medium, Orbitron_700Bold } from '@expo-google-fonts/orbitron';
-import { useEffect } from 'react';
-import { Text, View } from 'react-native';
-import MobileAds from 'react-native-google-mobile-ads';
+import {
+	useFonts,
+	Inter_400Regular,
+	Inter_500Medium,
+	Inter_600SemiBold,
+	Inter_700Bold,
+} from '@expo-google-fonts/inter';
+import { useEffect, useState } from 'react';
 import { useSessionStore } from './core/session/useSessionStore';
+import * as SplashScreen from 'expo-splash-screen';
 
 interface IAppInitializerProps {
 	children: React.ReactNode;
 }
 
+SplashScreen.preventAutoHideAsync();
+
+SplashScreen.setOptions({
+	duration: 400,
+	fade: true,
+});
+
 export function AppInitializer({ children }: IAppInitializerProps) {
+	const [isReady, setIsReady] = useState(false);
+
 	const { loadSession } = useSessionStore();
+
 	const [fontsLoaded] = useFonts({
-		Orbitron_400Regular,
-		Orbitron_500Medium,
-		Orbitron_700Bold,
+		Inter_400Regular,
+		Inter_500Medium,
+		Inter_600SemiBold,
+		Inter_700Bold,
 	});
 
-	function ConfigureAD() {
-		MobileAds()
-			.initialize()
-			.then((status) => {
-				console.log('MobileAds inicializado:', status);
-			});
-	}
-
 	useEffect(() => {
-		loadSession();
-		ConfigureAD();
+		async function init() {
+			try {
+				await loadSession();
+			} catch (e) {
+				console.warn(e);
+			} finally {
+				setIsReady(true);
+			}
+		}
+
+		init();
 	}, []);
 
-	if (!fontsLoaded)
-		return (
-			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-				<Text>carregando app</Text>
-			</View>
-		);
+	useEffect(() => {
+		if (isReady && fontsLoaded) {
+			SplashScreen.hideAsync();
+		}
+	}, [isReady, fontsLoaded]);
+
+	// trava render até tudo estar pronto
+	if (!isReady || !fontsLoaded) {
+		return null;
+	}
 
 	return children;
 }

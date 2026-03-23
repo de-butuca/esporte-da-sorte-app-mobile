@@ -4,17 +4,17 @@ import { ButtonBase } from '@/components/Button';
 import { SL } from './styles';
 import { useLoginViewModel } from './login.viewmodel';
 import { Controller } from 'react-hook-form';
-import BackgroundImage from '@assets/images/background-login.png';
-import LogoImage from '@assets/images/squad-logo.png';
+// import BackgroundImage from '@assets/images/background-login.png';
+// import LogoImage from '@assets/images/squad-logo.png';
 
 export default function LoginScreen() {
 	const { handleLogin, control, isLoading } = useLoginViewModel();
 
 	return (
 		<BasePage type="form" padding={0}>
-			<SL.Background source={BackgroundImage}>
+			<SL.Background>
 				<SL.Body>
-					<SL.Logo source={LogoImage} />
+					{/* <SL.Logo source={LogoImage} /> */}
 					<Controller
 						control={control}
 						name="login"

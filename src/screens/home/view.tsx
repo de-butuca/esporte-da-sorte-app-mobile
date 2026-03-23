@@ -1,8 +1,12 @@
 import { Button } from 'react-native';
 import { useSessionStore } from '../../core/session/useSessionStore';
+import { BasePage } from '@/components/BasePage';
+import { ButtonBase } from '@/components/Button';
 
 export default function HomeScreen() {
-	const signOut = useSessionStore((s) => s.signOut);
-
-	return <Button title="Sair" onPress={signOut} />;
+	return (
+		<BasePage>
+			<ButtonBase text="teste" onPress={() => {}} size="sm" />
+		</BasePage>
+	);
 }

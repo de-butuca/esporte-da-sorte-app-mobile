@@ -1,9 +1,11 @@
 import { useAppNavigation } from '@/navigation/hooks';
 import React, { useCallback, useEffect } from 'react';
 import { HeaderStyles as HS } from './styles';
-import { ArrowLeft, Feather } from 'lucide-react-native';
+import { ArrowLeft } from 'lucide-react-native';
 import { useTheme } from '@/theme/ThemeContext';
 import { Alert, BackHandler } from 'react-native';
+import Logo from '@assets/images/logo-square.svg';
+import { ButtonBase } from '@/components/Button';
 
 interface IHeaderRouterProps {
 	title?: string;
@@ -19,7 +21,6 @@ export function HeaderRouter({ back, title }: IHeaderRouterProps) {
 	}, []);
 
 	const onBackPress = () => {
-		// return false;
 		Alert.alert('Sair', 'Tem certeza que deseja voltar?', [
 			{ text: 'Cancelar', style: 'cancel' },
 			{
@@ -28,34 +29,39 @@ export function HeaderRouter({ back, title }: IHeaderRouterProps) {
 			},
 		]);
 
-		return true; // 🔴 impede o comportamento padrão
+		return true;
 	};
 
 	useEffect(() => {
 		const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-		return () => subscription.remove(); // 🧹 remove ao desmontar
+		return () => subscription.remove();
 	}, [navigation]);
 
 	if (back)
 		return (
 			<HS.Container>
-				{/* <Logo source={require("@assets/images/logoHorizontal.png")} resizeMode="contain" /> */}
+				<Logo width={40} height={40} />
 				<HS.ContainerBackIcon onPress={handlerGoBack}>
-					<ArrowLeft size={42} color={theme.colors.primary} />
+					<ArrowLeft size={42} color={theme.colors.onBackground} />
 				</HS.ContainerBackIcon>
 				<HS.Body>{title && <HS.Text>{title}</HS.Text>}</HS.Body>
 			</HS.Container>
 		);
 
-	if (title)
-		return (
-			<HS.Container>
-				<HS.Body>
-					<HS.Text>{title}</HS.Text>
-				</HS.Body>
-			</HS.Container>
-		);
+	return (
+		<HS.Container>
+			<HS.Body>
+				<HS.BodyStart>
+					<Logo width={32} height={32} />
+				</HS.BodyStart>
 
-	return <></>;
+				<HS.BodyMiddle>{/* centro */}</HS.BodyMiddle>
+
+				<HS.BodyEnd>
+					<ButtonBase text="Entrar" onPress={() => {}} size="sm" />
+				</HS.BodyEnd>
+			</HS.Body>
+		</HS.Container>
+	);
 }

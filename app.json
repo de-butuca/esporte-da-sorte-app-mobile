@@ -1,36 +1,53 @@
 {
-	"expo": {
-		"name": "Esportes da Sorte",
-		"slug": "EDScript",
-		"version": "1.0.0",
-		"orientation": "portrait",
-		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
-		"splash": {
-			"image": "./assets/splash-icon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#023697"
-		},
-		"ios": {
-			"supportsTablet": true,
-			"bundleIdentifier": "com.brcneto.edscript"
-		},
-		"android": {
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#023697"
-			},
-			"predictiveBackGestureEnabled": false,
-			"package": "com.brcneto.edscript"
-		},
-		"web": {
-			"favicon": "./assets/favicon.png"
-		},
-		"extra": {
-			"eas": {
-				"projectId": "69bc9be9-04b9-4b6c-94db-e4db2bec307f"
-			}
-		},
-		"owner": "brcneto"
-	}
+  "expo": {
+    "name": "Esportes da Sorte",
+    "slug": "EDScript",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#023697"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.brcneto.edscript"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#023697"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.brcneto.edscript"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "69bc9be9-04b9-4b6c-94db-e4db2bec307f"
+      }
+    },
+    "owner": "brcneto",
+    "plugins": [
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#023697",
+          "image": "./assets/splash-icon.png",
+          "dark": {
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#023697"
+          },
+          "imageWidth": 200
+        }
+      ],
+      "expo-image"
+    ]
+  }
 }

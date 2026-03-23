@@ -1,20 +1,18 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/home/View';
 import { Text, View } from 'react-native';
 import React from 'react';
-import { MainTabs } from './TabRoutes';
+// import { MainTabs } from './TabRoutes';
 import { ButtonBase } from '@/components/Button';
 import { useAppNavigation } from './hooks';
-import { SnakeGameScreen } from '@/screens/MiniGames/Games/snake/Game';
 import { HeaderRouter } from '@/components/navigation/header/header';
-import { PropagandaScreen } from '@/screens/propaganda';
+import HomeScreen from '@/screens/home/view';
 
 const Stack = createNativeStackNavigator();
 
 export function AppStack() {
 	return (
 		<Stack.Navigator
-			initialRouteName="MainTabs"
+			initialRouteName="Home"
 			screenOptions={{
 				headerShown: true,
 				animation: 'slide_from_right',
@@ -23,14 +21,7 @@ export function AppStack() {
 				},
 			}}
 		>
-			<Stack.Screen name="MainTabs" component={MainTabs} />
-			<Stack.Screen name="Home" component={HomeScreen} />
-			<Stack.Screen
-				name="Propaganda"
-				component={PropagandaScreen}
-				options={{ headerShown: false, animation: 'fade', presentation: 'transparentModal' }}
-			/>
-			<Stack.Screen name="snakeGame" component={SnakeGameScreen} options={{ title: 'Snake Game' }} />
+			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
 		</Stack.Navigator>
 	);
 }
