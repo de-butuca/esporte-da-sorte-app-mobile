@@ -34,17 +34,15 @@
     "plugins": [
       "expo-font",
       "expo-secure-store",
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#023697",
-          "dark": {
-            "backgroundColor": "#023697"
-          }
-        }
-      ],
       "expo-image",
-      "./plugins/native-splash-plugin"
+      "./plugins/native-splash-plugin",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#023697"
+        }
+      ]
     ]
   }
 }

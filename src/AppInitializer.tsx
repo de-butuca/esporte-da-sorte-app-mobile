@@ -8,11 +8,12 @@ import {
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
-import * as SplashScreen from 'expo-splash-screen';
-import { hideNativeSplash } from './native/NativeSplash';
-
-// Lazy import para evitar crash se Skia/Lottie não estiverem prontos
-const AnimatedSplash = React.lazy(() => import('./components/AnimatedSplash'));
+import AnimatedSplash from './components/AnimatedSplash';
+import {
+	requestNotificationPermissions,
+	setupAppLifecycleNotifications,
+	cleanupNotifications,
+} from './core/services/notifications';
 
 interface IAppInitializerProps {
 	children: React.ReactNode;
@@ -35,6 +36,8 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 		async function init() {
 			try {
 				await loadSession();
+				await requestNotificationPermissions();
+				setupAppLifecycleNotifications();
 			} catch (e) {
 				console.warn(e);
 			} finally {
@@ -44,26 +47,16 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 
 		init();
 
-		// Safety: force skip splash after 6s if something fails
-		const safety = setTimeout(() => {
-			hideNativeSplash();
-			SplashScreen.hideAsync().catch(() => {});
-			setSplashDone(true);
-		}, 6000);
-
-		return () => clearTimeout(safety);
+		return () => {
+			cleanupNotifications();
+		};
 	}, []);
 
 	if (!splashDone && !splashError) {
 		return (
-			<React.Suspense fallback={<View style={{ flex: 1, backgroundColor: '#023697' }} />}>
-				<ErrorBoundary onError={() => { setSplashError(true); setSplashDone(true); hideNativeSplash(); }}>
-					<AnimatedSplash
-						onFinish={() => setSplashDone(true)}
-						onReady={() => SplashScreen.hideAsync()}
-					/>
-				</ErrorBoundary>
-			</React.Suspense>
+			<AnimatedSplash
+				onFinish={() => setSplashDone(true)}
+			/>
 		);
 	}
 

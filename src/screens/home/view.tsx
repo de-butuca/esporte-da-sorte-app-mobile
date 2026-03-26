@@ -1,141 +1,121 @@
-import { useState } from 'react';
-import { View, Pressable, Text, StyleSheet, Dimensions, Image } from 'react-native';
-import { BasePage } from '@/components/BasePage';
-import { Roulette } from '@/components/Roulette';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
+import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { useAppNavigation } from '@/navigation/hooks';
-import { ChevronRight } from 'lucide-react-native';
+import { useAuthGuard } from '@/core/auth/useAuthGuard';
+import { HomeHeader } from './components/HomeHeader';
+import { BannerCarousel } from './components/BannerCarousel';
+import { SectionHeader } from './components/SectionHeader';
+import { GameRow } from './components/GameRow';
+import { PromoBanner } from './components/PromoBanner';
+import { BottomNavBar, NavTab } from '@/components/BottomNavBar';
 
-const CAMPO_IMG = require('@assets/images/campo.png');
-const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
+const GAME_THUMB_1 = require('@assets/images/games/game-thumbnail-1.png');
+const GAME_THUMB_2 = require('@assets/images/games/game-thumbnail-2.png');
+const GAME_THUMB_3 = require('@assets/images/games/game-thumbnail-3.png');
+
+const LIVE_GAMES = [
+	{ id: '1', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '2', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '3', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '4', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '5', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+];
+
+const TRENDING_GAMES = [
+	{ id: '1', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '2', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '3', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '4', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+];
+
+const NEW_GAMES = [
+	{ id: '1', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '2', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '3', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '4', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+];
 
 export default function HomeScreen() {
-	const [showRoulette, setShowRoulette] = useState(false);
+	const [activeTab, setActiveTab] = useState<NavTab>('home');
+	const scrollY = useSharedValue(0);
 	const { navigate } = useAppNavigation();
+	const { requireAuth } = useAuthGuard();
+
+	const handleGamePress = (gameId: string) => {
+		requireAuth(() => {
+			// TODO: navigate to game screen
+			console.log('Opening game:', gameId);
+		});
+	};
+
+	const scrollHandler = useAnimatedScrollHandler({
+		onScroll: (event) => {
+			scrollY.value = event.contentOffset.y;
+		},
+	});
+
+	const handleCategoryChange = (category: 'cassino' | 'esportes') => {
+		if (category === 'esportes') {
+			navigate('GameHome');
+		}
+	};
 
 	return (
-		<BasePage type="scroll">
-			{/* Card jogo ao vivo */}
-			<Pressable style={styles.matchCard} onPress={() => navigate('GameHome')}>
-				<Image source={CAMPO_IMG} style={styles.matchImage} resizeMode="cover" />
-				<View style={styles.matchOverlay}>
-					<View style={styles.liveTag}>
-						<View style={styles.liveDot} />
-						<Text style={styles.liveText}>AO VIVO</Text>
-					</View>
-					<Text style={styles.matchTitle}>Brasil vs Argentina</Text>
-					<Text style={styles.matchSub}>Copa América 2026 - Final</Text>
-					<View style={styles.matchFooter}>
-						<Text style={styles.matchScore}>2 x 1</Text>
-						<View style={styles.matchArrow}>
-							<ChevronRight size={18} color="#fff" />
-						</View>
-					</View>
+		<View style={styles.root}>
+			<HomeHeader scrollY={scrollY} onCategoryChange={handleCategoryChange} />
+
+			<Animated.ScrollView
+				style={styles.scroll}
+				contentContainerStyle={styles.scrollContent}
+				showsVerticalScrollIndicator={false}
+				onScroll={scrollHandler}
+				scrollEventThrottle={16}
+			>
+				<BannerCarousel />
+
+				<View style={styles.section}>
+					<SectionHeader title="Ao vivo" count={12} hasLive />
+					<GameRow games={LIVE_GAMES} cardWidth={RFValue(95)} onGamePress={handleGamePress} />
 				</View>
-			</Pressable>
 
-			{/* Botão roleta */}
-			<View style={styles.centerWrap}>
-				<Pressable style={styles.openButton} onPress={() => setShowRoulette(true)}>
-					<Text style={styles.openButtonText}>Girar Roleta</Text>
-				</Pressable>
-			</View>
+				<View style={styles.section}>
+					<SectionHeader title="Cassino em alta" count={12} />
+					<GameRow games={TRENDING_GAMES} onGamePress={handleGamePress} />
+				</View>
 
-			<Roulette
-				visible={showRoulette}
-				onClose={() => setShowRoulette(false)}
-				onResult={(item) => {
-					console.log(`Prize: ${item.label} (${item.value})`);
-				}}
-			/>
-		</BasePage>
+				<PromoBanner />
+
+				<View style={styles.section}>
+					<SectionHeader title="Novos cassinos" count={12} />
+					<GameRow games={NEW_GAMES} onGamePress={handleGamePress} />
+				</View>
+
+				<View style={styles.bottomSpacer} />
+			</Animated.ScrollView>
+
+			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	matchCard: {
-		marginHorizontal: 16,
-		marginTop: 16,
-		borderRadius: 16,
-		overflow: 'hidden',
-		height: 180,
-		backgroundColor: '#0a0e2a',
-	},
-	matchImage: {
-		width: '100%',
-		height: '100%',
-		position: 'absolute',
-		opacity: 0.6,
-	},
-	matchOverlay: {
+	root: {
 		flex: 1,
-		padding: 16,
-		justifyContent: 'flex-end',
+		backgroundColor: '#01003A',
 	},
-	liveTag: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		alignSelf: 'flex-start',
-		backgroundColor: 'rgba(255,59,48,0.9)',
-		paddingHorizontal: 8,
-		paddingVertical: 3,
-		borderRadius: 5,
-		marginBottom: 8,
-		gap: 5,
+	scroll: {
+		flex: 1,
 	},
-	liveDot: {
-		width: 5,
-		height: 5,
-		borderRadius: 3,
-		backgroundColor: '#fff',
+	scrollContent: {
+		gap: RFValue(24),
+		paddingTop: RFValue(20),
 	},
-	liveText: {
-		fontFamily: 'Inter_700Bold',
-		fontSize: 10,
-		color: '#fff',
-		letterSpacing: 0.8,
+	section: {
+		gap: RFValue(12),
 	},
-	matchTitle: {
-		fontFamily: 'Inter_700Bold',
-		fontSize: 18,
-		color: '#fff',
-		marginBottom: 2,
-	},
-	matchSub: {
-		fontSize: 12,
-		color: 'rgba(255,255,255,0.5)',
-		marginBottom: 8,
-	},
-	matchFooter: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-	},
-	matchScore: {
-		fontFamily: 'Inter_700Bold',
-		fontSize: 22,
-		color: '#fff',
-	},
-	matchArrow: {
-		width: 32,
-		height: 32,
-		borderRadius: 16,
-		backgroundColor: 'rgba(255,255,255,0.1)',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	centerWrap: {
-		marginTop: 24,
-		alignItems: 'center',
-	},
-	openButton: {
-		backgroundColor: '#2EE683',
-		paddingHorizontal: 32,
-		paddingVertical: 16,
-		borderRadius: 12,
-	},
-	openButtonText: {
-		fontFamily: 'Inter_700Bold',
-		color: '#02003A',
-		fontSize: 16,
+	bottomSpacer: {
+		height: RFValue(20),
 	},
 });

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import { Canvas, Rect as SkiaRect, Group } from "@shopify/react-native-skia";
 import LottieView from "lottie-react-native";
-import { hideNativeSplash } from "../native/NativeSplash";
+import { hideNativeSplash, getNativeAnimationStartTime } from "../native/NativeSplash";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 const BG = "#023697";
@@ -42,16 +42,15 @@ interface AnimState {
 
 interface AnimatedSplashProps {
   onFinish: () => void;
-  onReady?: () => void;
 }
 
 // Exact same easing as HTML
 const eio = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const eob = (t: number) => { const c = 2.2; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
 
-export default function AnimatedSplash({ onFinish, onReady }: AnimatedSplashProps) {
+export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   const LOTTIE_W = SCREEN_W * 0.65;
-  const LOTTIE_H = LOTTIE_W * (1536 / 1024);
+  const LOTTIE_H = LOTTIE_W * (768 / 512);
 
   const [anim, setAnim] = useState<AnimState>({
     iconOpacity: 0, iconScale: 0.8,
@@ -92,17 +91,14 @@ export default function AnimatedSplash({ onFinish, onReady }: AnimatedSplashProp
   useEffect(() => {
     burstRef.current = false;
 
-    // Hide expo splash immediately (our native splash is on top)
-    onReady?.();
-
-    // Wait for native animation (phases 1-5 = 1500ms) to finish,
+    // Wait for native animation (phases 1-5 = 2976ms) to finish,
     // then hide native splash and start JS animation (phases 6-8)
     const NATIVE_DUR = 2976;
-    const nativeStartTime = Date.now();
+    const nativeStartTime = getNativeAnimationStartTime() || Date.now();
 
     const startJSAnimation = () => {
       hideNativeSplash();
-      lottieRef.current?.play(75, 320);
+      lottieRef.current?.play(23, 96);
       startRef.current = Date.now();
       frameRef.current = requestAnimationFrame(tick);
     };

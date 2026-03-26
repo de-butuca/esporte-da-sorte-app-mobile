@@ -16,4 +16,9 @@ class NativeSplashModule(reactContext: ReactApplicationContext) :
       NativeSplashView.instance?.hide()
     }
   }
+
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  fun getAnimationStartTime(): Double {
+    return NativeSplashView.animationStartTime.toDouble()
+  }
 }
