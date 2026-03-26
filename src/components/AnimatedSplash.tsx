@@ -95,7 +95,7 @@ export default function AnimatedSplash({ onFinish, onReady }: AnimatedSplashProp
     // Hide expo splash immediately (our native splash is on top)
     onReady?.();
 
-    // Wait for native animation (phases 1-5 = 2976ms) to finish,
+    // Wait for native animation (phases 1-5 = 1500ms) to finish,
     // then hide native splash and start JS animation (phases 6-8)
     const NATIVE_DUR = 2976;
     const nativeStartTime = Date.now();

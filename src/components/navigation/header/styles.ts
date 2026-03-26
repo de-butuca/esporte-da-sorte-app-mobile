@@ -5,7 +5,6 @@ const Container = Styled.View({
 		position: 'relative',
 		backgroundColor: theme.colors.background,
 		height: 60,
-		...theme.shadows.level2,
 	}),
 });
 const ContainerBackIcon = Styled.TouchableOpacity({

@@ -132,7 +132,6 @@ class NativeSplashView(context: Context) : View(context) {
         clipBotW = 0f
         clipTopW = 0f
         val p = easeInOutCubic((t - 0.806f) / 0.194f)
-        // HTML: translateX(137px) translateY(32px) on a 340px-wide SVG
         val displayScale = svgW / 340f
         translateX = p * 137f * displayScale
         translateY = p * 32f * displayScale
