@@ -5,6 +5,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily } from '@/theme/design-tokens';
 import { Search, TicketPercent } from 'lucide-react-native';
 import Logo from '@assets/images/logo-square.svg';
+import { useAppNavigation } from '@/navigation/hooks';
+import { useSessionStore } from '@/core/session/useSessionStore';
 import Animated, {
 	useAnimatedStyle,
 	SharedValue,
@@ -22,11 +24,19 @@ type CategoryTab = 'cassino' | 'esportes';
 
 interface HomeHeaderProps {
 	scrollY: SharedValue<number>;
+	onCategoryChange?: (category: CategoryTab) => void;
 }
 
-export function HomeHeader({ scrollY }: HomeHeaderProps) {
+export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
+	const { navigate } = useAppNavigation();
+	const isAuthenticated = useSessionStore((s) => s.isAuthenticated);
+
+	const handleCategoryPress = (category: CategoryTab) => {
+		setActiveCategory(category);
+		onCategoryChange?.(category);
+	};
 
 	const wrapperStyle = useAnimatedStyle(() => {
 		const progress = interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP);
@@ -48,9 +58,11 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
 						<TicketPercent size={RFValue(20)} color="#fff" strokeWidth={2} />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8}>
-						<Text style={styles.entrarText}>Entrar</Text>
-					</TouchableOpacity>
+					{!isAuthenticated && (
+						<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8} onPress={() => navigate('Login')}>
+							<Text style={styles.entrarText}>Entrar</Text>
+						</TouchableOpacity>
+					)}
 				</View>
 			</View>
 
@@ -58,7 +70,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 				<View style={styles.categoryTabs}>
 					<TouchableOpacity
 						style={[styles.categoryTab, activeCategory === 'cassino' && styles.categoryTabActive]}
-						onPress={() => setActiveCategory('cassino')}
+						onPress={() => handleCategoryPress('cassino')}
 						activeOpacity={0.7}
 					>
 						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
@@ -74,7 +86,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 
 					<TouchableOpacity
 						style={[styles.categoryTab, activeCategory === 'esportes' && styles.categoryTabActive]}
-						onPress={() => setActiveCategory('esportes')}
+						onPress={() => handleCategoryPress('esportes')}
 						activeOpacity={0.7}
 					>
 						<Image source={SOCCER_ICON} style={styles.categoryIcon} resizeMode="contain" />

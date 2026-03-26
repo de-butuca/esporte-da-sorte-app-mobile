@@ -15,9 +15,10 @@ interface Game {
 interface GameRowProps {
 	games: Game[];
 	cardWidth?: number;
+	onGamePress?: (gameId: string) => void;
 }
 
-export function GameRow({ games, cardWidth = RFValue(130) }: GameRowProps) {
+export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRowProps) {
 	return (
 		<FlatList
 			data={games}
@@ -33,6 +34,7 @@ export function GameRow({ games, cardWidth = RFValue(130) }: GameRowProps) {
 					badge={item.badge}
 					players={item.players}
 					width={cardWidth}
+					onPress={onGamePress ? () => onGamePress(item.id) : undefined}
 				/>
 			)}
 		/>
