@@ -10,8 +10,10 @@ class NativeSplashView(context: Context) : View(context) {
 
   companion object {
     var instance: NativeSplashView? = null
+    var animationStartTime: Long = 0L
   }
 
+  private var animationStarted = false
   private val BG_COLOR = Color.parseColor("#023697")
   private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
     color = Color.WHITE
@@ -66,6 +68,15 @@ class NativeSplashView(context: Context) : View(context) {
   }
 
   fun startAnimation() {
+    // Animation will actually begin on first onDraw (when view is visible)
+    animationStarted = false
+    invalidate()
+  }
+
+  private fun beginAnimation() {
+    if (animationStarted) return
+    animationStarted = true
+    animationStartTime = System.currentTimeMillis()
     animator = ValueAnimator.ofFloat(0f, 1f).apply {
       duration = 2976L // phases 1-5
       interpolator = null // we handle easing per-phase
@@ -87,6 +98,9 @@ class NativeSplashView(context: Context) : View(context) {
   override fun onDraw(canvas: Canvas) {
     super.onDraw(canvas)
     canvas.drawColor(BG_COLOR)
+
+    // Start animation on first actual draw (view is visible on screen)
+    beginAnimation()
 
     val screenW = width.toFloat()
     val screenH = height.toFloat()

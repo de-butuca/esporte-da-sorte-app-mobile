@@ -12,5 +12,10 @@ class NativeSplashModule: NSObject {
   }
 
   @objc
+  func getAnimationStartTime() -> NSNumber {
+    return NSNumber(value: NativeSplashView.animationStartTime)
+  }
+
+  @objc
   static func requiresMainQueueSetup() -> Bool { return false }
 }

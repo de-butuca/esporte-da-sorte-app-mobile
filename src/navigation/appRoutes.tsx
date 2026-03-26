@@ -21,7 +21,7 @@ export function AppStack() {
 				},
 			}}
 		>
-			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
+			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
 		</Stack.Navigator>
 	);
 }

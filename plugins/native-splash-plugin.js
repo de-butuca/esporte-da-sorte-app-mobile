@@ -124,6 +124,43 @@ function withNativeSplash(config) {
         }
       }
 
+      // Override splash theme to just show #023697 background (no icon needed)
+      const resDir = path.join(
+        projectRoot, "android", "app", "src", "main", "res"
+      );
+
+      // Fix ic_launcher_background.xml to not reference splashscreen_logo
+      const bgDrawable = path.join(resDir, "drawable", "ic_launcher_background.xml");
+      if (fs.existsSync(bgDrawable)) {
+        fs.writeFileSync(bgDrawable,
+          `<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:drawable="@color/activityBackground"/>
+</layer-list>
+`);
+      }
+
+      // Ensure splashscreen_background matches our color
+      const colorsPath = path.join(resDir, "values", "colors.xml");
+      if (fs.existsSync(colorsPath)) {
+        let colors = fs.readFileSync(colorsPath, "utf8");
+        colors = colors.replace(
+          /<color name="splashscreen_background">#[0-9A-Fa-f]+<\/color>/,
+          '<color name="splashscreen_background">#023697</color>'
+        );
+        fs.writeFileSync(colorsPath, colors);
+      }
+
+      // Same for night mode
+      const nightColorsPath = path.join(resDir, "values-night", "colors.xml");
+      if (fs.existsSync(nightColorsPath)) {
+        let colors = fs.readFileSync(nightColorsPath, "utf8");
+        colors = colors.replace(
+          /<color name="splashscreen_background">#[0-9A-Fa-f]+<\/color>/,
+          '<color name="splashscreen_background">#023697</color>'
+        );
+        fs.writeFileSync(nightColorsPath, colors);
+      }
+
       return config;
     },
   ]);

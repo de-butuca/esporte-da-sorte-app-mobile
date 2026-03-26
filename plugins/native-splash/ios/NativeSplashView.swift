@@ -3,6 +3,7 @@ import UIKit
 class NativeSplashView: UIView {
 
   static var shared: NativeSplashView?
+  static var animationStartTime: TimeInterval = 0
 
   private let BG = UIColor(red: 2/255, green: 54/255, blue: 151/255, alpha: 1)
   private let viewBoxW: CGFloat = 1209
@@ -162,6 +163,7 @@ class NativeSplashView: UIView {
     v.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     window.addSubview(v)
     shared = v
+    animationStartTime = Date().timeIntervalSince1970 * 1000
     v.startAnimation()
   }
 }

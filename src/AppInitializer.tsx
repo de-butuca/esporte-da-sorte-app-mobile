@@ -8,8 +8,12 @@ import {
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
-import * as SplashScreen from 'expo-splash-screen';
 import AnimatedSplash from './components/AnimatedSplash';
+import {
+	requestNotificationPermissions,
+	setupAppLifecycleNotifications,
+	cleanupNotifications,
+} from './core/services/notifications';
 
 interface IAppInitializerProps {
 	children: React.ReactNode;
@@ -31,6 +35,8 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 		async function init() {
 			try {
 				await loadSession();
+				await requestNotificationPermissions();
+				setupAppLifecycleNotifications();
 			} catch (e) {
 				console.warn(e);
 			} finally {
@@ -39,13 +45,16 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 		}
 
 		init();
+
+		return () => {
+			cleanupNotifications();
+		};
 	}, []);
 
 	if (!splashDone) {
 		return (
 			<AnimatedSplash
 				onFinish={() => setSplashDone(true)}
-				onReady={() => SplashScreen.hideAsync()}
 			/>
 		);
 	}
