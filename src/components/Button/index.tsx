@@ -1,8 +1,8 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { BBS } from './styles';
-import { useTheme } from '@/theme/ThemeContext';
 
+import { useStampdUI } from 'stampd/context';
 interface ButtonBaseProps {
 	text: string;
 	isLoading?: boolean;
@@ -13,7 +13,7 @@ interface ButtonBaseProps {
 
 export function ButtonBase({ text, isLoading = false, disabled = false, onPress, size = 'full' }: ButtonBaseProps) {
 	const isDisabled = disabled || isLoading;
-	const { theme } = useTheme();
+	const { theme } = useStampdUI();
 	return (
 		<BBS.container
 			size={size}

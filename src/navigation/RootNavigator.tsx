@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import { ActivityIndicator, View } from 'react-native';
 import { useSessionStore } from '../core/session/useSessionStore';
-import { AppStack } from './AppRoutes';
+import { AppStack } from './appRoutes';
 
 export function RootNavigator() {
 	const { isLoading, isAuthenticated } = useSessionStore();

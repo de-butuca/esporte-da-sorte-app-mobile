@@ -1,4 +1,5 @@
-import { Styled } from '@/theme/useStyled';
+import { Styled } from 'stampd/styled';
+
 const Background = Styled.ImageBackground({
 	style: ({ theme }) => ({
 		flex: 1,
@@ -8,28 +9,26 @@ const Background = Styled.ImageBackground({
 		resizeMode: 'cover',
 	},
 });
+
 const Body = Styled.View({
-	style: ({ theme }) => ({
-		// backgroundColor: theme.colors.error,
+	style: {
 		height: '90%',
 		alignItems: 'center',
 		justifyContent: 'center',
-	}),
+	},
 });
 
 const Footer = Styled.View({
-	style: ({ theme }) => ({
+	style: {
 		height: '10%',
-	}),
+	},
 });
 
 const Logo = Styled.Image({
-	style: ({ theme }) => ({
+	style: {
 		height: 240,
 		width: '100%',
-		// backgroundColor: 'red',
-		// marginBottom: 40,
-	}),
+	},
 	attrs: {
 		resizeMode: 'contain',
 	},
@@ -38,7 +37,7 @@ const Logo = Styled.Image({
 const Text = Styled.Text({
 	style: ({ theme }) => ({
 		color: theme.colors.onBackground,
-		fontSize: theme.typography.text3xl,
+		fontSize: theme.fonts.sizes.xl3,
 	}),
 });
 

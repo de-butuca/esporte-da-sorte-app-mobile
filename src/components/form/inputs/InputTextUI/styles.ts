@@ -1,4 +1,4 @@
-import { Styled } from '@/theme/useStyled';
+import { Styled } from 'stampd/styled';
 
 export const InputContainer = Styled.View({
 	style: {
@@ -8,7 +8,7 @@ export const InputContainer = Styled.View({
 
 export const InputLabel = Styled.Text({
 	style: ({ theme }) => ({
-		fontSize: theme.typography.textBase,
+		fontSize: theme.fonts.sizes.base,
 		color: theme.colors.label,
 		marginBottom: theme.size.s2,
 	}),
@@ -36,7 +36,7 @@ export const Body = Styled.View({
 		},
 
 		disabled: {
-			true: ({ theme }) => ({
+			true: () => ({
 				opacity: 0.5,
 			}),
 		},
@@ -53,7 +53,7 @@ export const Body = Styled.View({
 export const InputField = Styled.TextInput({
 	style: ({ theme }) => ({
 		flex: 1,
-		fontSize: theme.typography.textBase,
+		fontSize: theme.fonts.sizes.base,
 		color: theme.colors.inputText,
 		paddingVertical: theme.size.s3,
 	}),
@@ -67,7 +67,7 @@ export const ErrorContainer = Styled.View({
 
 export const ErrorText = Styled.Text({
 	style: ({ theme }) => ({
-		fontSize: theme.typography.textXs,
+		fontSize: theme.fonts.sizes.xs,
 		color: theme.colors.error,
 	}),
 });

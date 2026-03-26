@@ -1,35 +1,35 @@
-import { Styled } from "@/theme/useStyled"
-import React, { useEffect, useState } from "react"
-import { View } from "react-native"
-import { ButtonText, Label, Box, Button } from "./styles"
+import { Styled } from 'stampd/styled';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { ButtonText, Label, Box, Button } from './styles';
 
 // BOX com variants
 
 export function VariantTestScreen() {
-	const variants = ["paodoce", "secondary", "danger"] as const
-	const sizes = ["sm", "md", "lg"] as const
+	const variants = ['paodoce', 'secondary', 'danger'] as const;
+	const sizes = ['sm', 'md', 'lg'] as const;
 
-	const [variantIndex, setVariantIndex] = useState(0)
-	const [sizeIndex, setSizeIndex] = useState(0)
+	const [variantIndex, setVariantIndex] = useState(0);
+	const [sizeIndex, setSizeIndex] = useState(0);
 
 	function changeVariant() {
-		setVariantIndex((prev) => (prev + 1) % variants.length)
-		setSizeIndex((prev) => (prev + 1) % sizes.length)
+		setVariantIndex((prev) => (prev + 1) % variants.length);
+		setSizeIndex((prev) => (prev + 1) % sizes.length);
 	}
 
-	const variant = variants[variantIndex]
-	const size = sizes[sizeIndex]
+	const variant = variants[variantIndex];
+	const size = sizes[sizeIndex];
 
 	useEffect(() => {
-		return () => {}
-	}, [])
+		return () => {};
+	}, []);
 
 	return (
 		<View
 			style={{
 				flex: 1,
-				alignItems: "center",
-				justifyContent: "center",
+				alignItems: 'center',
+				justifyContent: 'center',
 			}}
 		>
 			<Box douglas={variant} size="md">
@@ -42,5 +42,5 @@ export function VariantTestScreen() {
 				<ButtonText>Mudar Variant</ButtonText>
 			</Button>
 		</View>
-	)
+	);
 }

@@ -1,23 +1,23 @@
-import { useTheme } from "@/theme/ThemeContext"
-import { Styled } from "@/theme/useStyled"
-import { TouchableOpacity } from "react-native"
+import { Styled } from 'stampd/styled';
+import { useStampdUI } from 'stampd/context';
+import { TouchableOpacity } from 'react-native';
 
 export const Box = Styled.View({
 	style: {
 		padding: 20,
 		borderRadius: 12,
-		alignItems: "center",
-		justifyContent: "center",
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 
 	variants: {
 		douglas: {
 			paodoce: {
-				backgroundColor: "#3b82f6",
+				backgroundColor: '#3b82f6',
 			},
 
 			secondary: {
-				backgroundColor: "#10b981",
+				backgroundColor: '#10b981',
 			},
 
 			danger: ({ theme }) => ({ backgroundColor: theme.colors.error }),
@@ -40,13 +40,13 @@ export const Box = Styled.View({
 			},
 		},
 	},
-})
+});
 
 // TEXTO com variants
 export const Label = Styled.Text({
 	style: {
-		color: "white",
-		fontWeight: "bold",
+		color: 'white',
+		fontWeight: 'bold',
 	},
 
 	variants: {
@@ -64,29 +64,29 @@ export const Label = Styled.Text({
 			},
 		},
 	},
-})
+});
 
 // BOTÃO
 export const Button = Styled.TouchableOpacity({
-	style: ({ theme }) => ({ padding: theme.size.s10, borderRadius: 10, backgroundColor: "#111", marginTop: 20 }),
+	style: ({ theme }) => ({ padding: theme.size.s10, borderRadius: 10, backgroundColor: '#111', marginTop: 20 }),
 
 	attrs: { activeOpacity: 1 },
-})
+});
 
 function Button2(params: any) {
-	const { theme } = useTheme()
+	const { theme } = useStampdUI();
 
-	const stylesVariants: any = []
+	const stylesVariants: any = [];
 
 	for (const variantName in params.variants) {
-		const variantValue = params[variantName]
+		const variantValue = params[variantName];
 
-		if (!variantValue) continue
+		if (!variantValue) continue;
 
-		const variantStyle = params.variants[variantName][variantValue]
+		const variantStyle = params.variants[variantName][variantValue];
 
 		if (variantStyle) {
-			stylesVariants.push(variantStyle)
+			stylesVariants.push(variantStyle);
 		}
 	}
 
@@ -96,20 +96,20 @@ function Button2(params: any) {
 				{
 					padding: theme.size.s10,
 					borderRadius: 10,
-					backgroundColor: "#111",
+					backgroundColor: '#111',
 					marginTop: 20,
 				},
 				...stylesVariants,
 			]}
 			{...{ activeOpacity: 1 }}
 		/>
-	)
+	);
 }
 
 // TEXTO BOTÃO
 export const ButtonText = Styled.Text({
 	style: {
-		color: "white",
+		color: 'white',
 		fontSize: 16,
 	},
-})
+});
