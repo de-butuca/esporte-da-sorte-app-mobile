@@ -162,8 +162,15 @@ export default function AnimatedSplash({ onFinish, onReady }: AnimatedSplashProp
     // Wait for native animation to finish, then start JS part
     const timeout = setTimeout(startJSAnimation, remaining);
 
+    // Safety: if splash is still showing after 8s, force finish
+    const safetyTimeout = setTimeout(() => {
+      hideNativeSplash();
+      onFinish();
+    }, 8000);
+
     return () => {
       clearTimeout(timeout);
+      clearTimeout(safetyTimeout);
       cancelAnimationFrame(frameRef.current);
     };
   }, []);

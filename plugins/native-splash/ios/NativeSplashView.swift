@@ -143,6 +143,12 @@ class NativeSplashView: UIView {
       a.fillMode = .forwards; a.isRemovedOnCompletion = false
       self.containerLayer.add(a, forKey: "move")
     }
+
+    // Auto-hide after animation completes (fallback if JS can't call hide)
+    let total = p1 + p2 + p3 + p4 + p5 + 0.3
+    DispatchQueue.main.asyncAfter(deadline: .now() + total) { [weak self] in
+      self?.hide(animated: true)
+    }
   }
 
   func hide(animated: Bool = true) {

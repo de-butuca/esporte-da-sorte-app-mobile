@@ -75,6 +75,8 @@ class NativeSplashView(context: Context) : View(context) {
       }
       start()
     }
+    // Auto-hide after animation completes (fallback if JS can't call hide)
+    postDelayed({ hide() }, 2976L + 300L)
   }
 
   fun hide() {

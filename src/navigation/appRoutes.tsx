@@ -6,6 +6,7 @@ import { ButtonBase } from '@/components/Button';
 import { useAppNavigation } from './hooks';
 import { HeaderRouter } from '@/components/navigation/header/header';
 import HomeScreen from '@/screens/home/view';
+import GameHomeScreen from '@/screens/game-home/view';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,14 +15,26 @@ export function AppStack() {
 		<Stack.Navigator
 			initialRouteName="Home"
 			screenOptions={{
-				headerShown: true,
+				headerShown: false,
 				animation: 'slide_from_right',
-				header: ({ options, back, route }) => {
-					return <HeaderRouter title={options.title} back={back} />;
-				},
 			}}
 		>
-			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
+			<Stack.Screen
+				name="Home"
+				component={HomeScreen}
+				options={{
+					headerShown: true,
+					header: ({ options, back }) => <HeaderRouter title={options.title} back={back} />,
+				}}
+			/>
+			<Stack.Screen
+				name="GameHome"
+				component={GameHomeScreen}
+				options={{
+					contentStyle: { backgroundColor: '#f8f9fc' },
+					gestureEnabled: false,
+				}}
+			/>
 		</Stack.Navigator>
 	);
 }
