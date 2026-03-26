@@ -7,7 +7,6 @@ const Container = Styled.View({
 		position: 'relative',
 		backgroundColor: theme.colors.background,
 		height: 60,
-		...shadows.level2,
 	}),
 });
 

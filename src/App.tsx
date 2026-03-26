@@ -1,16 +1,19 @@
 import { AppProviders } from './providers';
 import { RootNavigator } from './navigation/RootNavigator';
 import { VariantTestScreen } from './screens/teste';
-import React, { useEffect } from 'react';
+import React from 'react';
+import { View } from 'react-native';
 import { AppInitializer } from './AppInitializer';
 
 export default function App() {
 	return (
-		<AppProviders>
-			{/* <VariantTestScreen /> */}
+		<View style={{ flex: 1, backgroundColor: '#023697' }}>
 			<AppInitializer>
-				<RootNavigator />
+				<AppProviders>
+					{/* <VariantTestScreen /> */}
+					<RootNavigator />
+				</AppProviders>
 			</AppInitializer>
-		</AppProviders>
+		</View>
 	);
 }

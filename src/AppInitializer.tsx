@@ -6,23 +6,18 @@ import {
 	Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
 import * as SplashScreen from 'expo-splash-screen';
+import AnimatedSplash from './components/AnimatedSplash';
 
 interface IAppInitializerProps {
 	children: React.ReactNode;
 }
 
-SplashScreen.preventAutoHideAsync();
-
-SplashScreen.setOptions({
-	duration: 400,
-	fade: true,
-});
-
 export function AppInitializer({ children }: IAppInitializerProps) {
 	const [isReady, setIsReady] = useState(false);
-
+	const [splashDone, setSplashDone] = useState(false);
 	const { loadSession } = useSessionStore();
 
 	const [fontsLoaded] = useFonts({
@@ -46,15 +41,18 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 		init();
 	}, []);
 
-	useEffect(() => {
-		if (isReady && fontsLoaded) {
-			SplashScreen.hideAsync();
-		}
-	}, [isReady, fontsLoaded]);
+	if (!splashDone) {
+		return (
+			<AnimatedSplash
+				onFinish={() => setSplashDone(true)}
+				onReady={() => SplashScreen.hideAsync()}
+			/>
+		);
+	}
 
-	// trava render até tudo estar pronto
 	if (!isReady || !fontsLoaded) {
-		return null;
+		// Tela azul enquanto carrega (mesmo fundo da splash)
+		return <View style={{ flex: 1, backgroundColor: '#023697' }} />;
 	}
 
 	return children;

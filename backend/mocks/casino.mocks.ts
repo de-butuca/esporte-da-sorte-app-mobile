@@ -1,0 +1,418 @@
+// ============================================================
+// Casino Mocks — Realistic mock data for casino, iframe
+//                games, tags, reserved categories/games
+// ============================================================
+
+import {
+  CasinoGamesTagsResponse,
+  CasinoTagsResponse,
+  ReservedCategoryResponse,
+  ReservedGameResponse,
+  OpenGame,
+  GameListRecord,
+  LaunchGame,
+} from '../models/casino.models';
+import { OdinResponse } from '../models/common.models';
+
+// ---- Casino Games Tags ----
+
+/** Mock de mapeamento jogo → tags: 8 jogos com IDs de tags para filtros. */
+export const mockCasinoGamesTags: CasinoGamesTagsResponse = {
+  state: { code: 0, message: 'OK', messageDetails: '', reference: '' },
+  list: [
+    { gameId: 60001, tagIds: [1, 5, 12] },
+    { gameId: 60002, tagIds: [2, 5] },
+    { gameId: 60003, tagIds: [1, 3, 8] },
+    { gameId: 60004, tagIds: [4, 12] },
+    { gameId: 60005, tagIds: [1, 2, 5, 8] },
+    { gameId: 60006, tagIds: [3, 7] },
+    { gameId: 60007, tagIds: [1, 6, 11] },
+    { gameId: 60008, tagIds: [2, 9] },
+  ],
+};
+
+// ---- Casino Tags (tag id → name map) ----
+
+/** Mock de catálogo de tags: 12 tags (Popular, Novos, Slots, Mesa, Ao Vivo, Jackpot, etc.). */
+export const mockCasinoTags: CasinoTagsResponse = {
+  state: { code: 0, message: 'OK', messageDetails: '', reference: '' },
+  map: {
+    '1': 'Popular',
+    '2': 'Novos',
+    '3': 'Slots',
+    '4': 'Ao Vivo',
+    '5': 'Jackpot',
+    '6': 'Crash',
+    '7': 'Roleta',
+    '8': 'Blackjack',
+    '9': 'Baccarat',
+    '10': 'Megaways',
+    '11': 'Buy Feature',
+    '12': 'Bônus',
+  },
+};
+
+// ---- Reserved Categories ----
+
+/** Mock de categorias reservadas: Slots, Mesa, Ao Vivo, Crash Games, Jackpot, Novos. */
+export const mockReservedCategories: ReservedCategoryResponse = {
+  state: { code: 0, message: 'OK' },
+  categories: [
+    { id: 1, name: 'Slots', count: 480, webCount: 480, mobileCount: 410, isCustom: false, order: 1 },
+    { id: 2, name: 'Ao Vivo', count: 120, webCount: 120, mobileCount: 95, isCustom: false, order: 2 },
+    { id: 3, name: 'Jogos de Mesa', count: 62, webCount: 62, mobileCount: 55, isCustom: false, order: 3 },
+    { id: 5, name: 'Crash Games', count: 18, webCount: 18, mobileCount: 18, isCustom: false, order: 4 },
+    { id: 7, name: 'Jackpot', count: 34, webCount: 34, mobileCount: 30, isCustom: false, order: 5 },
+    { id: 10, name: 'Populares', count: 50, webCount: 50, mobileCount: 50, isCustom: true, order: 6 },
+  ],
+};
+
+// ---- Reserved Games ----
+
+/** Mock de jogos reservados: Sweet Bonanza, Gates of Olympus, Aviator, Lightning Roulette, etc. */
+export const mockReservedGames: ReservedGameResponse = {
+  state: { code: 0, message: 'OK' },
+  games: [
+    {
+      id: 60001,
+      categoryId: 1,
+      name: 'Sweet Bonanza',
+      defaultGameName: 'Sweet Bonanza',
+      vendorId: 1001,
+      popular: true,
+      newGame: false,
+      jackpot: false,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 0.20,
+      maxBet: 500,
+      orderBy: 1,
+      fppCoefficient: 1.0,
+      vendorLimitGroups: [
+        { vendorLimitId: 'VLG-001', limits: [{ csnGameLimitId: 1, currencyCode: 'BRL', minBet: 1.0, maxBet: 2500 }] },
+      ],
+    },
+    {
+      id: 60002,
+      categoryId: 1,
+      name: 'Gates of Olympus',
+      defaultGameName: 'Gates of Olympus',
+      vendorId: 1001,
+      popular: true,
+      newGame: false,
+      jackpot: false,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 0.20,
+      maxBet: 500,
+      orderBy: 2,
+      fppCoefficient: 1.0,
+    },
+    {
+      id: 60003,
+      categoryId: 5,
+      name: 'Aviator',
+      defaultGameName: 'Aviator',
+      vendorId: 1002,
+      popular: true,
+      newGame: false,
+      jackpot: false,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 1.0,
+      maxBet: 1000,
+      orderBy: 1,
+      fppCoefficient: 0.8,
+    },
+    {
+      id: 60004,
+      categoryId: 2,
+      name: 'Lightning Roulette',
+      defaultGameName: 'Lightning Roulette',
+      vendorId: 1003,
+      popular: true,
+      newGame: false,
+      jackpot: false,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 0.50,
+      maxBet: 10000,
+      orderBy: 1,
+      fppCoefficient: 1.0,
+      gameDetails: {
+        dealer: 'Maria',
+        dealerImageUrl: 'https://cdn.example.com/dealers/maria.jpg',
+      },
+    },
+    {
+      id: 60005,
+      categoryId: 1,
+      name: 'Big Bass Bonanza',
+      defaultGameName: 'Big Bass Bonanza',
+      vendorId: 1001,
+      popular: false,
+      newGame: true,
+      jackpot: false,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 0.10,
+      maxBet: 250,
+      orderBy: 5,
+      fppCoefficient: 1.0,
+      promoStartDate: Date.now() - 86400000 * 3,
+    },
+    {
+      id: 60006,
+      categoryId: 2,
+      name: 'Crazy Time',
+      defaultGameName: 'Crazy Time',
+      vendorId: 1003,
+      popular: true,
+      newGame: false,
+      jackpot: false,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 0.50,
+      maxBet: 5000,
+      orderBy: 2,
+      fppCoefficient: 1.0,
+      gameDetails: {
+        dealer: 'Pedro',
+        dealerImageUrl: 'https://cdn.example.com/dealers/pedro.jpg',
+      },
+    },
+    {
+      id: 60007,
+      categoryId: 5,
+      name: 'JetX',
+      defaultGameName: 'JetX',
+      vendorId: 1004,
+      popular: false,
+      newGame: false,
+      jackpot: false,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 0.10,
+      maxBet: 300,
+      orderBy: 2,
+      fppCoefficient: 0.8,
+    },
+    {
+      id: 60008,
+      categoryId: 7,
+      name: 'Mega Moolah',
+      defaultGameName: 'Mega Moolah',
+      vendorId: 1005,
+      popular: false,
+      newGame: false,
+      jackpot: true,
+      jackpotAmount: 1250000.75,
+      vipGame: false,
+      open: true,
+      op: true,
+      minBet: 0.25,
+      maxBet: 200,
+      orderBy: 1,
+      fppCoefficient: 1.0,
+    },
+  ],
+};
+
+// ---- Open Demo Game ----
+
+/** Mock de abertura de jogo demo: URL, dimensões 100% e durações de sessão. */
+export const mockOpenDemoGame: OpenGame = {
+  gameUrl: 'https://gameserver.example.com/demo/launch?token=DEMO-abc123&lang=pt&currency=BRL',
+  width: '100%',
+  height: '100%',
+  remainingDailySessionDuration: 86400,
+  remainingWeeklySessionDuration: 604800,
+  remainingMonthlySessionDuration: 2592000,
+};
+
+// ---- Iframe Game List ----
+
+/** Mock de lista de jogos iframe: Pragmatic Play (5 jogos), Spribe (2), Evolution Gaming (3). */
+export const mockIframeGameList: OdinResponse<GameListRecord[]> = {
+  success: true,
+  responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
+  data: [
+    {
+      provider: { providerId: 1001, code: 'PRAGMATIC', name: 'Pragmatic Play', virtual: false },
+      lobby: {
+        gameId: 0,
+        gameName: 'Pragmatic Play Lobby',
+        code: 'PRAGMATIC_LOBBY',
+        categoryId: 1,
+        open: true,
+        forWeb: 1,
+        forMobile: 1,
+        vendorId: 1001,
+      },
+      games: [
+        {
+          gameId: 60001,
+          gameName: 'Sweet Bonanza',
+          shortName: 'SweetBon',
+          code: 'vs20fruitsw',
+          categoryId: 1,
+          categoryName: 'Slots',
+          gameType: 'slot',
+          newGame: false,
+          vipGame: false,
+          popular: true,
+          jackpot: false,
+          open: true,
+          orderBy: 1,
+          forWeb: 1,
+          forMobile: 1,
+          vendorId: 1001,
+          minBet: 0.20,
+          maxBet: 500,
+          fppCoefficient: 1.0,
+        },
+        {
+          gameId: 60002,
+          gameName: 'Gates of Olympus',
+          shortName: 'GatesOly',
+          code: 'vs20olympgate',
+          categoryId: 1,
+          categoryName: 'Slots',
+          gameType: 'slot',
+          newGame: false,
+          vipGame: false,
+          popular: true,
+          jackpot: false,
+          open: true,
+          orderBy: 2,
+          forWeb: 1,
+          forMobile: 1,
+          vendorId: 1001,
+          minBet: 0.20,
+          maxBet: 500,
+          fppCoefficient: 1.0,
+        },
+        {
+          gameId: 60005,
+          gameName: 'Big Bass Bonanza',
+          shortName: 'BigBass',
+          code: 'vs10bbbonanza',
+          categoryId: 1,
+          categoryName: 'Slots',
+          gameType: 'slot',
+          newGame: true,
+          vipGame: false,
+          popular: false,
+          jackpot: false,
+          open: true,
+          orderBy: 5,
+          forWeb: 1,
+          forMobile: 1,
+          vendorId: 1001,
+          minBet: 0.10,
+          maxBet: 250,
+          fppCoefficient: 1.0,
+        },
+      ],
+    },
+    {
+      provider: { providerId: 1002, code: 'SPRIBE', name: 'Spribe', virtual: false },
+      games: [
+        {
+          gameId: 60003,
+          gameName: 'Aviator',
+          shortName: 'Aviator',
+          code: 'aviator',
+          categoryId: 5,
+          categoryName: 'Crash Games',
+          gameType: 'crash',
+          newGame: false,
+          vipGame: false,
+          popular: true,
+          jackpot: false,
+          open: true,
+          orderBy: 1,
+          forWeb: 1,
+          forMobile: 1,
+          vendorId: 1002,
+          minBet: 1.0,
+          maxBet: 1000,
+          fppCoefficient: 0.8,
+        },
+      ],
+    },
+    {
+      provider: { providerId: 1003, code: 'EVOLUTION', name: 'Evolution Gaming', virtual: false },
+      games: [
+        {
+          gameId: 60004,
+          gameName: 'Lightning Roulette',
+          shortName: 'LightRoul',
+          code: 'LightningTable01',
+          categoryId: 2,
+          categoryName: 'Ao Vivo',
+          gameType: 'roulette',
+          newGame: false,
+          vipGame: false,
+          popular: true,
+          jackpot: false,
+          open: true,
+          orderBy: 1,
+          forWeb: 1,
+          forMobile: 1,
+          vendorId: 1003,
+          minBet: 0.50,
+          maxBet: 10000,
+          fppCoefficient: 1.0,
+          gameDetails: {
+            dealer: 'Maria',
+            dealerImageUrl: 'https://cdn.example.com/dealers/maria.jpg',
+          },
+        },
+        {
+          gameId: 60006,
+          gameName: 'Crazy Time',
+          shortName: 'CrazyTime',
+          code: 'CrazyTime0001',
+          categoryId: 2,
+          categoryName: 'Ao Vivo',
+          gameType: 'gameshow',
+          newGame: false,
+          vipGame: false,
+          popular: true,
+          jackpot: false,
+          open: true,
+          orderBy: 2,
+          forWeb: 1,
+          forMobile: 1,
+          vendorId: 1003,
+          minBet: 0.50,
+          maxBet: 5000,
+          fppCoefficient: 1.0,
+          gameDetails: {
+            dealer: 'Pedro',
+            dealerImageUrl: 'https://cdn.example.com/dealers/pedro.jpg',
+          },
+        },
+      ],
+    },
+  ],
+};
+
+// ---- Launch Demo (Iframe) ----
+
+/** Mock de URL de lançamento de demo via iframe. */
+export const mockLaunchDemo: OdinResponse<LaunchGame> = {
+  success: true,
+  responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
+  data: {
+    gameUrl: 'https://gameserver.example.com/demo/iframe?token=DEMO-xyz789&lang=pt&mode=demo&currency=BRL',
+  },
+};

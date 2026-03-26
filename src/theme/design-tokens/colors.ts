@@ -5,7 +5,7 @@ export const lightColors = {
 	secondary: '#625B71',
 	onSecondary: '#FFFFFF',
 
-	background: '#1B3C89',
+	background: '#01002C',
 	onBackground: '#FFFFFF',
 
 	label: '#fff',
