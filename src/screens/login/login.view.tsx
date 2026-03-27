@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/stampd.config';
 import { Controller } from 'react-hook-form';
 import { useLoginViewModel } from './login.viewmodel';
 import { useAppNavigation } from '@/navigation/hooks';

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/stampd.config';
 
 type BadgeType = 'live' | 'new' | 'none';
 

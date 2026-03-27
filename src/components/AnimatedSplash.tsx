@@ -5,7 +5,7 @@ import LottieView from "lottie-react-native";
 import { hideNativeSplash, getNativeAnimationStartTime } from "../native/NativeSplash";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
-import { lightColors } from "@/theme/design-tokens";
+import { lightColors } from "@/stampd.config";
 
 const BG = lightColors.primary;
 

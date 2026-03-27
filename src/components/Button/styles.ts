@@ -1,4 +1,4 @@
-import { shadows } from '@/theme/design-tokens';
+import { shadows } from '@/stampd.config';
 import { Styled } from 'stampd/styled';
 
 const Container = Styled.TouchableOpacity({

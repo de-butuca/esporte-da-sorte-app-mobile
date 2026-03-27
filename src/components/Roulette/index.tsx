@@ -23,7 +23,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { Gift } from "lucide-react-native";
-import { lightColors } from "@/theme/design-tokens";
+import { lightColors } from "@/stampd.config";
 import { RouletteWheel } from "./RouletteWheel";
 
 const { width: SCREEN_W } = Dimensions.get("window");

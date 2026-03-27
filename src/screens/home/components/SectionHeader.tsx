@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/stampd.config';
 
 interface SectionHeaderProps {
 	title: string;

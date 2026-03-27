@@ -10,7 +10,7 @@ import {
 	ImageBackground,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/stampd.config';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width: SCREEN_W } = Dimensions.get('window');

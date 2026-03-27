@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { ButtonBase } from '@/components/Button';
 import { useAppNavigation } from './hooks';
-import { lightColors } from '@/theme/design-tokens';
+import { lightColors } from '@/stampd.config';
 import HomeScreen from '@/screens/home/view';
 import GameHomeScreen from '@/screens/game-home/view';
 import LoginScreen from '@/screens/login/login.view';

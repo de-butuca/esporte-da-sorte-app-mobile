@@ -4,7 +4,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { useAppNavigation } from '@/navigation/hooks';
 import { useAuthGuard } from '@/core/auth/useAuthGuard';
-import { lightColors } from '@/theme/design-tokens';
+import { lightColors } from '@/stampd.config';
 import { HomeHeader } from './components/HomeHeader';
 import { BannerCarousel } from './components/BannerCarousel';
 import { SectionHeader } from './components/SectionHeader';

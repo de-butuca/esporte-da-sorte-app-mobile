@@ -3,7 +3,7 @@ import { RootNavigator } from './navigation/RootNavigator';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { AppInitializer } from './AppInitializer';
-import { lightColors } from './theme/design-tokens';
+import { lightColors } from './stampd.config';
 
 export default function App() {
 	return (

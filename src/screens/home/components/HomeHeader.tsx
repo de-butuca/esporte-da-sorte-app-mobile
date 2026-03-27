@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/stampd.config';
 import { Search, Settings } from 'lucide-react-native';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
