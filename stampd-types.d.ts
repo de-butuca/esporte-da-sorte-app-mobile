@@ -57,17 +57,18 @@ declare global {
     };
     fonts: {
       default: {
-        size: 16;
+        size: 14;
         family: "Inter_400Regular";
       };
       sizes: {
-        xs: 12;
-        sm: 14;
-        base: 16;
+        xs: 10;
+        sm: 12;
+        base: 14;
+        md: 16;
         lg: 18;
         xl: 20;
-        xl2: 22;
-        xl3: 24;
+        xl2: 24;
+        xl3: 32;
       };
       family: {
         regular: "Inter_400Regular";
