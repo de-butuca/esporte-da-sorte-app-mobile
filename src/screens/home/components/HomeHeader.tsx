@@ -13,8 +13,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 
-const CASSINO_ICON = require('@assets/images/cassino-coin-icon.png');
-const SOCCER_ICON = require('@assets/images/soccer-ball-icon.png');
+const CASSINO_ICON = require('@assets/images/icons/cassino-coin-icon.png');
+const SOCCER_ICON = require('@assets/images/icons/soccer-ball-icon.png');
 
 const EXPANDED_HEIGHT = RFValue(56);
 
