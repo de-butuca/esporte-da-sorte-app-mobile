@@ -19,7 +19,7 @@ export function useResetToHome(props: ResetState) {
 				}
 			)
 		);
-	}, [navigation]);
+	}, [navigation, props]);
 
 	return resetToHome;
 }

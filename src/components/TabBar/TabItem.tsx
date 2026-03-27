@@ -1,6 +1,6 @@
 import React from 'react'
-import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
-import Animated, { useSharedValue, withSpring, withTiming, useAnimatedStyle } from 'react-native-reanimated'
+import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import Animated, { useSharedValue, useDerivedValue, withSpring, withTiming, useAnimatedStyle } from 'react-native-reanimated'
 
 import { stylesTabBar } from './styles'
 
@@ -19,13 +19,12 @@ export interface TabItemProps extends TouchableOpacityProps {
 }
 
 export function TabItem({ label, isFocused, onPress, icon: Icon }: TabItemProps) {
-	const translateY = useSharedValue(isFocused ? -8 : 0)
-	const opacity = useSharedValue(isFocused ? 1 : 0)
-
-	React.useEffect(() => {
-		translateY.value = withSpring(isFocused ? -8 : 0)
-		opacity.value = withTiming(isFocused ? 1 : 0, { duration: 200 })
-	}, [isFocused, translateY, opacity])
+	const translateY = useDerivedValue(() =>
+		withSpring(isFocused ? -8 : 0)
+	)
+	const opacity = useDerivedValue(() =>
+		withTiming(isFocused ? 1 : 0, { duration: 200 })
+	)
 
 	const iconStyle = useAnimatedStyle(() => ({
 		transform: [{ translateY: translateY.value }],

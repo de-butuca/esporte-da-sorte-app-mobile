@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
 	View,
 	Text,
@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/theme/design-tokens';
 import { Controller } from 'react-hook-form';
 import { useLoginViewModel } from './login.viewmodel';
 import { useAppNavigation } from '@/navigation/hooks';
@@ -35,10 +35,14 @@ const LOGIN_METHODS: { key: LoginMethod; label: string; icon: typeof User }[] = 
 	{ key: 'cpf', label: 'CPF', icon: CreditCard },
 ];
 
+const ICON_COLOR = lightColors.textInactive;
+const TRACK_COLORS = { false: '#282564', true: lightColors.accent };
+
 export default function LoginScreen() {
 	const insets = useSafeAreaInsets();
 	const { canGoBack, goBack } = useAppNavigation();
 	const [showPassword, setShowPassword] = useState(false);
+	const togglePassword = useCallback(() => setShowPassword(s => !s), []);
 
 	const {
 		control,
@@ -51,16 +55,25 @@ export default function LoginScreen() {
 		handleLogin,
 	} = useLoginViewModel();
 
+	const containerStyle = useMemo(
+		() => [styles.container, { paddingTop: insets.top }],
+		[insets.top],
+	);
+	const bottomCtaStyle = useMemo(
+		() => [styles.bottomCta, { paddingBottom: insets.bottom + RFValue(16) }],
+		[insets.bottom],
+	);
+
 	return (
 		<KeyboardAvoidingView
 			style={styles.root}
 			behavior={Platform.OS === 'ios' ? 'padding' : undefined}
 		>
-			<View style={[styles.container, { paddingTop: insets.top }]}>
+			<View style={containerStyle}>
 				{/* Top bar */}
 				<View style={styles.topBar}>
 					<TouchableOpacity style={styles.topBarBtn} activeOpacity={0.7}>
-						<HelpCircle size={RFValue(22)} color="#A0A0B0" strokeWidth={1.8} />
+						<HelpCircle size={RFValue(22)} color={lightColors.textMuted} strokeWidth={1.8} />
 					</TouchableOpacity>
 					{canGoBack() && (
 						<TouchableOpacity
@@ -68,7 +81,7 @@ export default function LoginScreen() {
 							activeOpacity={0.7}
 							onPress={goBack}
 						>
-							<X size={RFValue(22)} color="#A0A0B0" strokeWidth={1.8} />
+							<X size={RFValue(22)} color={lightColors.textMuted} strokeWidth={1.8} />
 						</TouchableOpacity>
 					)}
 				</View>
@@ -101,7 +114,7 @@ export default function LoginScreen() {
 								>
 									<Icon
 										size={RFValue(14)}
-										color={isActive ? '#02003D' : '#A0A0B0'}
+										color={isActive ? lightColors.bgNav : lightColors.textMuted}
 										strokeWidth={2}
 									/>
 									<Text
@@ -131,19 +144,19 @@ export default function LoginScreen() {
 								>
 									<User
 										size={RFValue(18)}
-										color="#808099"
+										color={ICON_COLOR}
 										strokeWidth={1.8}
 										style={styles.inputIcon}
 									/>
 									<TextInput
 										style={styles.input}
 										placeholder={getPlaceholder()}
-										placeholderTextColor="#808099"
+										placeholderTextColor={ICON_COLOR}
 										value={value}
 										onChangeText={onChange}
 										autoCapitalize="none"
 										keyboardType={getKeyboardType()}
-										cursorColor="#38E67D"
+										cursorColor={lightColors.accent}
 									/>
 								</View>
 								{fieldState.error ? (
@@ -173,22 +186,22 @@ export default function LoginScreen() {
 									<TextInput
 										style={[styles.input, styles.inputNoIcon]}
 										placeholder="Senha"
-										placeholderTextColor="#808099"
+										placeholderTextColor={ICON_COLOR}
 										value={value}
 										onChangeText={onChange}
 										secureTextEntry={!showPassword}
 										autoCapitalize="none"
-										cursorColor="#38E67D"
+										cursorColor={lightColors.accent}
 									/>
 									<TouchableOpacity
-										onPress={() => setShowPassword(!showPassword)}
+										onPress={togglePassword}
 										style={styles.eyeBtn}
 										activeOpacity={0.7}
 									>
 										{showPassword ? (
-											<EyeOff size={RFValue(18)} color="#808099" strokeWidth={1.8} />
+											<EyeOff size={RFValue(18)} color={ICON_COLOR} strokeWidth={1.8} />
 										) : (
-											<Eye size={RFValue(18)} color="#808099" strokeWidth={1.8} />
+											<Eye size={RFValue(18)} color={ICON_COLOR} strokeWidth={1.8} />
 										)}
 									</TouchableOpacity>
 								</View>
@@ -216,8 +229,8 @@ export default function LoginScreen() {
 								<Switch
 									value={value}
 									onValueChange={onChange}
-									trackColor={{ false: '#282564', true: '#38E67D' }}
-									thumbColor="#FFFFFF"
+									trackColor={TRACK_COLORS}
+									thumbColor={lightColors.textPrimary}
 								/>
 							</View>
 						)}
@@ -231,7 +244,7 @@ export default function LoginScreen() {
 						disabled={isLoading}
 					>
 						{isLoading ? (
-							<ActivityIndicator color="#02003D" size="small" />
+							<ActivityIndicator color={lightColors.bgNav} size="small" />
 						) : (
 							<Text style={styles.loginBtnText}>INICIAR SESSAO</Text>
 						)}
@@ -239,7 +252,7 @@ export default function LoginScreen() {
 				</ScrollView>
 
 				{/* Bottom register CTA */}
-				<View style={[styles.bottomCta, { paddingBottom: insets.bottom + RFValue(16) }]}>
+				<View style={bottomCtaStyle}>
 					<TouchableOpacity style={styles.registerBtn} activeOpacity={0.8}>
 						<Text style={styles.registerText}>
 							Novo membro? <Text style={styles.registerTextBold}>Entre aqui</Text>
@@ -254,7 +267,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
 	root: {
 		flex: 1,
-		backgroundColor: '#01003A',
+		backgroundColor: lightColors.background,
 	},
 	container: {
 		flex: 1,
@@ -283,7 +296,7 @@ const styles = StyleSheet.create({
 	sectionLabel: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(18),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 		marginBottom: RFValue(12),
 	},
 	methodTabs: {
@@ -303,16 +316,16 @@ const styles = StyleSheet.create({
 		backgroundColor: 'transparent',
 	},
 	methodTabActive: {
-		backgroundColor: '#38E67D',
-		borderColor: '#38E67D',
+		backgroundColor: lightColors.accent,
+		borderColor: lightColors.accent,
 	},
 	methodTabText: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(12),
-		color: '#A0A0B0',
+		color: lightColors.textMuted,
 	},
 	methodTabTextActive: {
-		color: '#02003D',
+		color: lightColors.bgNav,
 		fontFamily: fontFamily.bold,
 	},
 	inputGroup: {
@@ -321,7 +334,7 @@ const styles = StyleSheet.create({
 	inputWrapper: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: '#0F0C50',
+		backgroundColor: lightColors.bgCard,
 		borderRadius: RFValue(10),
 		borderWidth: 1,
 		borderColor: '#282564',
@@ -329,7 +342,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: RFValue(16),
 	},
 	inputError: {
-		borderColor: '#FF3B3B',
+		borderColor: lightColors.live,
 		borderWidth: 2,
 	},
 	inputIcon: {
@@ -339,7 +352,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(14),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 		height: '100%',
 	},
 	inputNoIcon: {
@@ -352,14 +365,14 @@ const styles = StyleSheet.create({
 	helperText: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(11),
-		color: '#808099',
+		color: lightColors.textInactive,
 		marginTop: RFValue(8),
 		lineHeight: RFValue(16),
 	},
 	errorText: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(11),
-		color: '#FF3B3B',
+		color: lightColors.live,
 		marginTop: RFValue(6),
 	},
 	forgotBtn: {
@@ -369,7 +382,7 @@ const styles = StyleSheet.create({
 	forgotText: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(13),
-		color: '#38E67D',
+		color: lightColors.accent,
 	},
 	keepSessionRow: {
 		flexDirection: 'row',
@@ -380,10 +393,10 @@ const styles = StyleSheet.create({
 	keepSessionText: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(13),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 	},
 	loginBtn: {
-		backgroundColor: '#38E67D',
+		backgroundColor: lightColors.accent,
 		borderRadius: RFValue(10),
 		height: RFValue(50),
 		alignItems: 'center',
@@ -396,14 +409,14 @@ const styles = StyleSheet.create({
 	loginBtnText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(14),
-		color: '#02003D',
+		color: lightColors.bgNav,
 		letterSpacing: 1,
 	},
 	bottomCta: {
 		paddingHorizontal: RFValue(24),
 	},
 	registerBtn: {
-		backgroundColor: '#0F0C50',
+		backgroundColor: lightColors.bgCard,
 		borderRadius: RFValue(10),
 		height: RFValue(50),
 		alignItems: 'center',
@@ -412,10 +425,10 @@ const styles = StyleSheet.create({
 	registerText: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(14),
-		color: '#A0A0B0',
+		color: lightColors.textMuted,
 	},
 	registerTextBold: {
 		fontFamily: fontFamily.bold,
-		color: '#38E67D',
+		color: lightColors.accent,
 	},
 });

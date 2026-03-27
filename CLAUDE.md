@@ -171,6 +171,108 @@ setThemeMode(ThemeMode.DARK);
 - **State:** Zustand para state global persistente, Context para injeção de dependência
 - **Avoid:** Inline styles repetidos, anonymous functions em renderProps de listas, imports circulares
 
+## useEffect — Usar com cautela
+
+`useEffect` é a maior fonte de bugs em projetos React/React Native. A maioria dos usos é desnecessária e deve ser substituída por alternativas melhores. **Antes de escrever um useEffect, pergunte: "existe outra forma?"**
+
+### Quando NÃO usar useEffect
+
+**1. Derivar dados de state/props — use variáveis ou `useMemo`**
+```tsx
+// ERRADO: useEffect para "sincronizar" state derivado
+const [fullName, setFullName] = useState('');
+useEffect(() => {
+  setFullName(`${firstName} ${lastName}`);
+}, [firstName, lastName]);
+
+// CORRETO: derivar direto no render (custo zero)
+const fullName = `${firstName} ${lastName}`;
+
+// CORRETO: se o cálculo for pesado, use useMemo
+const filtered = useMemo(() => items.filter(expensiveCheck), [items]);
+```
+
+**2. Resetar state quando uma prop muda — use `key`**
+```tsx
+// ERRADO: useEffect para resetar form quando muda de usuário
+useEffect(() => {
+  setFormData(initialData);
+}, [userId]);
+
+// CORRETO: usar key no componente pai força remount limpo
+<UserForm key={userId} initialData={data} />
+```
+
+**3. Responder a eventos do usuário — use handlers**
+```tsx
+// ERRADO: useEffect observando state para fazer side effect
+const [submitted, setSubmitted] = useState(false);
+useEffect(() => {
+  if (submitted) sendForm(data);
+}, [submitted]);
+
+// CORRETO: fazer o side effect direto no handler
+const handleSubmit = () => {
+  sendForm(data);
+};
+```
+
+**4. Buscar dados — use React Query**
+```tsx
+// ERRADO: useEffect + useState para fetch
+const [data, setData] = useState(null);
+const [loading, setLoading] = useState(true);
+useEffect(() => {
+  fetchData().then(setData).finally(() => setLoading(false));
+}, []);
+
+// CORRETO: React Query (cache, retry, refetch, loading/error states)
+const { data, isLoading } = useQuery({ queryKey: ['data'], queryFn: fetchData });
+```
+
+**5. Transformar dados para passar como prop — faça no render**
+```tsx
+// ERRADO: useEffect para formatar lista
+useEffect(() => {
+  setFormattedItems(items.map(format));
+}, [items]);
+
+// CORRETO: derivar direto
+const formattedItems = items.map(format);
+// ou com useMemo se a lista for grande
+const formattedItems = useMemo(() => items.map(format), [items]);
+```
+
+**6. Notificar o pai quando state muda — chamar callback no handler**
+```tsx
+// ERRADO: useEffect para "propagar" mudança pro pai
+useEffect(() => {
+  onChange(value);
+}, [value]);
+
+// CORRETO: chamar onChange no mesmo handler que seta o state
+const handleChange = (newValue) => {
+  setValue(newValue);
+  onChange(newValue);
+};
+```
+
+### Quando useEffect É necessário
+
+- **Subscriptions/listeners:** AppState, Keyboard, BackHandler, EventEmitter — precisa de cleanup no return
+- **Timers:** setTimeout/setInterval (com cleanup)
+- **Inicialização única:** Carregar sessão do storage, configurar SDK — executar uma vez no mount
+- **Sync com sistema externo:** WebSocket, deep links, push notification handlers
+
+### Regras ao usar useEffect
+
+- **Sempre retornar cleanup** para listeners, timers e subscriptions
+- **Deps array completo:** Incluir todas as variáveis usadas dentro do effect. Deps incompletas = stale closures = bugs sutis
+- **Nunca setar state derivado:** Se o useEffect existe só para `setState(algo derivado de props/state)`, ele é desnecessário
+- **Evitar cascata de effects:** Se um useEffect seta state que trigger outro useEffect, a arquitetura está errada. Mover a lógica para um único handler ou derivar
+- **Race conditions em async:** Se o effect faz fetch async, usar flag `isCancelled` ou `AbortController` no cleanup para evitar setState em componente desmontado
+- **`InteractionManager.runAfterInteractions()`:** Para work pesado em useEffect de mount, defer para depois das animações de transição de tela
+
 ## Performance
 
 Os principais gargalos em React Native e como evitá-los:

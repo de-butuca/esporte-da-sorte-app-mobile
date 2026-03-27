@@ -19,9 +19,11 @@ import Animated, {
   withSequence,
   withTiming,
   withDelay,
+  cancelAnimation,
   Easing,
 } from "react-native-reanimated";
 import { Gift } from "lucide-react-native";
+import { lightColors } from "@/theme/design-tokens";
 import { RouletteWheel } from "./RouletteWheel";
 
 const { width: SCREEN_W } = Dimensions.get("window");
@@ -71,6 +73,12 @@ function LoadingDots() {
       withSequence(withTiming(1, { duration: dur }), withTiming(0.2, { duration: dur })),
       -1, true
     ));
+
+    return () => {
+      cancelAnimation(dot1);
+      cancelAnimation(dot2);
+      cancelAnimation(dot3);
+    };
   }, []);
 
   const s1 = useAnimatedStyle(() => ({ opacity: dot1.value }));
@@ -88,7 +96,7 @@ function LoadingDots() {
 
 const dotsStyles = StyleSheet.create({
   row: { flexDirection: "row", justifyContent: "center", alignItems: "center" },
-  dot: { color: "#fff", fontSize: 28, fontWeight: "bold", marginHorizontal: 2 },
+  dot: { color: lightColors.textPrimary, fontSize: 28, fontWeight: "bold", marginHorizontal: 2 },
 });
 
 interface Props {
@@ -211,8 +219,8 @@ export function Roulette({ visible, onClose, onResult }: Props) {
                   style={styles.bottomArea}
                 >
                   <Pressable style={styles.ctaButton} onPress={handleClose}>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                      <Gift size={20} color="#02003A" strokeWidth={2.5} />
+                    <View style={styles.ctaInner}>
+                      <Gift size={20} color={lightColors.background} strokeWidth={2.5} />
                       <Text style={styles.ctaText}>Resgatar agora</Text>
                     </View>
                   </Pressable>
@@ -273,7 +281,7 @@ const styles = StyleSheet.create({
   parabensText: {
     fontFamily: "Inter_700Bold",
     fontSize: 28,
-    color: "#fff",
+    color: lightColors.textPrimary,
     letterSpacing: 3,
     textTransform: "uppercase",
   },
@@ -286,14 +294,14 @@ const styles = StyleSheet.create({
   prizeLabelText: {
     fontFamily: "Inter_700Bold",
     fontSize: 15,
-    color: "#fff",
+    color: lightColors.textPrimary,
     textAlign: "center",
     marginBottom: 4,
   },
   prizeHero: {
     fontFamily: "Inter_700Bold",
     fontSize: 34,
-    color: "#fff",
+    color: lightColors.textPrimary,
     textAlign: "center",
     letterSpacing: 0.5,
   },
@@ -307,7 +315,7 @@ const styles = StyleSheet.create({
 
   // --- Botões ---
   spinButton: {
-    backgroundColor: "#2EE683",
+    backgroundColor: lightColors.accent,
     paddingVertical: 16,
     borderRadius: 12,
     width: SCREEN_W * 0.85,
@@ -320,11 +328,11 @@ const styles = StyleSheet.create({
   },
   spinText: {
     fontFamily: "Inter_700Bold",
-    color: "#02003A",
+    color: lightColors.background,
     fontSize: 17,
   },
   ctaButton: {
-    backgroundColor: "#2EE683",
+    backgroundColor: lightColors.accent,
     paddingVertical: 16,
     borderRadius: 12,
     width: SCREEN_W * 0.85,
@@ -332,9 +340,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     minHeight: 54,
   },
+  ctaInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
   ctaText: {
     fontFamily: "Inter_700Bold",
-    color: "#02003A",
+    color: lightColors.background,
     fontSize: 17,
   },
   tryAgainButton: {
@@ -350,7 +363,7 @@ const styles = StyleSheet.create({
   },
   tryAgainText: {
     fontFamily: "Inter_700Bold",
-    color: "#fff",
+    color: lightColors.textPrimary,
     fontSize: 17,
   },
 });

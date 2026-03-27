@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 		height: RFValue(130),
 		borderRadius: RFValue(16),
 		overflow: 'hidden',
-		backgroundColor: '#0F0C50',
+		backgroundColor: lightColors.bgCard,
 	},
 	thumbnailImage: {
 		width: '100%',

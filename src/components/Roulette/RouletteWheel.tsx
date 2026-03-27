@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
   Easing,
   runOnJS,
+  cancelAnimation,
 } from "react-native-reanimated";
 import { Svg, Path } from "react-native-svg";
 import type { RouletteItem } from "./index";
@@ -86,7 +87,11 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
         runOnJS(reportResult)();
       }
     );
-  }, [spinning]);
+
+    return () => {
+      cancelAnimation(rotation);
+    };
+  }, [spinning, sliceAngle, rotation, reportResult]);
 
   const wheelAnimStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotation.value}rad` }],

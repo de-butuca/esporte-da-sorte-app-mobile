@@ -1,8 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { ButtonBase } from '@/components/Button';
 import { useAppNavigation } from './hooks';
+import { lightColors } from '@/theme/design-tokens';
 import HomeScreen from '@/screens/home/view';
 import GameHomeScreen from '@/screens/game-home/view';
 import LoginScreen from '@/screens/login/login.view';
@@ -23,7 +24,7 @@ export function AppStack() {
 				name="GameHome"
 				component={GameHomeScreen}
 				options={{
-					contentStyle: { backgroundColor: '#f8f9fc' },
+					contentStyle: { backgroundColor: lightColors.background },
 					gestureEnabled: false,
 				}}
 			/>
@@ -43,23 +44,34 @@ export function createTestScreen(number: number) {
 	return function TestScreen() {
 		const { navigate } = useAppNavigation();
 		return (
-			<View
-				style={{
-					flex: 1,
-					justifyContent: 'center',
-					alignItems: 'center',
-					backgroundColor: '#101010',
-				}}
-			>
+			<View style={testStyles.container}>
 				<ButtonBase
 					text="sada"
 					onPress={() => {
 						navigate('flapGame');
 					}}
 				/>
-				<Text style={{ fontSize: 24, color: '#fff' }}>ESTA E UMA TELA DE {number}</Text>
-				<Text style={{ fontSize: 16, color: '#aaa', marginTop: 10 }}>Componente criado dinamicamente</Text>
+				<Text style={testStyles.title}>ESTA E UMA TELA DE {number}</Text>
+				<Text style={testStyles.subtitle}>Componente criado dinamicamente</Text>
 			</View>
 		);
 	};
 }
+
+const testStyles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: lightColors.background,
+	},
+	title: {
+		fontSize: 24,
+		color: lightColors.textPrimary,
+	},
+	subtitle: {
+		fontSize: 16,
+		color: lightColors.textMuted,
+		marginTop: 10,
+	},
+});

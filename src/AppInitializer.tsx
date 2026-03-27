@@ -58,7 +58,7 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 				cleanupNotifications();
 			}
 		};
-	}, []);
+	}, [loadSession]);
 
 	if (!splashDone && !splashError) {
 		return (
