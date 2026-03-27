@@ -11,6 +11,7 @@ import Animated, {
 	interpolate,
 	Extrapolation,
 } from 'react-native-reanimated';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 
 const CASSINO_ICON = require('@assets/images/cassino-coin-icon.png');
 const SOCCER_ICON = require('@assets/images/soccer-ball-icon.png');
@@ -27,6 +28,7 @@ interface HomeHeaderProps {
 export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
+	const { requireAuth, isAuthenticated } = useRequireAuth();
 
 	const wrapperStyle = useAnimatedStyle(() => {
 		const progress = interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP);
@@ -48,9 +50,15 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
 						<TicketPercent size={RFValue(20)} color="#fff" strokeWidth={2} />
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8}>
-						<Text style={styles.entrarText}>Entrar</Text>
-					</TouchableOpacity>
+					{!isAuthenticated && (
+						<TouchableOpacity
+							style={styles.entrarBtn}
+							activeOpacity={0.8}
+							onPress={() => requireAuth(() => {})}
+						>
+							<Text style={styles.entrarText}>Entrar</Text>
+						</TouchableOpacity>
+					)}
 				</View>
 			</View>
 

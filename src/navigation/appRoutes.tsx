@@ -6,6 +6,7 @@ import { ButtonBase } from '@/components/Button';
 import { useAppNavigation } from './hooks';
 import { HeaderRouter } from '@/components/navigation/header/header';
 import HomeScreen from '@/screens/home/view';
+import LoginScreen from '@/screens/login/login.view';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,14 @@ export function AppStack() {
 			}}
 		>
 			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+			<Stack.Screen
+				name="Login"
+				component={LoginScreen}
+				options={{
+					headerShown: false,
+					animation: 'slide_from_bottom',
+				}}
+			/>
 		</Stack.Navigator>
 	);
 }

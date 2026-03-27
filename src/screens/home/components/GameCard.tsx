@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ImageSourcePropType } from 'react-native';
+import { View, Text, StyleSheet, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily } from '@/theme/design-tokens';
 
@@ -12,6 +12,7 @@ interface GameCardProps {
 	badge?: BadgeType;
 	players?: string;
 	width?: number;
+	onPress?: () => void;
 }
 
 export function GameCard({
@@ -21,9 +22,14 @@ export function GameCard({
 	badge = 'none',
 	players,
 	width = RFValue(130),
+	onPress,
 }: GameCardProps) {
 	return (
-		<View style={[styles.container, { width }]}>
+		<TouchableOpacity
+			style={[styles.container, { width }]}
+			activeOpacity={0.8}
+			onPress={onPress}
+		>
 			<View style={[styles.thumbnail, { width }]}>
 				<Image source={image} style={styles.thumbnailImage} resizeMode="cover" />
 				{badge === 'live' && (
@@ -46,7 +52,7 @@ export function GameCard({
 				{name}
 			</Text>
 			<Text style={styles.provider}>{provider}</Text>
-		</View>
+		</TouchableOpacity>
 	);
 }
 
