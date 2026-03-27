@@ -36,6 +36,7 @@
       "expo-secure-store",
       "expo-image",
       "./plugins/native-splash-plugin",
+      "./plugins/android-build-config",
       [
         "expo-notifications",
         {
