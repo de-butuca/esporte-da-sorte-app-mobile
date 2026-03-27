@@ -16,7 +16,7 @@ import { useRequireAuth } from '@/hooks/useRequireAuth';
 const CASSINO_ICON = require('@assets/images/icons/cassino-coin-icon.png');
 const SOCCER_ICON = require('@assets/images/icons/soccer-ball-icon.png');
 
-const EXPANDED_HEIGHT = RFValue(56);
+const EXPANDED_HEIGHT = RFValue(72);
 
 type CategoryTab = 'cassino' | 'esportes';
 

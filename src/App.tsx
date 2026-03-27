@@ -7,7 +7,7 @@ import { AppInitializer } from './AppInitializer';
 
 export default function App() {
 	return (
-		<View style={{ flex: 1, backgroundColor: '#023697' }}>
+		<View style={{ flex: 1, backgroundColor: '#01003A' }}>
 			<AppInitializer>
 				<AppProviders>
 					{/* <VariantTestScreen /> */}
