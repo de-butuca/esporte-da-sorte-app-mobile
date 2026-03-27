@@ -42,10 +42,10 @@ function AppContent({ children }: IAppProvidersProps) {
 	const { theme, themeMode } = useStampdUI();
 	return (
 		<>
-			<SafeAreaView style={{ flex: 1 }}>
+			<View style={{ flex: 1 }}>
 				<StatusBar style={themeMode == ThemeMode.LIGHT ? 'light' : 'dark'} animated />
 				{children}
-			</SafeAreaView>
+			</View>
 		</>
 	);
 }

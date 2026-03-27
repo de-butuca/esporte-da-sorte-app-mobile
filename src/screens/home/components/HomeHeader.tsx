@@ -5,16 +5,12 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily } from '@/theme/design-tokens';
 import { Search, Settings } from 'lucide-react-native';
 import Logo from '@assets/images/logo-square.svg';
-import Animated, {
-	useAnimatedStyle,
-	SharedValue,
-	interpolate,
-	Extrapolation,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 
-const CASSINO_ICON = require('@assets/images/cassino-coin-icon.png');
-const SOCCER_ICON = require('@assets/images/soccer-ball-icon.png');
+import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
+
+import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
 
 const EXPANDED_HEIGHT = RFValue(56);
 
@@ -56,11 +52,7 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 						<Settings size={RFValue(20)} color="#fff" strokeWidth={2} />
 					</TouchableOpacity>
 					{!isAuthenticated && (
-						<TouchableOpacity
-							style={styles.entrarBtn}
-							activeOpacity={0.8}
-							onPress={() => requireAuth(() => {})}
-						>
+						<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8} onPress={() => requireAuth(() => {})}>
 							<Text style={styles.entrarText}>Entrar</Text>
 						</TouchableOpacity>
 					)}
@@ -75,12 +67,7 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 						activeOpacity={0.7}
 					>
 						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text
-							style={[
-								styles.categoryLabel,
-								activeCategory === 'cassino' && styles.categoryLabelActive,
-							]}
-						>
+						<Text style={[styles.categoryLabel, activeCategory === 'cassino' && styles.categoryLabelActive]}>
 							Cassino
 						</Text>
 					</TouchableOpacity>
@@ -91,12 +78,7 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 						activeOpacity={0.7}
 					>
 						<Image source={SOCCER_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text
-							style={[
-								styles.categoryLabel,
-								activeCategory === 'esportes' && styles.categoryLabelActive,
-							]}
-						>
+						<Text style={[styles.categoryLabel, activeCategory === 'esportes' && styles.categoryLabelActive]}>
 							Esportes
 						</Text>
 					</TouchableOpacity>
