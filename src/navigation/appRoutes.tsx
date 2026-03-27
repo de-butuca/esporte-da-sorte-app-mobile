@@ -3,11 +3,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { ButtonBase } from '@/components/Button';
 import { useAppNavigation } from './hooks';
-import { lightColors } from '@/theme/design-tokens';
+import { lightColors } from '@/stampd.config';
 import HomeScreen from '@/screens/home/view';
 import GameHomeScreen from '@/screens/game-home/view';
 import LoginScreen from '@/screens/login/login.view';
 import RegisterScreen from '@/screens/register/register.view';
+import PromotionsScreen from '@/screens/promotions/view';
+import SearchScreen from '@/screens/search/view';
+import SupportScreen from '@/screens/support/view';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +25,30 @@ export function AppStack() {
 			}}
 		>
 			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+			<Stack.Screen
+				name="Search"
+				component={SearchScreen}
+				options={{
+					headerShown: false,
+					contentStyle: { backgroundColor: lightColors.background },
+				}}
+			/>
+			<Stack.Screen
+				name="Promotions"
+				component={PromotionsScreen}
+				options={{
+					headerShown: false,
+					contentStyle: { backgroundColor: lightColors.background },
+				}}
+			/>
+			<Stack.Screen
+				name="Support"
+				component={SupportScreen}
+				options={{
+					headerShown: false,
+					contentStyle: { backgroundColor: lightColors.background },
+				}}
+			/>
 			<Stack.Screen
 				name="GameHome"
 				component={GameHomeScreen}

@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/theme/design-tokens';
-import { Search, Settings } from 'lucide-react-native';
+import { fontFamily, lightColors } from '@/stampd.config';
+import { Menu, Search, Settings } from 'lucide-react-native';
+import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -13,26 +15,33 @@ import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
 
 const EXPANDED_HEIGHT = RFValue(62);
 
-type CategoryTab = 'cassino' | 'esportes';
+export type CategoryTab = 'cassino' | 'esportes';
 
 interface HomeHeaderProps {
 	scrollY: SharedValue<number>;
-	onCategoryChange?: (category: CategoryTab) => void;
+	activeCategory: CategoryTab;
+	onCategoryChange: (category: CategoryTab) => void;
 }
 
-export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
+export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
-	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
+	const navigation = useAppNavigation();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
+	const { open: openSidebar } = useSidebar();
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => {
-		setActiveCategory(category);
-		onCategoryChange?.(category);
+		onCategoryChange(category);
 	}, [onCategoryChange]);
 
 	const handleLogin = useCallback(() => {
-		requireAuth(() => {});
+		requireAuth(() => { });
 	}, [requireAuth]);
+
+	const handleSearchPress = useCallback(() => {
+		navigation.navigate('Search', {
+			initialSportSlug: activeCategory === 'esportes' ? 'futebol' : undefined,
+		});
+	}, [activeCategory, navigation]);
 
 	const wrapperStyle = useAnimatedStyle(() => {
 		const progress = interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP);

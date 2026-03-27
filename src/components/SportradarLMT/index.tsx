@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
-import { lightColors } from "@/theme/design-tokens";
+import { lightColors } from "@/stampd.config";
 
 const SR_TOKEN = "7b6af8136bd66719bdff2667482b19ce";
 

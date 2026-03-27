@@ -2,53 +2,16 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
-import { useAppNavigation } from '@/navigation/hooks';
-import { useAuthGuard } from '@/core/auth/useAuthGuard';
-import { lightColors } from '@/theme/design-tokens';
-import { HomeHeader } from './components/HomeHeader';
-import { BannerCarousel } from './components/BannerCarousel';
-import { SectionHeader } from './components/SectionHeader';
-import { GameRow } from './components/GameRow';
-import { PromoBanner } from './components/PromoBanner';
+import { lightColors } from '@/stampd.config';
+import { HomeHeader, CategoryTab } from './Pages/homeCassino/components/HomeHeader';
 import { BottomNavBar, NavTab } from '@/components/BottomNavBar';
-
-const GAME_THUMB_1 = require('@assets/images/games/game-thumbnail-1.png');
-const GAME_THUMB_2 = require('@assets/images/games/game-thumbnail-2.png');
-const GAME_THUMB_3 = require('@assets/images/games/game-thumbnail-3.png');
-
-const LIVE_GAMES = [
-	{ id: '1', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
-	{ id: '2', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
-	{ id: '3', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
-	{ id: '4', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
-	{ id: '5', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
-];
-
-const TRENDING_GAMES = [
-	{ id: '1', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
-	{ id: '2', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
-	{ id: '3', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
-	{ id: '4', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
-];
-
-const NEW_GAMES = [
-	{ id: '1', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
-	{ id: '2', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
-	{ id: '3', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
-	{ id: '4', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
-];
+import { HomeCassino } from './Pages/homeCassino/view';
+import { HomeEsportes } from './Pages/homeEsportes/view';
 
 export default function HomeScreen() {
 	const [activeTab, setActiveTab] = useState<NavTab>('home');
+	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
 	const scrollY = useSharedValue(0);
-	const { navigate } = useAppNavigation();
-	const { requireAuth } = useAuthGuard();
-
-	const handleGamePress = useCallback((gameId: string) => {
-		requireAuth(() => {
-			if (__DEV__) console.log('Opening game:', gameId);
-		});
-	}, [requireAuth]);
 
 	const scrollHandler = useAnimatedScrollHandler({
 		onScroll: (event) => {
@@ -56,15 +19,17 @@ export default function HomeScreen() {
 		},
 	});
 
-	const handleCategoryChange = useCallback((category: 'cassino' | 'esportes') => {
-		if (category === 'esportes') {
-			navigate('GameHome');
-		}
-	}, [navigate]);
+	const handleCategoryChange = useCallback(
+		(category: CategoryTab) => {
+			setActiveCategory(category);
+			scrollY.value = 0;
+		},
+		[scrollY]
+	);
 
 	return (
 		<View style={styles.root}>
-			<HomeHeader scrollY={scrollY} onCategoryChange={handleCategoryChange} />
+			<HomeHeader scrollY={scrollY} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
 
 			<Animated.ScrollView
 				style={styles.scroll}

@@ -1,0 +1,114 @@
+import { StyleSheet, View } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { BannerCarousel } from './components/BannerCarousel';
+import { GameRow } from './components/GameRow';
+import { PromoBanner } from './components/PromoBanner';
+import { SectionHeader } from './components/SectionHeader';
+import { lightColors } from '@/stampd.config';
+import { useAuthGuard } from '@/core/auth/useAuthGuard';
+import { useCallback } from 'react';
+
+const GAME_THUMB_1 = require('@assets/images/games/game-thumbnail-1.png');
+const GAME_THUMB_2 = require('@assets/images/games/game-thumbnail-2.png');
+const GAME_THUMB_3 = require('@assets/images/games/game-thumbnail-3.png');
+
+const LIVE_GAMES = [
+	{ id: '1', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '2', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '3', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '4', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '5', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+];
+
+const TRENDING_GAMES = [
+	{ id: '1', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '2', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '3', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '4', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+];
+
+const NEW_GAMES = [
+	{
+		id: '1',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
+	{
+		id: '2',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
+	{
+		id: '3',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
+	{
+		id: '4',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
+];
+
+export function HomeCassino() {
+	const { requireAuth } = useAuthGuard();
+
+	const handleGamePress = useCallback(
+		(gameId: string) => {
+			requireAuth(() => {
+				if (__DEV__) console.log('Opening game:', gameId);
+			});
+		},
+		[requireAuth]
+	);
+	return (
+		<>
+			<BannerCarousel />
+			<View style={styles.section}>
+				<SectionHeader title="Ao vivo" count={12} hasLive />
+				<GameRow games={LIVE_GAMES} cardWidth={RFValue(95)} onGamePress={handleGamePress} />
+			</View>
+			<View style={styles.section}>
+				<SectionHeader title="Cassino em alta" count={12} />
+				<GameRow games={TRENDING_GAMES} onGamePress={handleGamePress} />
+			</View>
+			<PromoBanner />
+			<View style={styles.section}>
+				<SectionHeader title="Novos cassinos" count={12} />
+				<GameRow games={NEW_GAMES} onGamePress={handleGamePress} />
+			</View>
+			<View style={styles.bottomSpacer} />
+		</>
+	);
+}
+const styles = StyleSheet.create({
+	root: {
+		flex: 1,
+		backgroundColor: lightColors.background,
+	},
+	scroll: {
+		flex: 1,
+	},
+	scrollContent: {
+		gap: RFValue(20),
+		paddingTop: RFValue(20),
+	},
+	section: {
+		gap: RFValue(12),
+	},
+	bottomSpacer: {
+		height: RFValue(16),
+	},
+});

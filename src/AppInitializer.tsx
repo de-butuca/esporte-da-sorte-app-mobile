@@ -8,7 +8,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { InteractionManager, Platform, StyleSheet, View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
-import { lightColors } from './theme/design-tokens';
+import { lightColors } from './stampd.config';
 import AnimatedSplash from './components/AnimatedSplash';
 import {
 	requestNotificationPermissions,

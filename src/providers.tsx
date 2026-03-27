@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ToastProvider } from './contexts/Toast/ToastProvider';
 import { ApiRepositoryProvider } from './contexts/ApiRepositoryContext';
+import { SidebarProvider } from './contexts/Sidebar/SidebarProvider';
 import { config } from './stampd.config';
 
 const queryClient = new QueryClient();
@@ -26,7 +27,9 @@ export function AppProviders({ children }: IAppProvidersProps) {
 						<NavigationContainer>
 							<ApiRepositoryProvider>
 								<ToastProvider>
+									<SidebarProvider>
 									<AppContent>{children}</AppContent>
+								</SidebarProvider>
 								</ToastProvider>
 							</ApiRepositoryProvider>
 						</NavigationContainer>

@@ -4,6 +4,9 @@ import type { NativeStackNavigationProp, NativeStackScreenProps } from '@react-n
 // páginas principais
 export type RootStackParamList = {
 	Home: undefined;
+	Search: { initialSportSlug?: string } | undefined;
+	Promotions: undefined;
+	Support: undefined;
 	GameHome: undefined;
 	Login: undefined;
 	Register: undefined;
