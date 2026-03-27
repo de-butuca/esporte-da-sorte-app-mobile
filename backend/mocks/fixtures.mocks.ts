@@ -21,6 +21,7 @@ import {
 const now = new Date();
 const inTwoHours = new Date(now.getTime() + 2 * 60 * 60 * 1000).toISOString();
 const inFourHours = new Date(now.getTime() + 4 * 60 * 60 * 1000).toISOString();
+const inSixHours = new Date(now.getTime() + 6 * 60 * 60 * 1000).toISOString();
 const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
 
 // ---- Fixture Odds ----
@@ -204,6 +205,57 @@ const mockFixtures: Fixture[] = [
       },
     ],
   },
+  {
+    fId: 5501004,
+    fsd: inSixHours,
+    cshOut: true,
+    ante: false,
+    hcId: 2007,
+    hcN: 'Corinthians',
+    acId: 2008,
+    acN: 'Atletico Mineiro',
+    lbO: false,
+    lSt: false,
+    vld: true,
+    frz: false,
+    fDS: 26,
+    xid: 'sr:match:42837294',
+    btgs: mockFixtureBtgs,
+  },
+  {
+    fId: 5501005,
+    fsd: tomorrow,
+    cshOut: true,
+    ante: false,
+    hcId: 2009,
+    hcN: 'Manchester City',
+    acId: 2010,
+    acN: 'Liverpool',
+    lbO: false,
+    lSt: false,
+    vld: true,
+    frz: false,
+    fDS: 31,
+    xid: 'sr:match:42837295',
+    btgs: mockFixtureBtgs,
+  },
+  {
+    fId: 5501006,
+    fsd: tomorrow,
+    cshOut: true,
+    ante: false,
+    hcId: 2011,
+    hcN: 'River Plate',
+    acId: 2012,
+    acN: 'Boca Juniors',
+    lbO: false,
+    lSt: false,
+    vld: true,
+    frz: false,
+    fDS: 18,
+    xid: 'sr:match:42837296',
+    btgs: mockFixtureBtgs,
+  },
 ];
 
 // ---- Seasons ----
@@ -228,6 +280,33 @@ const mockSeasons: Season[] = [
     seaSURL: 'la-liga',
     fs: [mockFixtures[1]],
   },
+  {
+    sId: 30004,
+    lId: 4004,
+    seaN: 'Copa do Brasil 2026',
+    cshOut: true,
+    lName: 'Copa do Brasil',
+    seaSURL: 'copa-do-brasil',
+    fs: [mockFixtures[3]],
+  },
+  {
+    sId: 30005,
+    lId: 4005,
+    seaN: 'Premier League 2025/26',
+    cshOut: true,
+    lName: 'Premier League',
+    seaSURL: 'premier-league',
+    fs: [mockFixtures[4]],
+  },
+  {
+    sId: 30006,
+    lId: 4006,
+    seaN: 'Libertadores 2026',
+    cshOut: true,
+    lName: 'Libertadores',
+    seaSURL: 'libertadores',
+    fs: [mockFixtures[5]],
+  },
 ];
 
 // ---- Categories ----
@@ -239,7 +318,7 @@ const mockCategories: Category[] = [
     cN: 'Brasil',
     iso: 'BR',
     ord: 1,
-    sns: [mockSeasons[0]],
+    sns: [mockSeasons[0], mockSeasons[2]],
     cSURL: 'brasil',
   },
   {
@@ -249,6 +328,22 @@ const mockCategories: Category[] = [
     ord: 2,
     sns: [mockSeasons[1]],
     cSURL: 'espanha',
+  },
+  {
+    cId: 702,
+    cN: 'Inglaterra',
+    iso: 'GB',
+    ord: 3,
+    sns: [mockSeasons[3]],
+    cSURL: 'inglaterra',
+  },
+  {
+    cId: 703,
+    cN: 'America do Sul',
+    iso: 'SA',
+    ord: 4,
+    sns: [mockSeasons[4]],
+    cSURL: 'america-do-sul',
   },
 ];
 

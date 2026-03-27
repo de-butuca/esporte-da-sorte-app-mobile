@@ -5,6 +5,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily, lightColors } from '@/stampd.config';
 import { Menu, Search, Settings } from 'lucide-react-native';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -24,6 +25,7 @@ interface HomeHeaderProps {
 
 export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
+	const navigation = useAppNavigation();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
 	const { open: openSidebar } = useSidebar();
 
@@ -34,6 +36,12 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	const handleLogin = useCallback(() => {
 		requireAuth(() => {});
 	}, [requireAuth]);
+
+	const handleSearchPress = useCallback(() => {
+		navigation.navigate('Search', {
+			initialSportSlug: activeCategory === 'esportes' ? 'futebol' : undefined,
+		});
+	}, [activeCategory, navigation]);
 
 	const wrapperStyle = useAnimatedStyle(() => {
 		const progress = interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP);
@@ -57,7 +65,7 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 				<Logo width={RFValue(80)} height={RFValue(28)} />
 
 				<View style={styles.actions}>
-					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
+					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7} onPress={handleSearchPress}>
 						<Search size={RFValue(20)} color={lightColors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>

@@ -56,7 +56,7 @@ export default function LoginScreen() {
 	} = useLoginViewModel();
 
 	const containerStyle = useMemo(
-		() => [styles.container, { paddingTop: insets.top }],
+		() => [styles.container, { paddingTop: insets.top + RFValue(10) }],
 		[insets.top],
 	);
 	const bottomCtaStyle = useMemo(
