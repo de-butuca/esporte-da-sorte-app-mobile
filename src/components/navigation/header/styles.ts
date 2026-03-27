@@ -1,4 +1,6 @@
-import { Styled } from '@/theme/useStyled';
+import { shadows } from '@/theme/design-tokens';
+import { Styled } from 'stampd/styled';
+
 const Container = Styled.View({
 	style: ({ theme }) => ({
 		width: '100%',
@@ -7,6 +9,7 @@ const Container = Styled.View({
 		height: 60,
 	}),
 });
+
 const ContainerBackIcon = Styled.TouchableOpacity({
 	style: ({ theme }) => ({
 		position: 'absolute',
@@ -17,11 +20,11 @@ const ContainerBackIcon = Styled.TouchableOpacity({
 });
 
 const Body = Styled.View({
-	style: () => ({
+	style: {
 		flexDirection: 'row',
 		width: '100%',
 		alignItems: 'center',
-	}),
+	},
 });
 
 const BodyStart = Styled.View({
@@ -34,28 +37,27 @@ const BodyStart = Styled.View({
 });
 
 const BodyMiddle = Styled.View({
-	style: () => ({
+	style: {
 		width: '50%',
 		justifyContent: 'center',
 		alignItems: 'center',
-	}),
+	},
 });
 
 const BodyEnd = Styled.View({
-	style: () => ({
+	style: {
 		width: '25%',
 		justifyContent: 'center',
 		alignItems: 'flex-end',
-	}),
+	},
 });
 
 const Logo = Styled.Image({
-	style: ({ theme }) => ({
+	style: {
 		height: 40,
 		width: 40,
 		backgroundColor: 'red',
-		// marginBottom: 40,
-	}),
+	},
 	attrs: {
 		resizeMode: 'contain',
 	},
@@ -64,7 +66,7 @@ const Logo = Styled.Image({
 const Text = Styled.Text({
 	style: ({ theme }) => ({
 		color: theme.colors.onBackground,
-		fontSize: theme.typography.text3xl,
+		fontSize: theme.fonts.sizes.xl3,
 	}),
 });
 

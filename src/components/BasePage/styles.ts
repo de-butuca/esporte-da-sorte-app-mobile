@@ -1,4 +1,4 @@
-import { Styled } from "@/theme/useStyled"
+import { Styled } from 'stampd/styled'
 
 const ContainerView = Styled.View({
 	style: ({ theme }) => ({

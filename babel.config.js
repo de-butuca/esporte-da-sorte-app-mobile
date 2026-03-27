@@ -50,7 +50,7 @@ const workletsPlugin = ['react-native-worklets/plugin', workletsPluginOptions];
  * Plugins
  * ========================================
  */
-const plugins = [moduleResolverPlugin, workletsPlugin];
+const plugins = [moduleResolverPlugin, workletsPlugin, 'module:stampd'];
 
 /** @type {import('@babel/core').ConfigFunction} */
 module.exports = function (api) {

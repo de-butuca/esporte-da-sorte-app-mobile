@@ -1,4 +1,5 @@
-import { Styled } from '@/theme/useStyled';
+import { shadows } from '@/theme/design-tokens';
+import { Styled } from 'stampd/styled';
 
 const Container = Styled.TouchableOpacity({
 	style: ({ theme }) => ({
@@ -7,7 +8,7 @@ const Container = Styled.TouchableOpacity({
 		alignItems: 'center',
 		justifyContent: 'center',
 		alignSelf: 'flex-start',
-		...theme.shadows.level2,
+		...shadows.level2,
 	}),
 	attrs: {
 		activeOpacity: 0.8,
@@ -15,8 +16,8 @@ const Container = Styled.TouchableOpacity({
 	variants: {
 		size: {
 			sm: ({ theme }) => ({ paddingHorizontal: theme.size.s4, paddingVertical: theme.size.s2 }),
-			md: ({ theme }) => ({}),
-			lg: ({ theme }) => ({}),
+			md: () => ({}),
+			lg: () => ({}),
 			full: ({ theme }) => ({ padding: theme.size.s4, width: '100%' }),
 		},
 	},
@@ -25,8 +26,8 @@ const Container = Styled.TouchableOpacity({
 const Text = Styled.Text({
 	style: ({ theme }) => ({
 		color: theme.colors.onPrimary,
-		fontSize: theme.typography.textBase,
-		fontFamily: theme.typography.fontFamily.default.bold,
+		fontSize: theme.fonts.sizes.base,
+		fontFamily: theme.fonts.family.bold,
 	}),
 });
 

@@ -2,10 +2,10 @@ import { useAppNavigation } from '@/navigation/hooks';
 import React, { useCallback, useEffect } from 'react';
 import { HeaderStyles as HS } from './styles';
 import { ArrowLeft } from 'lucide-react-native';
-import { useTheme } from '@/theme/ThemeContext';
 import { Alert, BackHandler } from 'react-native';
 import Logo from '@assets/images/logo-square.svg';
 import { ButtonBase } from '@/components/Button';
+import { useStampdUI } from 'stampd/context';
 
 interface IHeaderRouterProps {
 	title?: string;
@@ -14,7 +14,7 @@ interface IHeaderRouterProps {
 
 export function HeaderRouter({ back, title }: IHeaderRouterProps) {
 	const navigation = useAppNavigation();
-	const { theme } = useTheme();
+	const { theme } = useStampdUI();
 
 	const handlerGoBack = useCallback(() => {
 		navigation.goBack();
