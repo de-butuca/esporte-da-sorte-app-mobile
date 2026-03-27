@@ -6,8 +6,9 @@ import {
 	Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import React, { useEffect, useState } from 'react';
-import { Platform, View } from 'react-native';
+import { InteractionManager, Platform, StyleSheet, View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
+import { lightColors } from './theme/design-tokens';
 import AnimatedSplash from './components/AnimatedSplash';
 import {
 	requestNotificationPermissions,
@@ -23,7 +24,7 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 	const [isReady, setIsReady] = useState(false);
 	const [splashDone, setSplashDone] = useState(false);
 	const [splashError, setSplashError] = useState(false);
-	const { loadSession } = useSessionStore();
+	const loadSession = useSessionStore((s) => s.loadSession);
 
 	const [fontsLoaded] = useFonts({
 		Inter_400Regular,
@@ -36,15 +37,18 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 		async function init() {
 			try {
 				await loadSession();
+			} catch (e) {
+				if (__DEV__) console.warn(e);
+			} finally {
+				setIsReady(true);
+			}
+
+			InteractionManager.runAfterInteractions(async () => {
 				if (Platform.OS === 'android') {
 					await requestNotificationPermissions();
 					setupAppLifecycleNotifications();
 				}
-			} catch (e) {
-				console.warn(e);
-			} finally {
-				setIsReady(true);
-			}
+			});
 		}
 
 		init();
@@ -65,11 +69,18 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 	}
 
 	if (!isReady || !fontsLoaded) {
-		return <View style={{ flex: 1, backgroundColor: '#023697' }} />;
+		return <View style={styles.loading} />;
 	}
 
 	return <>{children}</>;
 }
+
+const styles = StyleSheet.create({
+	loading: {
+		flex: 1,
+		backgroundColor: lightColors.primary,
+	},
+});
 
 // Simple error boundary
 class ErrorBoundary extends React.Component<{ children: React.ReactNode; onError: () => void }> {

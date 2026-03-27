@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
+import { lightColors } from "@/theme/design-tokens";
 
 const SR_TOKEN = "7b6af8136bd66719bdff2667482b19ce";
 
@@ -13,9 +14,9 @@ interface SportradarLMTProps {
 export function SportradarLMT({
   matchId,
   height = 300,
-  backgroundColor = "#01003A",
+  backgroundColor = lightColors.background,
 }: SportradarLMTProps) {
-  const widgetHtml = `<!DOCTYPE html>
+  const widgetHtml = useMemo(() => `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
@@ -54,10 +55,20 @@ SIR('addWidget', '#sr-widget', 'match.lmtPlus', {
 });
 </script>
 </body>
-</html>`;
+</html>`, [matchId, backgroundColor]);
+
+  const containerStyle = useMemo(
+    () => [styles.container, { height }],
+    [height],
+  );
+
+  const webviewStyle = useMemo(
+    () => [styles.webview, { backgroundColor }],
+    [backgroundColor],
+  );
 
   return (
-    <View style={[styles.container, { height }]}>
+    <View style={containerStyle}>
       <WebView
         source={{ html: widgetHtml }}
         javaScriptEnabled
@@ -68,7 +79,7 @@ SIR('addWidget', '#sr-widget', 'match.lmtPlus', {
         mediaPlaybackRequiresUserAction={false}
         scrollEnabled={false}
         userAgent="Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-        style={[styles.webview, { backgroundColor }]}
+        style={webviewStyle}
       />
     </View>
   );

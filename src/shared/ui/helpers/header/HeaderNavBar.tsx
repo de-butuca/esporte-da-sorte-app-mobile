@@ -1,9 +1,7 @@
-import { View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
-import React, { isValidElement } from "react";
+import { View, StyleSheet, SafeAreaView, useWindowDimensions } from "react-native";
+import React, { isValidElement, useMemo } from "react";
 import type { HeaderNavBarProps } from "../../types";
 import { BlurView } from "expo-blur";
-
-const WIDTH = Dimensions.get("window").width;
 
 export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({
   children,
@@ -13,6 +11,7 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({
   // @ts-ignore
   ...props
 }) => {
+  const { width: WIDTH } = useWindowDimensions();
   const childrenArray = React.Children.toArray(children).filter((child) =>
     isValidElement(child)
   );
@@ -59,15 +58,14 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({
     );
   };
 
+  const blurStyle = useMemo(
+    () => [styles.container, { height: headerHeight, width: WIDTH, backgroundColor: "transparent" }],
+    [headerHeight, WIDTH],
+  );
+
   return (
     <BlurView
-      style={[
-        styles.container,
-        {
-          height: headerHeight,
-          backgroundColor: "transparent",
-        },
-      ]}
+      style={blurStyle}
       intensity={intensity}
       tint={tint}
     >
@@ -80,7 +78,6 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: WIDTH,
     position: "absolute",
     top: 0,
     left: 0,

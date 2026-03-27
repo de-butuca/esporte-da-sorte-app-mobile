@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/theme/design-tokens';
 
 type BadgeType = 'live' | 'new' | 'none';
 
@@ -15,7 +16,7 @@ interface GameCardProps {
 	onPress?: () => void;
 }
 
-export function GameCard({
+export const GameCard = React.memo(function GameCard({
 	image,
 	name,
 	provider,
@@ -24,14 +25,17 @@ export function GameCard({
 	width = RFValue(130),
 	onPress,
 }: GameCardProps) {
+	const containerStyle = useMemo(() => [styles.container, { width }], [width]);
+	const thumbnailStyle = useMemo(() => [styles.thumbnail, { width }], [width]);
+
 	return (
 		<TouchableOpacity
-			style={[styles.container, { width }]}
+			style={containerStyle}
 			activeOpacity={0.8}
 			onPress={onPress}
 		>
-			<View style={[styles.thumbnail, { width }]}>
-				<Image source={image} style={styles.thumbnailImage} resizeMode="cover" />
+			<View style={thumbnailStyle}>
+				<Image source={image} style={styles.thumbnailImage} contentFit="cover" />
 				{badge === 'live' && (
 					<View style={[styles.badge, styles.badgeLive]}>
 						<View style={styles.liveIndicator} />
@@ -53,7 +57,7 @@ export function GameCard({
 			<Text style={styles.provider} numberOfLines={1}>{provider}</Text>
 		</TouchableOpacity>
 	);
-}
+});
 
 const styles = StyleSheet.create({
 	container: {
@@ -81,26 +85,26 @@ const styles = StyleSheet.create({
 		gap: RFValue(4),
 	},
 	badgeLive: {
-		backgroundColor: '#FF3C3C',
+		backgroundColor: lightColors.live,
 	},
 	liveIndicator: {
 		width: 5,
 		height: 5,
 		borderRadius: 3,
-		backgroundColor: '#fff',
+		backgroundColor: lightColors.textPrimary,
 	},
 	badgeLiveText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(9),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 	},
 	badgeNew: {
-		backgroundColor: '#38E67D',
+		backgroundColor: lightColors.accent,
 	},
 	badgeNewText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(9),
-		color: '#02003D',
+		color: lightColors.bgNav,
 	},
 	players: {
 		position: 'absolute',
@@ -114,16 +118,16 @@ const styles = StyleSheet.create({
 	playersText: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(8),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 	},
 	name: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(11),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 	},
 	provider: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(9),
-		color: '#A0A0C8',
+		color: lightColors.textMuted,
 	},
 });

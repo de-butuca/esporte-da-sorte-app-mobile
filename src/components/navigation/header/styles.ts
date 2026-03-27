@@ -56,7 +56,7 @@ const Logo = Styled.Image({
 	style: {
 		height: 40,
 		width: 40,
-		backgroundColor: 'red',
+		backgroundColor: 'transparent',
 	},
 	attrs: {
 		resizeMode: 'contain',

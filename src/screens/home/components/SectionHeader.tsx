@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/theme/design-tokens';
 
 interface SectionHeaderProps {
 	title: string;
@@ -42,16 +42,16 @@ const styles = StyleSheet.create({
 		width: RFValue(8),
 		height: RFValue(8),
 		borderRadius: RFValue(4),
-		backgroundColor: '#FF3C3C',
+		backgroundColor: lightColors.live,
 	},
 	title: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(18),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 	},
 	seeAll: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(13),
-		color: '#38E67D',
+		color: lightColors.accent,
 	},
 });

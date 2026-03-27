@@ -63,7 +63,7 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
   const targetIndexRef = useRef(0);
 
   const reportResult = useCallback(() => {
-    console.log(`[ROULETTE] targetIndex=${targetIndexRef.current}, prize="${items[targetIndexRef.current]?.label}"`);
+    if (__DEV__) console.log(`[ROULETTE] targetIndex=${targetIndexRef.current}, prize="${items[targetIndexRef.current]?.label}"`);
     onFinish(items[targetIndexRef.current]);
   }, [items, onFinish]);
 
