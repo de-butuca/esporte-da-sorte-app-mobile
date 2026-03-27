@@ -9,7 +9,6 @@ import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } f
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
-
 import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
 
 const EXPANDED_HEIGHT = RFValue(56);
