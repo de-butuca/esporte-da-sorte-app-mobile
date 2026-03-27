@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -13,21 +13,20 @@ import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
 
 const EXPANDED_HEIGHT = RFValue(72);
 
-type CategoryTab = 'cassino' | 'esportes';
+export type CategoryTab = 'cassino' | 'esportes';
 
 interface HomeHeaderProps {
 	scrollY: SharedValue<number>;
-	onCategoryChange?: (category: CategoryTab) => void;
+	activeCategory: CategoryTab;
+	onCategoryChange: (category: CategoryTab) => void;
 }
 
-export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
+export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
-	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
 	const { requireAuth, isAuthenticated } = useRequireAuth();
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => {
-		setActiveCategory(category);
-		onCategoryChange?.(category);
+		onCategoryChange(category);
 	}, [onCategoryChange]);
 
 	const handleLogin = useCallback(() => {
