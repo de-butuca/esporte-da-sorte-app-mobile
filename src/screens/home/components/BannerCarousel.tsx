@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
 	View,
 	Text,
@@ -10,7 +10,7 @@ import {
 	ImageBackground,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/theme/design-tokens';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -56,15 +56,15 @@ export function BannerCarousel() {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const flatListRef = useRef<FlatList>(null);
 
-	const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+	const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
 		const index = Math.round(e.nativeEvent.contentOffset.x / (BANNER_W + BANNER_GAP));
 		setActiveIndex(index);
-	};
+	}, []);
 
-	const renderBanner = ({ item }: { item: Banner }) => (
+	const renderBanner = useCallback(({ item }: { item: Banner }) => (
 		<View style={styles.bannerContainer}>
 			<LinearGradient
-				colors={['#023397', '#38E67D']}
+				colors={[lightColors.primary, lightColors.accent]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.banner}
@@ -80,7 +80,9 @@ export function BannerCarousel() {
 				/>
 			</LinearGradient>
 		</View>
-	);
+	), []);
+
+	const keyExtractor = useCallback((item: Banner) => item.id, []);
 
 	return (
 		<View style={styles.container}>
@@ -88,7 +90,7 @@ export function BannerCarousel() {
 				ref={flatListRef}
 				data={BANNERS}
 				renderItem={renderBanner}
-				keyExtractor={(item) => item.id}
+				keyExtractor={keyExtractor}
 				horizontal
 				pagingEnabled={false}
 				snapToInterval={BANNER_W + BANNER_GAP}
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
 	bannerTitle: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(26),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 		textTransform: 'uppercase',
 		lineHeight: RFValue(28),
 	},
@@ -166,7 +168,7 @@ const styles = StyleSheet.create({
 		height: RFValue(4),
 	},
 	dotActive: {
-		backgroundColor: '#38E67D',
+		backgroundColor: lightColors.accent,
 		width: RFValue(20),
 	},
 	dotInactive: {

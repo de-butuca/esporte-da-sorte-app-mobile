@@ -5,7 +5,9 @@ import LottieView from "lottie-react-native";
 import { hideNativeSplash, getNativeAnimationStartTime } from "../native/NativeSplash";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
-const BG = "#023697";
+import { lightColors } from "@/theme/design-tokens";
+
+const BG = lightColors.primary;
 
 const LOTTIE_SOURCE = require("../../assets/images/icon-e-animated.json");
 

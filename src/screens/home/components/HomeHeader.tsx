@@ -1,20 +1,15 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/theme/design-tokens';
 import { Search, Settings } from 'lucide-react-native';
 import Logo from '@assets/images/logo-square.svg';
-import Animated, {
-	useAnimatedStyle,
-	SharedValue,
-	interpolate,
-	Extrapolation,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 
-const CASSINO_ICON = require('@assets/images/icons/cassino-coin-icon.png');
-const SOCCER_ICON = require('@assets/images/icons/soccer-ball-icon.png');
+import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
+import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
 
 const EXPANDED_HEIGHT = RFValue(72);
 
@@ -30,10 +25,14 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
 	const { requireAuth, isAuthenticated } = useRequireAuth();
 
-	const handleCategoryPress = (category: CategoryTab) => {
+	const handleCategoryPress = useCallback((category: CategoryTab) => {
 		setActiveCategory(category);
 		onCategoryChange?.(category);
-	};
+	}, [onCategoryChange]);
+
+	const handleLogin = useCallback(() => {
+		requireAuth(() => {});
+	}, [requireAuth]);
 
 	const wrapperStyle = useAnimatedStyle(() => {
 		const progress = interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP);
@@ -43,24 +42,25 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 		};
 	});
 
+	const containerStyle = useMemo(
+		() => [styles.container, { paddingTop: insets.top }],
+		[insets.top],
+	);
+
 	return (
-		<View style={[styles.container, { paddingTop: insets.top }]}>
+		<View style={containerStyle}>
 			<View style={styles.topRow}>
 				<Logo width={RFValue(80)} height={RFValue(28)} />
 
 				<View style={styles.actions}>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Search size={RFValue(20)} color="#fff" strokeWidth={2} />
+						<Search size={RFValue(20)} color={lightColors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Settings size={RFValue(20)} color="#fff" strokeWidth={2} />
+						<Settings size={RFValue(20)} color={lightColors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					{!isAuthenticated && (
-						<TouchableOpacity
-							style={styles.entrarBtn}
-							activeOpacity={0.8}
-							onPress={() => requireAuth(() => {})}
-						>
+						<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8} onPress={handleLogin}>
 							<Text style={styles.entrarText}>Entrar</Text>
 						</TouchableOpacity>
 					)}
@@ -75,12 +75,7 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 						activeOpacity={0.7}
 					>
 						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text
-							style={[
-								styles.categoryLabel,
-								activeCategory === 'cassino' && styles.categoryLabelActive,
-							]}
-						>
+						<Text style={[styles.categoryLabel, activeCategory === 'cassino' && styles.categoryLabelActive]}>
 							Cassino
 						</Text>
 					</TouchableOpacity>
@@ -91,12 +86,7 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 						activeOpacity={0.7}
 					>
 						<Image source={SOCCER_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text
-							style={[
-								styles.categoryLabel,
-								activeCategory === 'esportes' && styles.categoryLabelActive,
-							]}
-						>
+						<Text style={[styles.categoryLabel, activeCategory === 'esportes' && styles.categoryLabelActive]}>
 							Esportes
 						</Text>
 					</TouchableOpacity>
@@ -108,7 +98,7 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#01003A',
+		backgroundColor: lightColors.background,
 		paddingHorizontal: RFValue(20),
 		paddingBottom: RFValue(12),
 		shadowColor: '#000',
@@ -132,7 +122,7 @@ const styles = StyleSheet.create({
 		padding: RFValue(4),
 	},
 	entrarBtn: {
-		backgroundColor: '#38E67D',
+		backgroundColor: lightColors.accent,
 		paddingHorizontal: RFValue(20),
 		paddingVertical: RFValue(10),
 		borderRadius: RFValue(10),
@@ -140,7 +130,7 @@ const styles = StyleSheet.create({
 	entrarText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(12),
-		color: '#02003D',
+		color: lightColors.bgNav,
 		letterSpacing: 0.1,
 	},
 	tabsWrapper: {
@@ -163,7 +153,7 @@ const styles = StyleSheet.create({
 		gap: RFValue(8),
 	},
 	categoryTabActive: {
-		backgroundColor: '#02003D',
+		backgroundColor: lightColors.bgNav,
 	},
 	categoryIcon: {
 		width: RFValue(16),
@@ -172,11 +162,11 @@ const styles = StyleSheet.create({
 	categoryLabel: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(12),
-		color: '#A0A0C8',
+		color: lightColors.textMuted,
 		letterSpacing: 0.08,
 	},
 	categoryLabelActive: {
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 		fontFamily: fontFamily.bold,
 	},
 });

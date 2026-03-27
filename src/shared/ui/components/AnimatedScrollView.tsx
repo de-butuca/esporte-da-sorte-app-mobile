@@ -1,4 +1,4 @@
-import { Animated, ScrollView, View } from "react-native";
+import { Animated, ScrollView, StyleSheet, View } from "react-native";
 import React, { forwardRef } from "react";
 import { HEADER_HEIGHT, IMG_HEADER_HEIGHT } from "../constants";
 import { useAnimateScrollView } from "../hooks/useAnimatedScrollView";
@@ -40,7 +40,7 @@ export const AnimatedScrollView = forwardRef<
       useAnimateScrollView(imageHeight, disableScale);
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={scrollStyles.fill}>
         <Animated.ScrollView
           ref={ref}
           scrollEnabled={true}
@@ -86,3 +86,7 @@ export const AnimatedScrollView = forwardRef<
     );
   },
 );
+
+const scrollStyles = StyleSheet.create({
+  fill: { flex: 1 },
+});

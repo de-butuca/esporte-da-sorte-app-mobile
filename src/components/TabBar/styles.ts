@@ -11,7 +11,7 @@ export const stylesTabBar = StyleSheet.create({
 		height: 70,
 		backgroundColor: '#111',
 		borderRadius: 20,
-		width: `{${porcentagemWidth * 100}%}` as DimensionValue,
+		width: `${porcentagemWidth * 100}%` as DimensionValue,
 		overflow: 'hidden',
 	},
 

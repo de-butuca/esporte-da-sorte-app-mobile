@@ -12,15 +12,17 @@ interface IHeaderRouterProps {
 	back?: any;
 }
 
+const NOOP = () => {};
+
 export function HeaderRouter({ back, title }: IHeaderRouterProps) {
 	const navigation = useAppNavigation();
 	const { theme } = useStampdUI();
 
 	const handlerGoBack = useCallback(() => {
 		navigation.goBack();
-	}, []);
+	}, [navigation]);
 
-	const onBackPress = () => {
+	const onBackPress = useCallback(() => {
 		Alert.alert('Sair', 'Tem certeza que deseja voltar?', [
 			{ text: 'Cancelar', style: 'cancel' },
 			{
@@ -30,13 +32,13 @@ export function HeaderRouter({ back, title }: IHeaderRouterProps) {
 		]);
 
 		return true;
-	};
+	}, [navigation]);
 
 	useEffect(() => {
 		const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
 		return () => subscription.remove();
-	}, [navigation]);
+	}, [onBackPress]);
 
 	if (back)
 		return (
@@ -59,7 +61,7 @@ export function HeaderRouter({ back, title }: IHeaderRouterProps) {
 				<HS.BodyMiddle>{/* centro */}</HS.BodyMiddle>
 
 				<HS.BodyEnd>
-					<ButtonBase text="Entrar" onPress={() => {}} size="sm" />
+					<ButtonBase text="Entrar" onPress={NOOP} size="sm" />
 				</HS.BodyEnd>
 			</HS.Body>
 		</HS.Container>

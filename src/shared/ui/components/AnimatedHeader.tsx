@@ -8,6 +8,9 @@ import {
 import React from "react";
 import type { AnimatedHeaderProps } from "../types";
 
+const AnimatedImageBackground =
+  Animated.createAnimatedComponent(ImageBackground);
+
 export const AnimatedHeader = ({
   HeaderComponent,
   headerImage,
@@ -19,8 +22,6 @@ export const AnimatedHeader = ({
   OverlayHeaderContent,
 }: AnimatedHeaderProps) => {
   const { width } = useWindowDimensions();
-  const AnimatedImageBackground =
-    Animated.createAnimatedComponent(ImageBackground);
   const opacity = translateYDown.interpolate({
     inputRange: [-imageHeight * 0.3, 0, imageHeight * 0.3],
     outputRange: [0, 1, 0],

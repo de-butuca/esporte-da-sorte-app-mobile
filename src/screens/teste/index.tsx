@@ -1,6 +1,6 @@
 import { Styled } from 'stampd/styled';
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { ButtonText, Label, Box, Button } from './styles';
 
 // BOX com variants
@@ -12,26 +12,16 @@ export function VariantTestScreen() {
 	const [variantIndex, setVariantIndex] = useState(0);
 	const [sizeIndex, setSizeIndex] = useState(0);
 
-	function changeVariant() {
+	const changeVariant = useCallback(() => {
 		setVariantIndex((prev) => (prev + 1) % variants.length);
 		setSizeIndex((prev) => (prev + 1) % sizes.length);
-	}
+	}, []);
 
 	const variant = variants[variantIndex];
 	const size = sizes[sizeIndex];
 
-	useEffect(() => {
-		return () => {};
-	}, []);
-
 	return (
-		<View
-			style={{
-				flex: 1,
-				alignItems: 'center',
-				justifyContent: 'center',
-			}}
-		>
+		<View style={styles.container}>
 			<Box douglas={variant} size="md">
 				<Label size={size}>
 					{variant.toUpperCase()} - {size.toUpperCase()}
@@ -44,3 +34,11 @@ export function VariantTestScreen() {
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+});

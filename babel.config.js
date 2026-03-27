@@ -1,25 +1,12 @@
-/**
- * ========================================
- * Presets
- * ========================================
- */
 const presets = ['babel-preset-expo'];
 
-/**
- * ========================================
- * Module Resolver
- * ========================================
- */
 const moduleResolverPlugin = [
 	'module-resolver',
 	{
 		root: ['./src'],
-
 		extensions: ['.js', '.jsx', '.ts', '.tsx'],
-
 		alias: {
 			'@': './src',
-
 			'@assets': './assets',
 			'@components': './src/components',
 			'@config': './src/config',
@@ -33,31 +20,15 @@ const moduleResolverPlugin = [
 	},
 ];
 
-/**
- * ========================================
- * React Native Worklets
- * ========================================
- * @type {import('react-native-worklets/plugin').PluginOptions}
- */
-const workletsPluginOptions = {
-	// coloque opções aqui se necessário
-};
-
-const workletsPlugin = ['react-native-worklets/plugin', workletsPluginOptions];
-
-/**
- * ========================================
- * Plugins
- * ========================================
- */
-const plugins = [moduleResolverPlugin, workletsPlugin, 'module:stampd'];
-
-/** @type {import('@babel/core').ConfigFunction} */
 module.exports = function (api) {
 	api.cache(true);
 
 	return {
-		presets: presets,
-		plugins: plugins,
+		presets,
+		plugins: [
+			moduleResolverPlugin,
+			'module:stampd',
+			'react-native-reanimated/plugin', // 👈 SEMPRE O ÚLTIMO
+		],
 	};
 };

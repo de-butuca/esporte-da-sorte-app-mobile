@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/theme/design-tokens';
 import { House, Zap, Dice5, ClipboardList, Menu } from 'lucide-react-native';
 
 export type NavTab = 'home' | 'live' | 'cassino' | 'apostas' | 'menu';
@@ -20,36 +20,55 @@ const TABS: { key: NavTab; label: string; Icon: typeof House }[] = [
 	{ key: 'menu', label: 'Menu', Icon: Menu },
 ];
 
-export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
-	const insets = useSafeAreaInsets();
+interface TabItemProps {
+	tab: typeof TABS[number];
+	isActive: boolean;
+	onPress: (key: NavTab) => void;
+}
+
+const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemProps) {
+	const color = isActive ? lightColors.accent : lightColors.textMuted;
+	const handlePress = useCallback(() => onPress(tab.key), [onPress, tab.key]);
 
 	return (
-		<View style={[styles.container, { paddingBottom: Math.max(insets.bottom, 8) }]}>
+		<TouchableOpacity
+			style={styles.tab}
+			onPress={handlePress}
+			activeOpacity={0.7}
+		>
+			<tab.Icon size={RFValue(20)} color={color} strokeWidth={isActive ? 2.2 : 1.5} />
+			<Text
+				style={[
+					styles.label,
+					{ color, fontFamily: isActive ? fontFamily.bold : fontFamily.regular },
+				]}
+			>
+				{tab.label}
+			</Text>
+			{isActive && <View style={styles.activeDot} />}
+		</TouchableOpacity>
+	);
+});
+
+export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
+	const insets = useSafeAreaInsets();
+	const containerStyle = useMemo(
+		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8) }],
+		[insets.bottom],
+	);
+
+	return (
+		<View style={containerStyle}>
 			<View style={styles.divider} />
 			<View style={styles.tabRow}>
-				{TABS.map((tab) => {
-					const isActive = activeTab === tab.key;
-					const color = isActive ? '#38E67D' : '#A0A0C8';
-					return (
-						<TouchableOpacity
-							key={tab.key}
-							style={styles.tab}
-							onPress={() => onTabPress(tab.key)}
-							activeOpacity={0.7}
-						>
-							<tab.Icon size={RFValue(20)} color={color} strokeWidth={isActive ? 2.2 : 1.5} />
-							<Text
-								style={[
-									styles.label,
-									{ color, fontFamily: isActive ? fontFamily.bold : fontFamily.regular },
-								]}
-							>
-								{tab.label}
-							</Text>
-							{isActive && <View style={styles.activeDot} />}
-						</TouchableOpacity>
-					);
-				})}
+				{TABS.map((tab) => (
+					<TabItem
+						key={tab.key}
+						tab={tab}
+						isActive={activeTab === tab.key}
+						onPress={onTabPress}
+					/>
+				))}
 			</View>
 		</View>
 	);
@@ -57,7 +76,7 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#05032D',
+		backgroundColor: lightColors.bgNav,
 	},
 	divider: {
 		height: 1,
@@ -85,7 +104,7 @@ const styles = StyleSheet.create({
 		width: 4,
 		height: 4,
 		borderRadius: 2,
-		backgroundColor: '#38E67D',
+		backgroundColor: lightColors.accent,
 		marginTop: 2,
 	},
 });

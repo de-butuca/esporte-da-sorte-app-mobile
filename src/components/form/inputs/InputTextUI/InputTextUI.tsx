@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TextInputProps, TouchableOpacity } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 
@@ -28,6 +28,7 @@ export function InputText({
 	const { theme } = useStampdUI();
 
 	const [secure, setSecure] = useState(secureTextEntry);
+	const toggleSecure = useCallback(() => setSecure(s => !s), []);
 
 	const colors = theme.colors;
 
@@ -53,7 +54,7 @@ export function InputText({
 				/>
 
 				{secureTextEntry && !multiline && (
-					<TouchableOpacity onPress={() => setSecure(!secure)}>
+					<TouchableOpacity onPress={toggleSecure}>
 						{secure ? (
 							<EyeOff color={colors.inputIcon} size={theme.size.s6} />
 						) : (
