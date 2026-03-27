@@ -1,4 +1,4 @@
-import { NativeModules, Platform, findNodeHandle } from "react-native";
+import { NativeModules } from "react-native";
 
 const NativeSplashModule =
   NativeModules.NativeSplashModule ?? null;

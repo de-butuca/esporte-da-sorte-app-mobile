@@ -6,7 +6,7 @@ import {
 	Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
 import AnimatedSplash from './components/AnimatedSplash';
 import {
@@ -36,8 +36,10 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 		async function init() {
 			try {
 				await loadSession();
-				await requestNotificationPermissions();
-				setupAppLifecycleNotifications();
+				if (Platform.OS === 'android') {
+					await requestNotificationPermissions();
+					setupAppLifecycleNotifications();
+				}
 			} catch (e) {
 				console.warn(e);
 			} finally {
@@ -48,7 +50,9 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 		init();
 
 		return () => {
-			cleanupNotifications();
+			if (Platform.OS === 'android') {
+				cleanupNotifications();
+			}
 		};
 	}, []);
 

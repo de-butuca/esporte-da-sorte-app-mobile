@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily } from '@/theme/design-tokens';
-import { Search, TicketPercent } from 'lucide-react-native';
+import { Search, Settings } from 'lucide-react-native';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, {
 	useAnimatedStyle,
@@ -16,7 +16,6 @@ import { useRequireAuth } from '@/hooks/useRequireAuth';
 const CASSINO_ICON = require('@assets/images/cassino-coin-icon.png');
 const SOCCER_ICON = require('@assets/images/soccer-ball-icon.png');
 
-// Pre-calculate outside worklet
 const EXPANDED_HEIGHT = RFValue(56);
 
 type CategoryTab = 'cassino' | 'esportes';
@@ -54,7 +53,7 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 						<Search size={RFValue(20)} color="#fff" strokeWidth={2} />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<TicketPercent size={RFValue(20)} color="#fff" strokeWidth={2} />
+						<Settings size={RFValue(20)} color="#fff" strokeWidth={2} />
 					</TouchableOpacity>
 					{!isAuthenticated && (
 						<TouchableOpacity
@@ -113,10 +112,10 @@ const styles = StyleSheet.create({
 		paddingHorizontal: RFValue(20),
 		paddingBottom: RFValue(12),
 		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 8 },
+		shadowOffset: { width: 0, height: 4 },
 		shadowOpacity: 0.3,
-		shadowRadius: 12,
-		elevation: 12,
+		shadowRadius: 4,
+		elevation: 8,
 	},
 	topRow: {
 		flexDirection: 'row',
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
 	actions: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		gap: RFValue(14),
+		gap: RFValue(16),
 	},
 	iconBtn: {
 		padding: RFValue(4),
@@ -140,16 +139,17 @@ const styles = StyleSheet.create({
 	},
 	entrarText: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(13),
-		color: '#01003A',
+		fontSize: RFValue(12),
+		color: '#02003D',
+		letterSpacing: 0.1,
 	},
 	tabsWrapper: {
 		overflow: 'hidden',
 	},
 	categoryTabs: {
 		flexDirection: 'row',
-		backgroundColor: 'rgba(255,255,255,0.15)',
-		borderRadius: RFValue(10),
+		backgroundColor: 'rgba(255,255,255,0.08)',
+		borderRadius: RFValue(12),
 		padding: RFValue(4),
 		marginTop: RFValue(16),
 	},
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingVertical: RFValue(8),
+		paddingVertical: RFValue(10),
 		borderRadius: RFValue(10),
 		gap: RFValue(8),
 	},
@@ -171,11 +171,12 @@ const styles = StyleSheet.create({
 	},
 	categoryLabel: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(11),
-		color: '#A0A0B0',
+		fontSize: RFValue(12),
+		color: '#A0A0C8',
 		letterSpacing: 0.08,
 	},
 	categoryLabelActive: {
 		color: '#FFFFFF',
+		fontFamily: fontFamily.bold,
 	},
 });
