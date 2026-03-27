@@ -4,11 +4,13 @@ import {
 	Platform,
 	RefreshControl,
 	ScrollViewProps,
+	StyleSheet,
 	TouchableWithoutFeedback,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BPS } from './styles';
 import { useStampdUI } from 'stampd/context';
+import { useMemo } from 'react';
 
 type BasePageType = 'view' | 'scroll' | 'form';
 
@@ -33,11 +35,19 @@ export function BasePage({
 }: BasePageProps) {
 	const { theme } = useStampdUI();
 
+	const paddingStyle = useMemo(() => ({ padding }), [padding]);
+	const formStyle = useMemo(() => ({ flex: 1, padding }), [padding]);
+	const scrollContentStyle = useMemo(() => ({ padding }), [padding]);
+	const safeAreaStyle = useMemo(
+		() => [baseStyles.fill, { backgroundColor: theme.colors.background }],
+		[theme.colors.background],
+	);
+
 	const content = (() => {
 		if (type === 'scroll') {
 			return (
 				<BPS.ScrollView
-					contentContainerStyle={{ padding }}
+					contentContainerStyle={scrollContentStyle}
 					refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : undefined}
 					keyboardShouldPersistTaps="handled"
 					{...scrollProps}
@@ -51,8 +61,8 @@ export function BasePage({
 			return (
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<BPS.KeyboardAvoidingView
-						behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
-						style={{ flex: 1, padding }}
+						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+						style={formStyle}
 						{...keyboardProps}
 					>
 						{children}
@@ -61,8 +71,12 @@ export function BasePage({
 			);
 		}
 
-		return <BPS.View style={{ padding }}>{children}</BPS.View>;
+		return <BPS.View style={paddingStyle}>{children}</BPS.View>;
 	})();
 
-	return <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>{content}</SafeAreaView>;
+	return <SafeAreaView style={safeAreaStyle}>{content}</SafeAreaView>;
 }
+
+const baseStyles = StyleSheet.create({
+	fill: { flex: 1 },
+});

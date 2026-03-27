@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
 import { useAppNavigation } from '@/navigation/hooks';
 import { useAuthGuard } from '@/core/auth/useAuthGuard';
+import { lightColors } from '@/theme/design-tokens';
 import { HomeHeader } from './components/HomeHeader';
 import { BannerCarousel } from './components/BannerCarousel';
 import { SectionHeader } from './components/SectionHeader';
@@ -43,11 +44,11 @@ export default function HomeScreen() {
 	const { navigate } = useAppNavigation();
 	const { requireAuth } = useAuthGuard();
 
-	const handleGamePress = (gameId: string) => {
+	const handleGamePress = useCallback((gameId: string) => {
 		requireAuth(() => {
-			console.log('Opening game:', gameId);
+			if (__DEV__) console.log('Opening game:', gameId);
 		});
-	};
+	}, [requireAuth]);
 
 	const scrollHandler = useAnimatedScrollHandler({
 		onScroll: (event) => {
@@ -55,11 +56,11 @@ export default function HomeScreen() {
 		},
 	});
 
-	const handleCategoryChange = (category: 'cassino' | 'esportes') => {
+	const handleCategoryChange = useCallback((category: 'cassino' | 'esportes') => {
 		if (category === 'esportes') {
 			navigate('GameHome');
 		}
-	};
+	}, [navigate]);
 
 	return (
 		<View style={styles.root}>
@@ -102,7 +103,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
 	root: {
 		flex: 1,
-		backgroundColor: '#01003A',
+		backgroundColor: lightColors.background,
 	},
 	scroll: {
 		flex: 1,

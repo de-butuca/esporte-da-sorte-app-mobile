@@ -31,5 +31,3 @@ export async function request<ResponseSuccess>(
     };
   }
 }
-
-request<{ arroz: 2 }>({ url: "", method: "get" });

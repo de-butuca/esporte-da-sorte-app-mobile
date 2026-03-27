@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { GameCard } from './GameCard';
@@ -22,7 +22,7 @@ interface GameRowProps {
 export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRowProps) {
 	const { guardNavigation } = useRequireAuth();
 
-	const handleGamePress = (game: Game) => {
+	const handleGamePress = useCallback((game: Game) => {
 		const category = game.badge === 'live' ? 'live' : 'casino';
 
 		guardNavigation(category, () => {
@@ -30,26 +30,30 @@ export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRo
 				onGamePress(game.id);
 			}
 		});
-	};
+	}, [guardNavigation, onGamePress]);
+
+	const renderItem = useCallback(({ item }: { item: Game }) => (
+		<GameCard
+			image={item.image}
+			name={item.name}
+			provider={item.provider}
+			badge={item.badge}
+			players={item.players}
+			width={cardWidth}
+			onPress={() => handleGamePress(item)}
+		/>
+	), [cardWidth, handleGamePress]);
+
+	const keyExtractor = useCallback((item: Game) => item.id, []);
 
 	return (
 		<FlatList
 			data={games}
-			keyExtractor={(item) => item.id}
+			keyExtractor={keyExtractor}
 			horizontal
 			showsHorizontalScrollIndicator={false}
 			contentContainerStyle={styles.content}
-			renderItem={({ item }) => (
-				<GameCard
-					image={item.image}
-					name={item.name}
-					provider={item.provider}
-					badge={item.badge}
-					players={item.players}
-					width={cardWidth}
-					onPress={() => handleGamePress(item)}
-				/>
-			)}
+			renderItem={renderItem}
 		/>
 	);
 }

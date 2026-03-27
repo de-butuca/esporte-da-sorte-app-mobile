@@ -1,19 +1,25 @@
 import { AppProviders } from './providers';
 import { RootNavigator } from './navigation/RootNavigator';
-import { VariantTestScreen } from './screens/teste';
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { AppInitializer } from './AppInitializer';
+import { lightColors } from './theme/design-tokens';
 
 export default function App() {
 	return (
-		<View style={{ flex: 1, backgroundColor: '#023697' }}>
+		<View style={styles.root}>
 			<AppInitializer>
 				<AppProviders>
-					{/* <VariantTestScreen /> */}
 					<RootNavigator />
 				</AppProviders>
 			</AppInitializer>
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	root: {
+		flex: 1,
+		backgroundColor: lightColors.primary,
+	},
+});

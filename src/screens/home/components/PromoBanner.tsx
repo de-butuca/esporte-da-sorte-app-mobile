@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/theme/design-tokens';
+import { fontFamily, lightColors } from '@/theme/design-tokens';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const PROMO_IMAGE = require('@assets/images/banners/banner-3.png');
@@ -10,7 +10,7 @@ export function PromoBanner() {
 	return (
 		<View style={styles.wrapper}>
 			<LinearGradient
-				colors={['#023397', '#38E67D']}
+				colors={[lightColors.primary, lightColors.accent]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.container}
@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
 	title: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(20),
-		color: '#FFFFFF',
+		color: lightColors.textPrimary,
 		lineHeight: RFValue(24),
 	},
 	button: {
-		backgroundColor: '#38E67D',
+		backgroundColor: lightColors.accent,
 		paddingHorizontal: RFValue(20),
 		paddingVertical: RFValue(10),
 		borderRadius: RFValue(10),
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(12),
-		color: '#02003D',
+		color: lightColors.bgNav,
 	},
 	image: {
 		width: RFValue(180),

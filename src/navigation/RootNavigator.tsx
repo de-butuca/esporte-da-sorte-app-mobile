@@ -1,12 +1,9 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { useEffect } from 'react';
-
-import { ActivityIndicator, View } from 'react-native';
 import { useSessionStore } from '../core/session/useSessionStore';
 import { AppStack } from './appRoutes';
 
 export function RootNavigator() {
-	const { isLoading, isAuthenticated } = useSessionStore();
+	const isLoading = useSessionStore((s) => s.isLoading);
+	const isAuthenticated = useSessionStore((s) => s.isAuthenticated);
 
 	return <AppStack />;
 }
