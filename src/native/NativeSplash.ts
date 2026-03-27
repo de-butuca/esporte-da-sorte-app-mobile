@@ -1,7 +1,24 @@
-import { NativeModules, Platform } from "react-native";
+<<<<<<< HEAD
+import { NativeModules, Platform, findNodeHandle } from "react-native";
+=======
+import { NativeModules } from "react-native";
+>>>>>>> feat/native-splash
 
-const { NativeSplashModule } = NativeModules;
+const NativeSplashModule =
+  NativeModules.NativeSplashModule ?? null;
 
 export function hideNativeSplash() {
-  NativeSplashModule?.hide();
+  try {
+    if (NativeSplashModule?.hide) {
+      NativeSplashModule.hide();
+    } else {
+      console.warn("[NativeSplash] Module not available, splash may not hide natively");
+    }
+  } catch (e) {
+    console.warn("[NativeSplash] Error hiding:", e);
+  }
+}
+
+export function getNativeAnimationStartTime(): number {
+  return NativeSplashModule?.getAnimationStartTime() ?? 0;
 }

@@ -6,6 +6,8 @@ import {
 	ScrollViewProps,
 	TouchableWithoutFeedback,
 } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { useTheme } from "@/theme/ThemeContext"
 import { BPS } from "./styles"
 
 type BasePageType = "view" | "scroll" | "form"
@@ -29,32 +31,42 @@ export function BasePage({
 	keyboardProps,
 	padding = 12,
 }: BasePageProps) {
-	if (type === "scroll") {
-		return (
-			<BPS.ScrollView
-				contentContainerStyle={{ padding }}
-				refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : undefined}
-				keyboardShouldPersistTaps="handled"
-				{...scrollProps}
-			>
-				{children}
-			</BPS.ScrollView>
-		)
-	}
+	const { theme } = useTheme()
 
-	if (type === "form") {
-		return (
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<BPS.KeyboardAvoidingView
-					behavior={Platform.OS === "ios" ? "padding" : "padding"}
-					style={{ flex: 1, padding }}
-					{...keyboardProps}
+	const content = (() => {
+		if (type === "scroll") {
+			return (
+				<BPS.ScrollView
+					contentContainerStyle={{ padding }}
+					refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : undefined}
+					keyboardShouldPersistTaps="handled"
+					{...scrollProps}
 				>
 					{children}
-				</BPS.KeyboardAvoidingView>
-			</TouchableWithoutFeedback>
-		)
-	}
+				</BPS.ScrollView>
+			)
+		}
 
-	return <BPS.View style={{ padding }}>{children}</BPS.View>
+		if (type === "form") {
+			return (
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+					<BPS.KeyboardAvoidingView
+						behavior={Platform.OS === "ios" ? "padding" : "padding"}
+						style={{ flex: 1, padding }}
+						{...keyboardProps}
+					>
+						{children}
+					</BPS.KeyboardAvoidingView>
+				</TouchableWithoutFeedback>
+			)
+		}
+
+		return <BPS.View style={{ padding }}>{children}</BPS.View>
+	})()
+
+	return (
+		<SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+			{content}
+		</SafeAreaView>
+	)
 }

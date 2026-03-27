@@ -3,6 +3,7 @@ import UIKit
 class NativeSplashView: UIView {
 
   static var shared: NativeSplashView?
+  static var animationStartTime: TimeInterval = 0
 
   private let BG = UIColor(red: 2/255, green: 54/255, blue: 151/255, alpha: 1)
   private let viewBoxW: CGFloat = 1209
@@ -143,6 +144,12 @@ class NativeSplashView: UIView {
       a.fillMode = .forwards; a.isRemovedOnCompletion = false
       self.containerLayer.add(a, forKey: "move")
     }
+
+    // Auto-hide after animation completes (fallback if JS can't call hide)
+    let total = p1 + p2 + p3 + p4 + p5 + 0.3
+    DispatchQueue.main.asyncAfter(deadline: .now() + total) { [weak self] in
+      self?.hide(animated: true)
+    }
   }
 
   func hide(animated: Bool = true) {
@@ -162,6 +169,7 @@ class NativeSplashView: UIView {
     v.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     window.addSubview(v)
     shared = v
+    animationStartTime = Date().timeIntervalSince1970 * 1000
     v.startAnimation()
   }
 }

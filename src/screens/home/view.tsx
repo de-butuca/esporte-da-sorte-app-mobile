@@ -1,47 +1,121 @@
-import { useState } from 'react';
-import { View, Pressable, Text, StyleSheet, Dimensions } from 'react-native';
-import { BasePage } from '@/components/BasePage';
-import { Roulette } from '@/components/Roulette';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
+import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
+import { useAppNavigation } from '@/navigation/hooks';
+import { useAuthGuard } from '@/core/auth/useAuthGuard';
+import { HomeHeader } from './components/HomeHeader';
+import { BannerCarousel } from './components/BannerCarousel';
+import { SectionHeader } from './components/SectionHeader';
+import { GameRow } from './components/GameRow';
+import { PromoBanner } from './components/PromoBanner';
+import { BottomNavBar, NavTab } from '@/components/BottomNavBar';
 
-const { height: SCREEN_H } = Dimensions.get('window');
+const GAME_THUMB_1 = require('@assets/images/games/game-thumbnail-1.png');
+const GAME_THUMB_2 = require('@assets/images/games/game-thumbnail-2.png');
+const GAME_THUMB_3 = require('@assets/images/games/game-thumbnail-3.png');
+
+const LIVE_GAMES = [
+	{ id: '1', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '2', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '3', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '4', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+	{ id: '5', name: 'Bac bo', provider: 'Fatec', image: GAME_THUMB_3, badge: 'live' as const, players: '1.2k online' },
+];
+
+const TRENDING_GAMES = [
+	{ id: '1', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '2', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '3', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+	{ id: '4', name: 'Choice gaming', provider: 'Maua', image: GAME_THUMB_1, players: '1.2k online' },
+];
+
+const NEW_GAMES = [
+	{ id: '1', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '2', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '3', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '4', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+];
 
 export default function HomeScreen() {
-	const [showRoulette, setShowRoulette] = useState(false);
+	const [activeTab, setActiveTab] = useState<NavTab>('home');
+	const scrollY = useSharedValue(0);
+	const { navigate } = useAppNavigation();
+	const { requireAuth } = useAuthGuard();
+
+	const handleGamePress = (gameId: string) => {
+		requireAuth(() => {
+			// TODO: navigate to game screen
+			console.log('Opening game:', gameId);
+		});
+	};
+
+	const scrollHandler = useAnimatedScrollHandler({
+		onScroll: (event) => {
+			scrollY.value = event.contentOffset.y;
+		},
+	});
+
+	const handleCategoryChange = (category: 'cassino' | 'esportes') => {
+		if (category === 'esportes') {
+			navigate('GameHome');
+		}
+	};
 
 	return (
-		<BasePage type="scroll">
-			<View style={styles.centerWrap}>
-				<Pressable style={styles.openButton} onPress={() => setShowRoulette(true)}>
-					<Text style={styles.openButtonText}>🎰 Girar Roleta</Text>
-				</Pressable>
-			</View>
+		<View style={styles.root}>
+			<HomeHeader scrollY={scrollY} onCategoryChange={handleCategoryChange} />
 
-			<Roulette
-				visible={showRoulette}
-				onClose={() => setShowRoulette(false)}
-				onResult={(item) => {
-					console.log(`Prize: ${item.label} (${item.value})`);
-				}}
-			/>
-		</BasePage>
+			<Animated.ScrollView
+				style={styles.scroll}
+				contentContainerStyle={styles.scrollContent}
+				showsVerticalScrollIndicator={false}
+				onScroll={scrollHandler}
+				scrollEventThrottle={16}
+			>
+				<BannerCarousel />
+
+				<View style={styles.section}>
+					<SectionHeader title="Ao vivo" count={12} hasLive />
+					<GameRow games={LIVE_GAMES} cardWidth={RFValue(95)} onGamePress={handleGamePress} />
+				</View>
+
+				<View style={styles.section}>
+					<SectionHeader title="Cassino em alta" count={12} />
+					<GameRow games={TRENDING_GAMES} onGamePress={handleGamePress} />
+				</View>
+
+				<PromoBanner />
+
+				<View style={styles.section}>
+					<SectionHeader title="Novos cassinos" count={12} />
+					<GameRow games={NEW_GAMES} onGamePress={handleGamePress} />
+				</View>
+
+				<View style={styles.bottomSpacer} />
+			</Animated.ScrollView>
+
+			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
-	centerWrap: {
-		height: SCREEN_H * 0.75,
-		justifyContent: 'center',
-		alignItems: 'center',
+	root: {
+		flex: 1,
+		backgroundColor: '#01003A',
 	},
-	openButton: {
-		backgroundColor: '#37E67D',
-		paddingHorizontal: 32,
-		paddingVertical: 16,
-		borderRadius: 30,
+	scroll: {
+		flex: 1,
 	},
-	openButtonText: {
-		color: '#023697',
-		fontSize: 18,
-		fontWeight: 'bold',
+	scrollContent: {
+		gap: RFValue(24),
+		paddingTop: RFValue(20),
+	},
+	section: {
+		gap: RFValue(12),
+	},
+	bottomSpacer: {
+		height: RFValue(20),
 	},
 });

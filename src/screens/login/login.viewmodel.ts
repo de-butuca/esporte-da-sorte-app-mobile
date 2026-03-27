@@ -1,75 +1,97 @@
-import { Alert } from 'react-native';
 import { useSessionStore } from '@/core/session/useSessionStore';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from './login.schema';
-import { LoginFormData } from './login.types';
+import { LoginFormData, LoginMethod } from './login.types';
 import { useState } from 'react';
 import { useToast } from '@/contexts/Toast/useToast';
-import { useLoginUseCase } from '@/useCases/Auth/LoginUseCase';
+import { useAppNavigation } from '@/navigation/hooks';
 
-//
-// 2️⃣ ViewModel
-//
 export function useLoginViewModel() {
 	const signIn = useSessionStore((s) => s.signIn);
-	const LoginUseCase = useLoginUseCase();
-
 	const toastfy = useToast();
+	const { goBack, canGoBack } = useAppNavigation();
+
+	const [loginMethod, setLoginMethod] = useState<LoginMethod>('usuario');
+	const [isLoading, setIsLoading] = useState(false);
+
 	const {
 		control,
 		handleSubmit,
-		formState: { errors, isSubmitting },
+		formState: { errors },
 	} = useForm<LoginFormData>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
-			login: '',
+			identifier: '',
+			password: '',
+			keepSession: false,
 		},
 	});
-
-	const [isLoading, setIsLoading] = useState(false);
 
 	const onSubmit = async (data: LoginFormData) => {
 		try {
 			setIsLoading(true);
 
-			await LoginUseCase({
-				login: data.login,
+			// Fake login - será substituído por API real
+			const result = await fakeLogin(data.identifier, data.password);
+
+			await signIn({
+				user: result.user,
+				token: result.token,
 			});
+
+			if (canGoBack()) {
+				goBack();
+			}
 		} catch (e: any) {
 			toastfy.error(e.message);
-			console.log(e);
 		} finally {
 			setIsLoading(false);
+		}
+	};
+
+	const getPlaceholder = () => {
+		switch (loginMethod) {
+			case 'usuario':
+				return 'Usuário';
+			case 'email':
+				return 'E-mail';
+			case 'cpf':
+				return 'CPF';
+		}
+	};
+
+	const getKeyboardType = () => {
+		switch (loginMethod) {
+			case 'email':
+				return 'email-address' as const;
+			case 'cpf':
+				return 'numeric' as const;
+			default:
+				return 'default' as const;
 		}
 	};
 
 	return {
 		control,
 		errors,
-		isSubmitting,
-		handleLogin: handleSubmit(onSubmit),
 		isLoading,
+		loginMethod,
+		setLoginMethod,
+		getPlaceholder,
+		getKeyboardType,
+		handleLogin: handleSubmit(onSubmit),
 	};
 }
 
-//
-// Fake API
-//
-async function fakeLogin(login: string) {
+async function fakeLogin(identifier: string, password: string) {
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 
-	if (login === 'drailer') {
-		return {
-			token: 'fake-jwt-token',
-			user: {
-				id: '1',
-				name: 'Admin',
-				email: login,
-			},
-		};
-	}
-
-	throw new Error('Invalid credentials');
+	return {
+		token: 'fake-jwt-token',
+		user: {
+			id: '1',
+			name: identifier,
+		},
+	};
 }

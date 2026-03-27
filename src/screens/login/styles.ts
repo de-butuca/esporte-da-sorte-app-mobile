@@ -17,13 +17,11 @@ const Body = Styled.View({
 		justifyContent: 'center',
 	},
 });
-
 const Footer = Styled.View({
 	style: {
 		height: '10%',
 	},
 });
-
 const Logo = Styled.Image({
 	style: {
 		height: 240,
@@ -33,7 +31,6 @@ const Logo = Styled.Image({
 		resizeMode: 'contain',
 	},
 });
-
 const Text = Styled.Text({
 	style: ({ theme }) => ({
 		color: theme.colors.onBackground,

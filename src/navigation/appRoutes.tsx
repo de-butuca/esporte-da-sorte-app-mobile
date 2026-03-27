@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text, View } from 'react-native';
 import React from 'react';
-// import { MainTabs } from './TabRoutes';
 import { ButtonBase } from '@/components/Button';
 import { useAppNavigation } from './hooks';
-import { HeaderRouter } from '@/components/navigation/header/header';
 import HomeScreen from '@/screens/home/view';
+import GameHomeScreen from '@/screens/game-home/view';
+import LoginScreen from '@/screens/login/login.view';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,17 +14,31 @@ export function AppStack() {
 		<Stack.Navigator
 			initialRouteName="Home"
 			screenOptions={{
-				headerShown: true,
+				headerShown: false,
 				animation: 'slide_from_right',
-				header: ({ options, back, route }) => {
-					return <HeaderRouter title={options.title} back={back} />;
-				},
 			}}
 		>
-			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
+			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+			<Stack.Screen
+				name="GameHome"
+				component={GameHomeScreen}
+				options={{
+					contentStyle: { backgroundColor: '#f8f9fc' },
+					gestureEnabled: false,
+				}}
+			/>
+			<Stack.Screen
+				name="Login"
+				component={LoginScreen}
+				options={{
+					animation: 'slide_from_bottom',
+					contentStyle: { backgroundColor: '#01003A' },
+				}}
+			/>
 		</Stack.Navigator>
 	);
 }
+
 export function createTestScreen(number: number) {
 	return function TestScreen() {
 		const { navigate } = useAppNavigation();
@@ -43,8 +57,7 @@ export function createTestScreen(number: number) {
 						navigate('flapGame');
 					}}
 				/>
-				<Text style={{ fontSize: 24, color: '#fff' }}>ESTA É UMA TELA DE {number} 🚀</Text>
-
+				<Text style={{ fontSize: 24, color: '#fff' }}>ESTA E UMA TELA DE {number}</Text>
 				<Text style={{ fontSize: 16, color: '#aaa', marginTop: 10 }}>Componente criado dinamicamente</Text>
 			</View>
 		);

@@ -5,8 +5,21 @@ export const lightColors = {
 	secondary: '#625B71',
 	onSecondary: '#FFFFFF',
 
-	background: '#01002C',
+	background: '#01003A',
 	onBackground: '#FFFFFF',
+
+	bgNav: '#02003D',
+	bgCard: '#0A0F2E',
+
+	accent: '#38E67D',
+	accentText: '#37E67D',
+
+	textPrimary: '#FFFFFF',
+	textSecondary: '#F0F0F0',
+	textMuted: '#A0A0B0',
+	textInactive: '#6B6B8A',
+
+	live: '#FF3B3B',
 
 	label: '#fff',
 	inputText: '#000000',

@@ -2,4 +2,5 @@
 
 @interface RCT_EXTERN_MODULE(NativeSplashModule, NSObject)
 RCT_EXTERN_METHOD(hide)
+RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(getAnimationStartTime)
 @end
