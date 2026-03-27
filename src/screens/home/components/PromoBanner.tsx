@@ -16,8 +16,8 @@ export function PromoBanner() {
 				style={styles.container}
 			>
 				<View style={styles.content}>
-					<Text style={styles.subtitle}>Ganhe bonus de ate 100%</Text>
-					<Text style={styles.title}>Faca seu primeiro deposito</Text>
+					<Text style={styles.subtitle}>Ganhe bônus de até 100%</Text>
+					<Text style={styles.title}>Faça seu primeiro depósito</Text>
 					<TouchableOpacity style={styles.button} activeOpacity={0.8}>
 						<Text style={styles.buttonText}>Depositar agora</Text>
 					</TouchableOpacity>
@@ -38,21 +38,21 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		height: RFValue(170),
-		borderRadius: RFValue(10),
+		borderRadius: RFValue(16),
 		flexDirection: 'row',
 		overflow: 'hidden',
 	},
 	content: {
 		flex: 1,
 		justifyContent: 'center',
-		paddingLeft: RFValue(16),
+		paddingLeft: RFValue(20),
 		gap: RFValue(8),
 		zIndex: 1,
 	},
 	subtitle: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(9),
-		color: '#3AE77E',
+		fontSize: RFValue(10),
+		color: 'rgba(255,255,255,0.8)',
 	},
 	title: {
 		fontFamily: fontFamily.bold,
@@ -62,14 +62,14 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		backgroundColor: '#38E67D',
-		paddingHorizontal: RFValue(16),
+		paddingHorizontal: RFValue(20),
 		paddingVertical: RFValue(10),
 		borderRadius: RFValue(10),
 		alignSelf: 'flex-start',
 	},
 	buttonText: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(11),
+		fontSize: RFValue(12),
 		color: '#02003D',
 	},
 	image: {

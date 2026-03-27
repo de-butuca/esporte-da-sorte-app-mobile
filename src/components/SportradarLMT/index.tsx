@@ -13,33 +13,48 @@ interface SportradarLMTProps {
 export function SportradarLMT({
   matchId,
   height = 300,
-  backgroundColor = "#1B7A2E",
+  backgroundColor = "#01003A",
 }: SportradarLMTProps) {
-  const widgetHtml = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <script type="application/javascript"
-          src="https://widgets.sir.sportradar.com/${SR_TOKEN}/widgetloader"
-          data-sr-language="pt">
-        </script>
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body { background: ${backgroundColor}; overflow: hidden; }
-          .sr-widget { width: 100%; }
-        </style>
-      </head>
-      <body>
-        <div
-          class="sr-widget"
-          data-sr-widget="match.lmtplus"
-          data-sr-match-id="${matchId}"
-          data-sr-input-props='{"layout":"single","scoreboard":"disable"}'>
-        </div>
-      </body>
-    </html>
-  `;
+  const widgetHtml = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; background: ${backgroundColor}; overflow: hidden; }
+#sr-widget { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+<div id="sr-widget"></div>
+<script>
+(function(a,b,c,d,e,f,g,h,i){
+  a[e]||(i=a[e]=function(){(a[e].q=a[e].q||[]).push(arguments)},
+  i.l=1*new Date,i.o=f,
+  g=b.createElement(c),h=b.getElementsByTagName(c)[0],
+  g.async=1,g.src=d,g.setAttribute("n",e),
+  h.parentNode.insertBefore(g,h))
+})(window,document,"script",
+  "https://widgets.sir.sportradar.com/${SR_TOKEN}/widgetloader",
+  "SIR", { language: "pt" });
+
+SIR('addWidget', '#sr-widget', 'match.lmtPlus', {
+  matchId: ${matchId},
+  layout: "single",
+  scoreboard: "disable",
+  detailedScoreboard: "disable",
+  branding: {
+    tabs: {
+      option: "iconText",
+      iconPosition: "start",
+      variant: "fullWidth"
+    }
+  }
+});
+</script>
+</body>
+</html>`;
 
   return (
     <View style={[styles.container, { height }]}>
@@ -47,9 +62,13 @@ export function SportradarLMT({
         source={{ html: widgetHtml }}
         javaScriptEnabled
         domStorageEnabled
-        scrollEnabled={false}
-        style={styles.webview}
         originWhitelist={["*"]}
+        mixedContentMode="always"
+        allowsInlineMediaPlayback
+        mediaPlaybackRequiresUserAction={false}
+        scrollEnabled={false}
+        userAgent="Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+        style={[styles.webview, { backgroundColor }]}
       />
     </View>
   );
@@ -62,6 +81,5 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
-    backgroundColor: "transparent",
   },
 });

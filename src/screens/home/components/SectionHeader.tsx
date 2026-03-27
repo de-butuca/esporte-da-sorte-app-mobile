@@ -19,7 +19,7 @@ export function SectionHeader({ title, count, hasLive, onSeeAll }: SectionHeader
 			</View>
 			{count !== undefined && (
 				<TouchableOpacity onPress={onSeeAll} activeOpacity={0.7}>
-					<Text style={styles.seeAll}>{`Ver todos (${count}) >`}</Text>
+					<Text style={styles.seeAll}>Ver todos →</Text>
 				</TouchableOpacity>
 			)}
 		</View>
@@ -39,10 +39,10 @@ const styles = StyleSheet.create({
 		gap: RFValue(8),
 	},
 	liveDot: {
-		width: RFValue(10),
-		height: RFValue(10),
-		borderRadius: RFValue(5),
-		backgroundColor: '#FF3B3B',
+		width: RFValue(8),
+		height: RFValue(8),
+		borderRadius: RFValue(4),
+		backgroundColor: '#FF3C3C',
 	},
 	title: {
 		fontFamily: fontFamily.bold,
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
 		color: '#FFFFFF',
 	},
 	seeAll: {
-		fontFamily: fontFamily.medium,
-		fontSize: RFValue(12),
-		color: '#37E67D',
+		fontFamily: fontFamily.bold,
+		fontSize: RFValue(13),
+		color: '#38E67D',
 	},
 });

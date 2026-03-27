@@ -45,7 +45,6 @@ export default function HomeScreen() {
 
 	const handleGamePress = (gameId: string) => {
 		requireAuth(() => {
-			// TODO: navigate to game screen
 			console.log('Opening game:', gameId);
 		});
 	};
@@ -109,13 +108,13 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	scrollContent: {
-		gap: RFValue(24),
+		gap: RFValue(20),
 		paddingTop: RFValue(20),
 	},
 	section: {
 		gap: RFValue(12),
 	},
 	bottomSpacer: {
-		height: RFValue(20),
+		height: RFValue(16),
 	},
 });

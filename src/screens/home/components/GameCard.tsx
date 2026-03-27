@@ -30,6 +30,7 @@ export function GameCard({
 				<Image source={image} style={styles.thumbnailImage} resizeMode="cover" />
 				{badge === 'live' && (
 					<View style={[styles.badge, styles.badgeLive]}>
+						<View style={styles.liveIndicator} />
 						<Text style={styles.badgeLiveText}>Ao vivo</Text>
 					</View>
 				)}
@@ -44,10 +45,8 @@ export function GameCard({
 					</View>
 				)}
 			</View>
-			<Text style={styles.name} numberOfLines={1}>
-				{name}
-			</Text>
-			<Text style={styles.provider}>{provider}</Text>
+			<Text style={styles.name} numberOfLines={1}>{name}</Text>
+			<Text style={styles.provider} numberOfLines={1}>{provider}</Text>
 		</TouchableOpacity>
 	);
 }
@@ -58,9 +57,9 @@ const styles = StyleSheet.create({
 	},
 	thumbnail: {
 		height: RFValue(130),
-		borderRadius: RFValue(10),
+		borderRadius: RFValue(16),
 		overflow: 'hidden',
-		backgroundColor: '#0A0F2E',
+		backgroundColor: '#0F0C50',
 	},
 	thumbnailImage: {
 		width: '100%',
@@ -70,12 +69,21 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: RFValue(8),
 		left: RFValue(8),
+		flexDirection: 'row',
+		alignItems: 'center',
 		paddingHorizontal: RFValue(8),
-		paddingVertical: RFValue(3),
-		borderRadius: RFValue(6),
+		paddingVertical: RFValue(4),
+		borderRadius: RFValue(8),
+		gap: RFValue(4),
 	},
 	badgeLive: {
-		backgroundColor: '#FF3B3B',
+		backgroundColor: '#FF3C3C',
+	},
+	liveIndicator: {
+		width: 5,
+		height: 5,
+		borderRadius: 3,
+		backgroundColor: '#fff',
 	},
 	badgeLiveText: {
 		fontFamily: fontFamily.bold,
@@ -112,6 +120,6 @@ const styles = StyleSheet.create({
 	provider: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(9),
-		color: '#F0F0F0',
+		color: '#A0A0C8',
 	},
 });

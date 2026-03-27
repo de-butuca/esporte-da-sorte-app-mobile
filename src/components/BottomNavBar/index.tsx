@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily } from '@/theme/design-tokens';
-import { House, Radio, Menu } from 'lucide-react-native';
+import { House, Zap, Dice5, ClipboardList, Menu } from 'lucide-react-native';
 
-export type NavTab = 'home' | 'live' | 'menu';
+export type NavTab = 'home' | 'live' | 'cassino' | 'apostas' | 'menu';
 
 interface BottomNavBarProps {
 	activeTab: NavTab;
@@ -13,8 +13,10 @@ interface BottomNavBarProps {
 }
 
 const TABS: { key: NavTab; label: string; Icon: typeof House }[] = [
-	{ key: 'home', label: 'Inicio', Icon: House },
-	{ key: 'live', label: 'Ao Vivo', Icon: Radio },
+	{ key: 'home', label: 'Início', Icon: House },
+	{ key: 'live', label: 'Ao Vivo', Icon: Zap },
+	{ key: 'cassino', label: 'Cassino', Icon: Dice5 },
+	{ key: 'apostas', label: 'Apostas', Icon: ClipboardList },
 	{ key: 'menu', label: 'Menu', Icon: Menu },
 ];
 
@@ -23,10 +25,11 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 
 	return (
 		<View style={[styles.container, { paddingBottom: Math.max(insets.bottom, 8) }]}>
+			<View style={styles.divider} />
 			<View style={styles.tabRow}>
 				{TABS.map((tab) => {
 					const isActive = activeTab === tab.key;
-					const color = isActive ? '#37E67D' : '#6B6B8A';
+					const color = isActive ? '#38E67D' : '#A0A0C8';
 					return (
 						<TouchableOpacity
 							key={tab.key}
@@ -34,15 +37,16 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 							onPress={() => onTabPress(tab.key)}
 							activeOpacity={0.7}
 						>
-							<tab.Icon size={RFValue(22)} color={color} strokeWidth={isActive ? 2.2 : 1.5} />
+							<tab.Icon size={RFValue(20)} color={color} strokeWidth={isActive ? 2.2 : 1.5} />
 							<Text
 								style={[
 									styles.label,
-									{ color, fontFamily: isActive ? fontFamily.medium : fontFamily.regular },
+									{ color, fontFamily: isActive ? fontFamily.bold : fontFamily.regular },
 								]}
 							>
 								{tab.label}
 							</Text>
+							{isActive && <View style={styles.activeDot} />}
 						</TouchableOpacity>
 					);
 				})}
@@ -53,29 +57,35 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#02003D',
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: -8 },
-		shadowOpacity: 0.3,
-		shadowRadius: 12,
-		elevation: 12,
+		backgroundColor: '#05032D',
+	},
+	divider: {
+		height: 1,
+		backgroundColor: 'rgba(160,160,200,0.15)',
 	},
 	tabRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingHorizontal: RFValue(24),
-		paddingVertical: RFValue(8),
-		height: RFValue(56),
+		paddingHorizontal: RFValue(16),
+		paddingTop: RFValue(8),
+		height: RFValue(52),
 	},
 	tab: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		gap: RFValue(4),
+		gap: RFValue(3),
 	},
 	label: {
 		fontSize: RFValue(10),
 		textAlign: 'center',
+	},
+	activeDot: {
+		width: 4,
+		height: 4,
+		borderRadius: 2,
+		backgroundColor: '#38E67D',
+		marginTop: 2,
 	},
 });

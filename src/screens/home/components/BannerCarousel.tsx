@@ -16,7 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const { width: SCREEN_W } = Dimensions.get('window');
 const BANNER_W = SCREEN_W - RFValue(40);
 const BANNER_H = RFValue(150);
-const BANNER_GAP = RFValue(14);
+const BANNER_GAP = RFValue(12);
 
 interface Banner {
 	id: string;
@@ -121,26 +121,26 @@ const styles = StyleSheet.create({
 	bannerContainer: {
 		width: BANNER_W,
 		height: BANNER_H,
-		borderRadius: RFValue(10),
+		borderRadius: RFValue(16),
 		overflow: 'hidden',
 	},
 	banner: {
 		flex: 1,
-		borderRadius: RFValue(10),
+		borderRadius: RFValue(16),
 		flexDirection: 'row',
 		overflow: 'hidden',
 	},
 	bannerContent: {
 		flex: 1,
 		justifyContent: 'center',
-		paddingLeft: RFValue(16),
+		paddingLeft: RFValue(20),
 		gap: RFValue(4),
 		zIndex: 1,
 	},
 	bannerSubtitle: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(9),
-		color: '#3AE77E',
+		fontSize: RFValue(10),
+		color: 'rgba(255,255,255,0.8)',
 	},
 	bannerTitle: {
 		fontFamily: fontFamily.bold,
@@ -163,14 +163,14 @@ const styles = StyleSheet.create({
 	},
 	dot: {
 		borderRadius: RFValue(4),
-		height: RFValue(6),
+		height: RFValue(4),
 	},
 	dotActive: {
 		backgroundColor: '#38E67D',
 		width: RFValue(20),
 	},
 	dotInactive: {
-		backgroundColor: 'rgba(255,255,255,0.3)',
-		width: RFValue(6),
+		backgroundColor: 'rgba(160,160,200,0.4)',
+		width: RFValue(4),
 	},
 });

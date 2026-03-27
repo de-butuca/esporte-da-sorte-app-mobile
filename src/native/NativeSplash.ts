@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { NativeModules, Platform, findNodeHandle } from "react-native";
-=======
 import { NativeModules } from "react-native";
->>>>>>> feat/native-splash
 
 const NativeSplashModule =
   NativeModules.NativeSplashModule ?? null;
