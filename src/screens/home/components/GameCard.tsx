@@ -22,7 +22,7 @@ export const GameCard = React.memo(function GameCard({
 	provider,
 	badge = 'none',
 	players,
-	width = RFValue(130),
+	width = RFValue(110),
 	onPress,
 }: GameCardProps) {
 	const containerStyle = useMemo(() => [styles.container, { width }], [width]);
@@ -61,11 +61,11 @@ export const GameCard = React.memo(function GameCard({
 
 const styles = StyleSheet.create({
 	container: {
-		gap: RFValue(6),
+		gap: RFValue(4),
 	},
 	thumbnail: {
-		height: RFValue(130),
-		borderRadius: RFValue(16),
+		height: RFValue(95),
+		borderRadius: RFValue(10),
 		overflow: 'hidden',
 		backgroundColor: lightColors.bgCard,
 	},
@@ -75,27 +75,27 @@ const styles = StyleSheet.create({
 	},
 	badge: {
 		position: 'absolute',
-		top: RFValue(8),
-		left: RFValue(8),
+		top: RFValue(6),
+		left: RFValue(6),
 		flexDirection: 'row',
 		alignItems: 'center',
-		paddingHorizontal: RFValue(8),
-		paddingVertical: RFValue(4),
-		borderRadius: RFValue(8),
-		gap: RFValue(4),
+		paddingHorizontal: RFValue(6),
+		paddingVertical: RFValue(3),
+		borderRadius: RFValue(6),
+		gap: RFValue(3),
 	},
 	badgeLive: {
 		backgroundColor: lightColors.live,
 	},
 	liveIndicator: {
-		width: 5,
-		height: 5,
-		borderRadius: 3,
+		width: 4,
+		height: 4,
+		borderRadius: 2,
 		backgroundColor: lightColors.textPrimary,
 	},
 	badgeLiveText: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(9),
+		fontSize: RFValue(8),
 		color: lightColors.textPrimary,
 	},
 	badgeNew: {
@@ -103,31 +103,31 @@ const styles = StyleSheet.create({
 	},
 	badgeNewText: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(9),
+		fontSize: RFValue(8),
 		color: lightColors.bgNav,
 	},
 	players: {
 		position: 'absolute',
-		bottom: RFValue(8),
-		left: RFValue(8),
+		bottom: RFValue(6),
+		left: RFValue(6),
 		backgroundColor: 'rgba(0,0,0,0.5)',
-		paddingHorizontal: RFValue(8),
-		paddingVertical: RFValue(3),
-		borderRadius: RFValue(20),
+		paddingHorizontal: RFValue(6),
+		paddingVertical: RFValue(2),
+		borderRadius: RFValue(16),
 	},
 	playersText: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(8),
+		fontSize: RFValue(7),
 		color: lightColors.textPrimary,
 	},
 	name: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(11),
+		fontSize: RFValue(10),
 		color: lightColors.textPrimary,
 	},
 	provider: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(9),
+		fontSize: RFValue(8),
 		color: lightColors.textMuted,
 	},
 });

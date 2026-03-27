@@ -6,6 +6,7 @@ export type RootStackParamList = {
 	Home: undefined;
 	GameHome: undefined;
 	Login: undefined;
+	Register: undefined;
 	Propaganda: undefined;
 	Settings: { tab?: string };
 };

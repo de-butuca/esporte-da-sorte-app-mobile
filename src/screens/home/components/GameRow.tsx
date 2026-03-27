@@ -19,7 +19,7 @@ interface GameRowProps {
 	onGamePress?: (gameId: string) => void;
 }
 
-export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRowProps) {
+export function GameRow({ games, cardWidth = RFValue(110), onGamePress }: GameRowProps) {
 	const { guardNavigation } = useRequireAuth();
 
 	const handleGamePress = useCallback((game: Game) => {
@@ -60,7 +60,7 @@ export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRo
 
 const styles = StyleSheet.create({
 	content: {
-		paddingHorizontal: RFValue(20),
-		gap: RFValue(12),
+		paddingHorizontal: RFValue(14),
+		gap: RFValue(8),
 	},
 });

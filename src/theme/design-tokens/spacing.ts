@@ -1,9 +1,13 @@
-// spacing.ts
+/**
+ * EDS Design System — Spacing tokens
+ * 2xs=2, xs=4, sm=8, md=12, lg=16, xl=20, 2xl=24, 3xl=32
+ */
 import { RFValue } from 'react-native-responsive-fontsize';
 
-/** Padding e Margin utilitários estilo Tailwind */
 export const spacing = {
 	// Padding
+	/** 2px */
+	p0: RFValue(2),
 	/** 4px */
 	p1: RFValue(4),
 	/** 8px */
@@ -20,6 +24,8 @@ export const spacing = {
 	p8: RFValue(32),
 
 	// Margin
+	/** 2px */
+	m0: RFValue(2),
 	/** 4px */
 	m1: RFValue(4),
 	/** 8px */
@@ -35,7 +41,9 @@ export const spacing = {
 	/** 32px */
 	m8: RFValue(32),
 
-	// Gap (útil em Views com flex)
+	// Gap
+	/** 2px */
+	gap0: RFValue(2),
 	/** 4px */
 	gap1: RFValue(4),
 	/** 8px */

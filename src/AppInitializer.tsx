@@ -78,7 +78,7 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 const styles = StyleSheet.create({
 	loading: {
 		flex: 1,
-		backgroundColor: lightColors.primary,
+		backgroundColor: lightColors.background,
 	},
 });
 

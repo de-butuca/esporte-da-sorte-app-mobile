@@ -11,7 +11,7 @@ import { useRequireAuth } from '@/hooks/useRequireAuth';
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
 import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
 
-const EXPANDED_HEIGHT = RFValue(72);
+const EXPANDED_HEIGHT = RFValue(62);
 
 type CategoryTab = 'cassino' | 'esportes';
 
@@ -50,14 +50,14 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 	return (
 		<View style={containerStyle}>
 			<View style={styles.topRow}>
-				<Logo width={RFValue(80)} height={RFValue(28)} />
+				<Logo width={RFValue(70)} height={RFValue(24)} />
 
 				<View style={styles.actions}>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Search size={RFValue(20)} color={lightColors.textPrimary} strokeWidth={2} />
+						<Search size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Settings size={RFValue(20)} color={lightColors.textPrimary} strokeWidth={2} />
+						<Settings size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					{!isAuthenticated && (
 						<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8} onPress={handleLogin}>
@@ -99,8 +99,8 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: lightColors.background,
-		paddingHorizontal: RFValue(20),
-		paddingBottom: RFValue(12),
+		paddingHorizontal: RFValue(14),
+		paddingBottom: RFValue(8),
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 4 },
 		shadowOpacity: 0.3,
@@ -111,25 +111,25 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		marginTop: RFValue(8),
+		marginTop: RFValue(6),
 	},
 	actions: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		gap: RFValue(16),
+		gap: RFValue(12),
 	},
 	iconBtn: {
 		padding: RFValue(4),
 	},
 	entrarBtn: {
 		backgroundColor: lightColors.accent,
-		paddingHorizontal: RFValue(20),
-		paddingVertical: RFValue(10),
-		borderRadius: RFValue(10),
+		paddingHorizontal: RFValue(16),
+		paddingVertical: RFValue(8),
+		borderRadius: RFValue(8),
 	},
 	entrarText: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(12),
+		fontSize: RFValue(11),
 		color: lightColors.bgNav,
 		letterSpacing: 0.1,
 	},
@@ -139,29 +139,29 @@ const styles = StyleSheet.create({
 	categoryTabs: {
 		flexDirection: 'row',
 		backgroundColor: 'rgba(255,255,255,0.08)',
-		borderRadius: RFValue(12),
-		padding: RFValue(4),
-		marginTop: RFValue(16),
+		borderRadius: RFValue(10),
+		padding: RFValue(3),
+		marginTop: RFValue(12),
 	},
 	categoryTab: {
 		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingVertical: RFValue(10),
-		borderRadius: RFValue(10),
-		gap: RFValue(8),
+		paddingVertical: RFValue(8),
+		borderRadius: RFValue(8),
+		gap: RFValue(6),
 	},
 	categoryTabActive: {
 		backgroundColor: lightColors.bgNav,
 	},
 	categoryIcon: {
-		width: RFValue(16),
-		height: RFValue(16),
+		width: RFValue(14),
+		height: RFValue(14),
 	},
 	categoryLabel: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(12),
+		fontSize: RFValue(11),
 		color: lightColors.textMuted,
 		letterSpacing: 0.08,
 	},

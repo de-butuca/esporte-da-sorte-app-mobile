@@ -14,9 +14,9 @@ import { fontFamily, lightColors } from '@/theme/design-tokens';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width: SCREEN_W } = Dimensions.get('window');
-const BANNER_W = SCREEN_W - RFValue(40);
-const BANNER_H = RFValue(150);
-const BANNER_GAP = RFValue(12);
+const BANNER_W = SCREEN_W - RFValue(32);
+const BANNER_H = RFValue(120);
+const BANNER_GAP = RFValue(10);
 
 interface Banner {
 	id: string;
@@ -64,7 +64,7 @@ export function BannerCarousel() {
 	const renderBanner = useCallback(({ item }: { item: Banner }) => (
 		<View style={styles.bannerContainer}>
 			<LinearGradient
-				colors={[lightColors.primary, lightColors.accent]}
+				colors={[lightColors.secondary, lightColors.primary]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.banner}
@@ -114,65 +114,65 @@ export function BannerCarousel() {
 
 const styles = StyleSheet.create({
 	container: {
-		gap: RFValue(12),
+		gap: RFValue(8),
 	},
 	listContent: {
-		paddingHorizontal: RFValue(20),
+		paddingHorizontal: RFValue(14),
 		gap: BANNER_GAP,
 	},
 	bannerContainer: {
 		width: BANNER_W,
 		height: BANNER_H,
-		borderRadius: RFValue(16),
+		borderRadius: RFValue(12),
 		overflow: 'hidden',
 	},
 	banner: {
 		flex: 1,
-		borderRadius: RFValue(16),
+		borderRadius: RFValue(12),
 		flexDirection: 'row',
 		overflow: 'hidden',
 	},
 	bannerContent: {
 		flex: 1,
 		justifyContent: 'center',
-		paddingLeft: RFValue(20),
-		gap: RFValue(4),
+		paddingLeft: RFValue(16),
+		gap: RFValue(3),
 		zIndex: 1,
 	},
 	bannerSubtitle: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(10),
+		fontSize: RFValue(9),
 		color: 'rgba(255,255,255,0.8)',
 	},
 	bannerTitle: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(26),
+		fontSize: RFValue(20),
 		color: lightColors.textPrimary,
 		textTransform: 'uppercase',
-		lineHeight: RFValue(28),
+		lineHeight: RFValue(22),
 	},
 	bannerImage: {
-		width: RFValue(200),
-		height: BANNER_H + RFValue(30),
-		marginTop: RFValue(-20),
-		marginRight: RFValue(-10),
+		width: RFValue(140),
+		height: BANNER_H + RFValue(16),
+		marginTop: RFValue(-10),
+		marginRight: RFValue(-8),
 	},
 	dots: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		gap: RFValue(6),
+		gap: RFValue(5),
 	},
 	dot: {
-		borderRadius: RFValue(4),
-		height: RFValue(4),
+		borderRadius: RFValue(3),
+		height: RFValue(3),
 	},
 	dotActive: {
 		backgroundColor: lightColors.accent,
-		width: RFValue(20),
+		width: RFValue(16),
 	},
 	dotInactive: {
 		backgroundColor: 'rgba(160,160,200,0.4)',
-		width: RFValue(4),
+		width: RFValue(3),
 	},
 });

@@ -7,6 +7,7 @@ import { lightColors } from '@/theme/design-tokens';
 import HomeScreen from '@/screens/home/view';
 import GameHomeScreen from '@/screens/game-home/view';
 import LoginScreen from '@/screens/login/login.view';
+import RegisterScreen from '@/screens/register/register.view';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ export function AppStack() {
 			screenOptions={{
 				headerShown: false,
 				animation: 'slide_from_right',
+				contentStyle: { backgroundColor: lightColors.background },
 			}}
 		>
 			<Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
@@ -34,6 +36,14 @@ export function AppStack() {
 				options={{
 					headerShown: false,
 					animation: 'slide_from_bottom',
+				}}
+			/>
+			<Stack.Screen
+				name="Register"
+				component={RegisterScreen}
+				options={{
+					headerShown: false,
+					animation: 'slide_from_right',
 				}}
 			/>
 		</Stack.Navigator>

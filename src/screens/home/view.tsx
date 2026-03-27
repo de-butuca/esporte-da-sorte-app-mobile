@@ -77,7 +77,7 @@ export default function HomeScreen() {
 
 				<View style={styles.section}>
 					<SectionHeader title="Ao vivo" count={12} hasLive />
-					<GameRow games={LIVE_GAMES} cardWidth={RFValue(95)} onGamePress={handleGamePress} />
+					<GameRow games={LIVE_GAMES} cardWidth={RFValue(80)} onGamePress={handleGamePress} />
 				</View>
 
 				<View style={styles.section}>
@@ -110,12 +110,12 @@ const styles = StyleSheet.create({
 	},
 	scrollContent: {
 		gap: RFValue(20),
-		paddingTop: RFValue(20),
+		paddingTop: RFValue(14),
 	},
 	section: {
-		gap: RFValue(12),
+		gap: RFValue(8),
 	},
 	bottomSpacer: {
-		height: RFValue(16),
+		height: RFValue(12),
 	},
 });

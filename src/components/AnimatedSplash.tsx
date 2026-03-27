@@ -7,7 +7,7 @@ import { hideNativeSplash, getNativeAnimationStartTime } from "../native/NativeS
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
 import { lightColors } from "@/theme/design-tokens";
 
-const BG = lightColors.primary;
+const BG = lightColors.background;
 
 const LOTTIE_SOURCE = require("../../assets/images/icon-e-animated.json");
 

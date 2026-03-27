@@ -1,15 +1,11 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
 	View,
 	Text,
 	TextInput,
 	TouchableOpacity,
 	StyleSheet,
-	ScrollView,
 	ActivityIndicator,
-	Switch,
-	KeyboardAvoidingView,
-	Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -17,336 +13,303 @@ import { fontFamily, lightColors } from '@/theme/design-tokens';
 import { Controller } from 'react-hook-form';
 import { useLoginViewModel } from './login.viewmodel';
 import { useAppNavigation } from '@/navigation/hooks';
-import { LoginMethod } from './login.types';
+import { FormFieldsProvider, FormScreen, useFormField } from '@/components/FormScreen';
 import Logo from '@assets/images/logo-square.svg';
-import {
-	X,
-	HelpCircle,
-	User,
-	AtSign,
-	CreditCard,
-	Eye,
-	EyeOff,
-} from 'lucide-react-native';
+import { ArrowLeft, MessageSquare, Eye, EyeOff } from 'lucide-react-native';
 
-const LOGIN_METHODS: { key: LoginMethod; label: string; icon: typeof User }[] = [
-	{ key: 'usuario', label: 'Usuario', icon: User },
-	{ key: 'email', label: 'E-mail', icon: AtSign },
-	{ key: 'cpf', label: 'CPF', icon: CreditCard },
-];
-
-const ICON_COLOR = lightColors.textInactive;
-const TRACK_COLORS = { false: '#282564', true: lightColors.accent };
-
-export default function LoginScreen() {
+function LoginHeader() {
 	const insets = useSafeAreaInsets();
 	const { canGoBack, goBack } = useAppNavigation();
+
+	return (
+		<View style={[styles.header, { paddingTop: insets.top }]}>
+			<View style={styles.headerRow}>
+				{canGoBack() ? (
+					<TouchableOpacity
+						onPress={goBack}
+						activeOpacity={0.7}
+						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+					>
+						<ArrowLeft size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+					</TouchableOpacity>
+				) : (
+					<View style={{ width: RFValue(20) }} />
+				)}
+				<TouchableOpacity
+					activeOpacity={0.7}
+					hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+				>
+					<MessageSquare size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+				</TouchableOpacity>
+			</View>
+		</View>
+	);
+}
+
+/** Componente externo: fornece o contexto de campos */
+export default function LoginScreen() {
+	return (
+		<FormFieldsProvider fieldCount={2}>
+			<LoginForm />
+		</FormFieldsProvider>
+	);
+}
+
+/** Componente interno: usa useFormField (já dentro do Provider) */
+function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
-	const togglePassword = useCallback(() => setShowPassword(s => !s), []);
+	const togglePassword = useCallback(() => setShowPassword((s) => !s), []);
 
 	const {
 		control,
-		errors,
 		isLoading,
-		loginMethod,
-		setLoginMethod,
-		getPlaceholder,
-		getKeyboardType,
+		canSubmit,
 		handleLogin,
+		navigateToRegister,
 	} = useLoginViewModel();
 
-	const containerStyle = useMemo(
-		() => [styles.container, { paddingTop: insets.top }],
-		[insets.top],
-	);
-	const bottomCtaStyle = useMemo(
-		() => [styles.bottomCta, { paddingBottom: insets.bottom + RFValue(16) }],
-		[insets.bottom],
-	);
+	const emailField = useFormField(0);
+	const passwordField = useFormField(1, handleLogin);
 
 	return (
-		<KeyboardAvoidingView
-			style={styles.root}
-			behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-		>
-			<View style={containerStyle}>
-				{/* Top bar */}
-				<View style={styles.topBar}>
-					<TouchableOpacity style={styles.topBarBtn} activeOpacity={0.7}>
-						<HelpCircle size={RFValue(22)} color={lightColors.textMuted} strokeWidth={1.8} />
-					</TouchableOpacity>
-					{canGoBack() && (
-						<TouchableOpacity
-							style={styles.topBarBtn}
-							activeOpacity={0.7}
-							onPress={goBack}
-						>
-							<X size={RFValue(22)} color={lightColors.textMuted} strokeWidth={1.8} />
-						</TouchableOpacity>
-					)}
-				</View>
-
+		<FormScreen header={<LoginHeader />}>
+			<View style={styles.content}>
 				{/* Logo */}
 				<View style={styles.logoContainer}>
-					<Logo width={RFValue(140)} height={RFValue(48)} />
+					<Logo width={RFValue(100)} height={RFValue(34)} />
 				</View>
 
-				<ScrollView
-					style={styles.scroll}
-					contentContainerStyle={styles.scrollContent}
-					showsVerticalScrollIndicator={false}
-					keyboardShouldPersistTaps="handled"
-				>
-					{/* Login ID label */}
-					<Text style={styles.sectionLabel}>Login ID</Text>
+				{/* Title */}
+				<View style={styles.titleBlock}>
+					<Text style={styles.title}>Entrar</Text>
+					<Text style={styles.subtitle}>
+						Acesse sua conta para apostar em segundos.
+					</Text>
+				</View>
 
-					{/* Method tabs */}
-					<View style={styles.methodTabs}>
-						{LOGIN_METHODS.map((method) => {
-							const isActive = loginMethod === method.key;
-							const Icon = method.icon;
-							return (
-								<TouchableOpacity
-									key={method.key}
-									style={[styles.methodTab, isActive && styles.methodTabActive]}
-									onPress={() => setLoginMethod(method.key)}
-									activeOpacity={0.7}
-								>
-									<Icon
-										size={RFValue(14)}
-										color={isActive ? lightColors.bgNav : lightColors.textMuted}
-										strokeWidth={2}
-									/>
-									<Text
-										style={[
-											styles.methodTabText,
-											isActive && styles.methodTabTextActive,
-										]}
-									>
-										{method.label}
-									</Text>
-								</TouchableOpacity>
-							);
-						})}
-					</View>
-
-					{/* Identifier input */}
+				{/* Form */}
+				<View style={styles.formBlock}>
+					{/* Email */}
 					<Controller
 						control={control}
-						name="identifier"
-						render={({ field: { onChange, value }, fieldState }) => (
+						name="email"
+						render={({ field: { onChange, value, onBlur }, fieldState }) => (
 							<View style={styles.inputGroup}>
+								<Text style={styles.label}>Email</Text>
 								<View
 									style={[
 										styles.inputWrapper,
+										fieldState.isTouched &&
+											!fieldState.error &&
+											value.length > 0 &&
+											styles.inputFocused,
 										fieldState.error && styles.inputError,
 									]}
 								>
-									<User
-										size={RFValue(18)}
-										color={ICON_COLOR}
-										strokeWidth={1.8}
-										style={styles.inputIcon}
-									/>
 									<TextInput
+										ref={emailField.ref}
+										returnKeyType={emailField.returnKeyType}
+										onSubmitEditing={emailField.onSubmitEditing}
+										blurOnSubmit={emailField.blurOnSubmit}
 										style={styles.input}
-										placeholder={getPlaceholder()}
-										placeholderTextColor={ICON_COLOR}
+										placeholder="Digite seu email"
+										placeholderTextColor="rgba(255,255,255,0.5)"
 										value={value}
 										onChangeText={onChange}
+										onBlur={onBlur}
 										autoCapitalize="none"
-										keyboardType={getKeyboardType()}
-										cursorColor={lightColors.accent}
+										keyboardType="email-address"
+										cursorColor={lightColors.success}
 									/>
-								</View>
-								{fieldState.error ? (
-									<Text style={styles.errorText}>{fieldState.error.message}</Text>
-								) : (
-									<Text style={styles.helperText}>
-										Escolha seu metodo preferido para fazer login: Usuario, E-mail
-										ou CPF
-									</Text>
-								)}
-							</View>
-						)}
-					/>
-
-					{/* Password input */}
-					<Controller
-						control={control}
-						name="password"
-						render={({ field: { onChange, value }, fieldState }) => (
-							<View style={styles.inputGroup}>
-								<View
-									style={[
-										styles.inputWrapper,
-										fieldState.error && styles.inputError,
-									]}
-								>
-									<TextInput
-										style={[styles.input, styles.inputNoIcon]}
-										placeholder="Senha"
-										placeholderTextColor={ICON_COLOR}
-										value={value}
-										onChangeText={onChange}
-										secureTextEntry={!showPassword}
-										autoCapitalize="none"
-										cursorColor={lightColors.accent}
-									/>
-									<TouchableOpacity
-										onPress={togglePassword}
-										style={styles.eyeBtn}
-										activeOpacity={0.7}
-									>
-										{showPassword ? (
-											<EyeOff size={RFValue(18)} color={ICON_COLOR} strokeWidth={1.8} />
-										) : (
-											<Eye size={RFValue(18)} color={ICON_COLOR} strokeWidth={1.8} />
-										)}
-									</TouchableOpacity>
 								</View>
 								{fieldState.error && (
-									<Text style={styles.errorText}>{fieldState.error.message}</Text>
+									<Text style={styles.errorText}>
+										{fieldState.error.message}
+									</Text>
 								)}
 							</View>
 						)}
 					/>
 
-					{/* Forgot password */}
-					<TouchableOpacity activeOpacity={0.7} style={styles.forgotBtn}>
-						<Text style={styles.forgotText}>Esqueceu a senha?</Text>
-					</TouchableOpacity>
+					{/* Password */}
+					<View>
+						<Controller
+							control={control}
+							name="password"
+							render={({ field: { onChange, value, onBlur }, fieldState }) => (
+								<View style={styles.inputGroup}>
+									<Text style={styles.label}>Senha</Text>
+									<View
+										style={[
+											styles.inputWrapper,
+											fieldState.isTouched &&
+												!fieldState.error &&
+												value.length > 0 &&
+												styles.inputFocused,
+											fieldState.error && styles.inputError,
+										]}
+									>
+										<TextInput
+											ref={passwordField.ref}
+											returnKeyType={passwordField.returnKeyType}
+											onSubmitEditing={passwordField.onSubmitEditing}
+											blurOnSubmit={passwordField.blurOnSubmit}
+											style={styles.input}
+											placeholder="Digite sua senha"
+											placeholderTextColor="rgba(255,255,255,0.5)"
+											value={value}
+											onChangeText={onChange}
+											onBlur={onBlur}
+											secureTextEntry={!showPassword}
+											autoCapitalize="none"
+											cursorColor={lightColors.success}
+										/>
+										<TouchableOpacity
+											onPress={togglePassword}
+											hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+										>
+											{showPassword ? (
+												<EyeOff
+													size={RFValue(18)}
+													color="rgba(255,255,255,0.5)"
+													strokeWidth={2}
+												/>
+											) : (
+												<Eye
+													size={RFValue(18)}
+													color="rgba(255,255,255,0.5)"
+													strokeWidth={2}
+												/>
+											)}
+										</TouchableOpacity>
+									</View>
+									{fieldState.error && (
+										<Text style={styles.errorText}>
+											{fieldState.error.message}
+										</Text>
+									)}
+								</View>
+							)}
+						/>
+						<TouchableOpacity
+							activeOpacity={0.7}
+							style={styles.forgotBtn}
+						>
+							<Text style={styles.forgotText}>Esqueci minha senha</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
 
-					{/* Keep session */}
-					<Controller
-						control={control}
-						name="keepSession"
-						render={({ field: { onChange, value } }) => (
-							<View style={styles.keepSessionRow}>
-								<Text style={styles.keepSessionText}>
-									Manter a minha sessao ativa
-								</Text>
-								<Switch
-									value={value}
-									onValueChange={onChange}
-									trackColor={TRACK_COLORS}
-									thumbColor={lightColors.textPrimary}
-								/>
-							</View>
-						)}
-					/>
+				{/* Login button */}
+				<TouchableOpacity
+					style={[styles.primaryBtn, !canSubmit && styles.btnDisabled]}
+					onPress={handleLogin}
+					activeOpacity={0.8}
+					disabled={isLoading || !canSubmit}
+				>
+					{isLoading ? (
+						<ActivityIndicator color={lightColors.onPrimary} size="small" />
+					) : (
+						<Text style={styles.primaryBtnText}>Entrar</Text>
+					)}
+				</TouchableOpacity>
 
-					{/* Login button */}
-					<TouchableOpacity
-						style={[styles.loginBtn, isLoading && styles.loginBtnDisabled]}
-						onPress={handleLogin}
-						activeOpacity={0.8}
-						disabled={isLoading}
-					>
-						{isLoading ? (
-							<ActivityIndicator color={lightColors.bgNav} size="small" />
-						) : (
-							<Text style={styles.loginBtnText}>INICIAR SESSAO</Text>
-						)}
-					</TouchableOpacity>
-				</ScrollView>
+				{/* Divider */}
+				<View style={styles.dividerRow}>
+					<View style={styles.dividerLine} />
+					<Text style={styles.dividerText}>ou</Text>
+					<View style={styles.dividerLine} />
+				</View>
 
-				{/* Bottom register CTA */}
-				<View style={bottomCtaStyle}>
-					<TouchableOpacity style={styles.registerBtn} activeOpacity={0.8}>
-						<Text style={styles.registerText}>
-							Novo membro? <Text style={styles.registerTextBold}>Entre aqui</Text>
-						</Text>
-					</TouchableOpacity>
+				{/* Register button */}
+				<TouchableOpacity
+					style={styles.outlineBtn}
+					onPress={navigateToRegister}
+					activeOpacity={0.8}
+				>
+					<Text style={styles.outlineBtnText}>Criar conta</Text>
+				</TouchableOpacity>
+
+				{/* Footer */}
+				<View style={styles.footer}>
+					<Text style={styles.footerText}>
+						Jogo responsável · Proibido para menores de 18 anos.
+					</Text>
+					<Text style={styles.footerLinks}>
+						Termos de Uso  ·  Política de Privacidade
+					</Text>
 				</View>
 			</View>
-		</KeyboardAvoidingView>
+		</FormScreen>
 	);
 }
 
 const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-		backgroundColor: lightColors.background,
+	header: {
+		backgroundColor: lightColors.bgSecondary,
+		paddingHorizontal: RFValue(20),
+		paddingBottom: RFValue(14),
+		shadowColor: '#000000',
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.15,
+		shadowRadius: 12,
+		elevation: 8,
 	},
-	container: {
-		flex: 1,
-	},
-	topBar: {
+	headerRow: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		paddingHorizontal: RFValue(16),
-		paddingVertical: RFValue(12),
+		paddingTop: RFValue(14),
 	},
-	topBarBtn: {
-		padding: RFValue(4),
+	content: {
+		gap: RFValue(22),
 	},
 	logoContainer: {
 		alignItems: 'center',
-		paddingVertical: RFValue(16),
+		paddingTop: RFValue(16),
 	},
-	scroll: {
-		flex: 1,
+	titleBlock: {
+		gap: RFValue(4),
 	},
-	scrollContent: {
-		paddingHorizontal: RFValue(24),
-		paddingTop: RFValue(24),
-	},
-	sectionLabel: {
+	title: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(18),
 		color: lightColors.textPrimary,
-		marginBottom: RFValue(12),
 	},
-	methodTabs: {
-		flexDirection: 'row',
-		gap: RFValue(8),
-		marginBottom: RFValue(20),
-	},
-	methodTab: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: RFValue(6),
-		paddingHorizontal: RFValue(14),
-		paddingVertical: RFValue(8),
-		borderRadius: RFValue(50),
-		borderWidth: 1,
-		borderColor: '#282564',
-		backgroundColor: 'transparent',
-	},
-	methodTabActive: {
-		backgroundColor: lightColors.accent,
-		borderColor: lightColors.accent,
-	},
-	methodTabText: {
-		fontFamily: fontFamily.medium,
+	subtitle: {
+		fontFamily: fontFamily.regular,
 		fontSize: RFValue(12),
-		color: lightColors.textMuted,
+		color: lightColors.textSecondary,
 	},
-	methodTabTextActive: {
-		color: lightColors.bgNav,
-		fontFamily: fontFamily.bold,
+	formBlock: {
+		gap: RFValue(20),
 	},
 	inputGroup: {
-		marginBottom: RFValue(16),
+		gap: RFValue(5),
+	},
+	label: {
+		fontFamily: fontFamily.semibold,
+		fontSize: RFValue(12),
+		lineHeight: RFValue(18),
+		color: lightColors.textPrimary,
 	},
 	inputWrapper: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: lightColors.bgCard,
-		borderRadius: RFValue(10),
+		backgroundColor: '#1A2332',
+		borderRadius: RFValue(8),
+		borderWidth: 2,
+		borderColor: 'transparent',
+		height: RFValue(42),
+		paddingHorizontal: RFValue(14),
+	},
+	inputFocused: {
 		borderWidth: 1,
-		borderColor: '#282564',
-		height: RFValue(48),
-		paddingHorizontal: RFValue(16),
+		borderColor: lightColors.success,
 	},
 	inputError: {
-		borderColor: lightColors.live,
 		borderWidth: 2,
-	},
-	inputIcon: {
-		marginRight: RFValue(12),
+		borderColor: lightColors.error,
 	},
 	input: {
 		flex: 1,
@@ -355,80 +318,81 @@ const styles = StyleSheet.create({
 		color: lightColors.textPrimary,
 		height: '100%',
 	},
-	inputNoIcon: {
-		paddingLeft: 0,
-	},
-	eyeBtn: {
-		padding: RFValue(4),
-		marginLeft: RFValue(8),
-	},
-	helperText: {
-		fontFamily: fontFamily.regular,
-		fontSize: RFValue(11),
-		color: lightColors.textInactive,
-		marginTop: RFValue(8),
-		lineHeight: RFValue(16),
-	},
 	errorText: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(11),
-		color: lightColors.live,
-		marginTop: RFValue(6),
+		color: lightColors.error,
 	},
 	forgotBtn: {
-		alignSelf: 'flex-start',
-		marginBottom: RFValue(16),
+		alignSelf: 'flex-end',
+		marginTop: RFValue(10),
 	},
 	forgotText: {
-		fontFamily: fontFamily.medium,
-		fontSize: RFValue(13),
-		color: lightColors.accent,
+		fontFamily: fontFamily.semibold,
+		fontSize: RFValue(11),
+		color: lightColors.primary,
 	},
-	keepSessionRow: {
+	primaryBtn: {
+		backgroundColor: lightColors.primary,
+		height: RFValue(42),
+		borderRadius: RFValue(10),
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	btnDisabled: {
+		opacity: 0.5,
+	},
+	primaryBtnText: {
+		fontFamily: fontFamily.semibold,
+		fontSize: RFValue(13),
+		lineHeight: RFValue(18),
+		color: lightColors.onPrimary,
+	},
+	dividerRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'space-between',
-		marginBottom: RFValue(24),
+		gap: RFValue(12),
 	},
-	keepSessionText: {
+	dividerLine: {
+		flex: 1,
+		height: 1,
+		backgroundColor: 'rgba(128,128,153,0.2)',
+	},
+	dividerText: {
 		fontFamily: fontFamily.regular,
+		fontSize: RFValue(11),
+		color: '#808099',
+	},
+	outlineBtn: {
+		height: RFValue(42),
+		borderRadius: RFValue(10),
+		borderWidth: 2,
+		borderColor: lightColors.primary,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	outlineBtnText: {
+		fontFamily: fontFamily.semibold,
 		fontSize: RFValue(13),
-		color: lightColors.textPrimary,
+		lineHeight: RFValue(18),
+		color: lightColors.primary,
 	},
-	loginBtn: {
-		backgroundColor: lightColors.accent,
-		borderRadius: RFValue(10),
-		height: RFValue(50),
+	footer: {
+		gap: RFValue(4),
 		alignItems: 'center',
-		justifyContent: 'center',
-		marginBottom: RFValue(24),
 	},
-	loginBtnDisabled: {
-		opacity: 0.6,
-	},
-	loginBtnText: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(14),
-		color: lightColors.bgNav,
-		letterSpacing: 1,
-	},
-	bottomCta: {
-		paddingHorizontal: RFValue(24),
-	},
-	registerBtn: {
-		backgroundColor: lightColors.bgCard,
-		borderRadius: RFValue(10),
-		height: RFValue(50),
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	registerText: {
+	footerText: {
 		fontFamily: fontFamily.regular,
-		fontSize: RFValue(14),
-		color: lightColors.textMuted,
+		fontSize: RFValue(10),
+		color: lightColors.textSecondary,
+		opacity: 0.5,
+		textAlign: 'center',
 	},
-	registerTextBold: {
-		fontFamily: fontFamily.bold,
-		color: lightColors.accent,
+	footerLinks: {
+		fontFamily: fontFamily.medium,
+		fontSize: RFValue(10),
+		color: lightColors.primary,
+		opacity: 0.6,
+		textAlign: 'center',
 	},
 });

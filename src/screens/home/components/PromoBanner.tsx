@@ -10,7 +10,7 @@ export function PromoBanner() {
 	return (
 		<View style={styles.wrapper}>
 			<LinearGradient
-				colors={[lightColors.primary, lightColors.accent]}
+				colors={[lightColors.secondary, lightColors.primary]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.container}
@@ -34,48 +34,48 @@ export function PromoBanner() {
 
 const styles = StyleSheet.create({
 	wrapper: {
-		paddingHorizontal: RFValue(20),
+		paddingHorizontal: RFValue(14),
 	},
 	container: {
-		height: RFValue(170),
-		borderRadius: RFValue(16),
+		height: RFValue(120),
+		borderRadius: RFValue(12),
 		flexDirection: 'row',
 		overflow: 'hidden',
 	},
 	content: {
 		flex: 1,
 		justifyContent: 'center',
-		paddingLeft: RFValue(20),
-		gap: RFValue(8),
+		paddingLeft: RFValue(16),
+		gap: RFValue(6),
 		zIndex: 1,
 	},
 	subtitle: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(10),
+		fontSize: RFValue(9),
 		color: 'rgba(255,255,255,0.8)',
 	},
 	title: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(20),
+		fontSize: RFValue(16),
 		color: lightColors.textPrimary,
-		lineHeight: RFValue(24),
+		lineHeight: RFValue(20),
 	},
 	button: {
 		backgroundColor: lightColors.accent,
-		paddingHorizontal: RFValue(20),
-		paddingVertical: RFValue(10),
-		borderRadius: RFValue(10),
+		paddingHorizontal: RFValue(16),
+		paddingVertical: RFValue(8),
+		borderRadius: RFValue(8),
 		alignSelf: 'flex-start',
 	},
 	buttonText: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(12),
+		fontSize: RFValue(11),
 		color: lightColors.bgNav,
 	},
 	image: {
-		width: RFValue(180),
-		height: RFValue(190),
-		marginTop: RFValue(-14),
-		marginRight: RFValue(-10),
+		width: RFValue(130),
+		height: RFValue(140),
+		marginTop: RFValue(-10),
+		marginRight: RFValue(-8),
 	},
 });

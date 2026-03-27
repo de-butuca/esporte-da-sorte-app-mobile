@@ -1,6 +1,9 @@
+/**
+ * EDS Design System — Border Radius tokens
+ * Figma defines: 4px, 8px, 12px
+ */
 import { RFValue } from 'react-native-responsive-fontsize';
 
-/** Border Radius utilitários estilo Tailwind */
 export const radius = {
 	/** 2px */
 	roundedSm: RFValue(2),
