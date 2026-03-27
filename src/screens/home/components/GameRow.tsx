@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { GameCard } from './GameCard';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 
 interface Game {
 	id: string;
@@ -19,6 +20,18 @@ interface GameRowProps {
 }
 
 export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRowProps) {
+	const { guardNavigation } = useRequireAuth();
+
+	const handleGamePress = (game: Game) => {
+		const category = game.badge === 'live' ? 'live' : 'casino';
+
+		guardNavigation(category, () => {
+			if (onGamePress) {
+				onGamePress(game.id);
+			}
+		});
+	};
+
 	return (
 		<FlatList
 			data={games}
@@ -34,7 +47,7 @@ export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRo
 					badge={item.badge}
 					players={item.players}
 					width={cardWidth}
-					onPress={onGamePress ? () => onGamePress(item.id) : undefined}
+					onPress={() => handleGamePress(item)}
 				/>
 			)}
 		/>

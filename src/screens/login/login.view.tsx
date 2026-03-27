@@ -30,7 +30,7 @@ import {
 } from 'lucide-react-native';
 
 const LOGIN_METHODS: { key: LoginMethod; label: string; icon: typeof User }[] = [
-	{ key: 'usuario', label: 'Usuário', icon: User },
+	{ key: 'usuario', label: 'Usuario', icon: User },
 	{ key: 'email', label: 'E-mail', icon: AtSign },
 	{ key: 'cpf', label: 'CPF', icon: CreditCard },
 ];
@@ -150,7 +150,7 @@ export default function LoginScreen() {
 									<Text style={styles.errorText}>{fieldState.error.message}</Text>
 								) : (
 									<Text style={styles.helperText}>
-										Escolha seu método preferido para fazer login: Usuário, E-mail
+										Escolha seu metodo preferido para fazer login: Usuario, E-mail
 										ou CPF
 									</Text>
 								)}
@@ -211,7 +211,7 @@ export default function LoginScreen() {
 						render={({ field: { onChange, value } }) => (
 							<View style={styles.keepSessionRow}>
 								<Text style={styles.keepSessionText}>
-									Manter a minha sessão ativa
+									Manter a minha sessao ativa
 								</Text>
 								<Switch
 									value={value}
@@ -233,7 +233,7 @@ export default function LoginScreen() {
 						{isLoading ? (
 							<ActivityIndicator color="#02003D" size="small" />
 						) : (
-							<Text style={styles.loginBtnText}>INICIAR SESSÃO</Text>
+							<Text style={styles.loginBtnText}>INICIAR SESSAO</Text>
 						)}
 					</TouchableOpacity>
 				</ScrollView>

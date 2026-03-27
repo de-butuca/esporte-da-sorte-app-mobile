@@ -25,7 +25,11 @@ export function GameCard({
 	onPress,
 }: GameCardProps) {
 	return (
-		<TouchableOpacity style={[styles.container, { width }]} activeOpacity={0.8} onPress={onPress}>
+		<TouchableOpacity
+			style={[styles.container, { width }]}
+			activeOpacity={0.8}
+			onPress={onPress}
+		>
 			<View style={[styles.thumbnail, { width }]}>
 				<Image source={image} style={styles.thumbnailImage} resizeMode="cover" />
 				{badge === 'live' && (

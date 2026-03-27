@@ -32,7 +32,7 @@ export function useLoginViewModel() {
 		try {
 			setIsLoading(true);
 
-			// Fake login - será substituído por API real
+			// Fake login - sera substituido por API real
 			const result = await fakeLogin(data.identifier, data.password);
 
 			await signIn({
@@ -53,7 +53,7 @@ export function useLoginViewModel() {
 	const getPlaceholder = () => {
 		switch (loginMethod) {
 			case 'usuario':
-				return 'Usuário';
+				return 'Usuario';
 			case 'email':
 				return 'E-mail';
 			case 'cpf':

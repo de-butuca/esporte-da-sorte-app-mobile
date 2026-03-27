@@ -5,14 +5,13 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily } from '@/theme/design-tokens';
 import { Search, TicketPercent } from 'lucide-react-native';
 import Logo from '@assets/images/logo-square.svg';
-import { useAppNavigation } from '@/navigation/hooks';
-import { useSessionStore } from '@/core/session/useSessionStore';
 import Animated, {
 	useAnimatedStyle,
 	SharedValue,
 	interpolate,
 	Extrapolation,
 } from 'react-native-reanimated';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 
 const CASSINO_ICON = require('@assets/images/cassino-coin-icon.png');
 const SOCCER_ICON = require('@assets/images/soccer-ball-icon.png');
@@ -30,8 +29,7 @@ interface HomeHeaderProps {
 export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
-	const { navigate } = useAppNavigation();
-	const isAuthenticated = useSessionStore((s) => s.isAuthenticated);
+	const { requireAuth, isAuthenticated } = useRequireAuth();
 
 	const handleCategoryPress = (category: CategoryTab) => {
 		setActiveCategory(category);
@@ -59,7 +57,11 @@ export function HomeHeader({ scrollY, onCategoryChange }: HomeHeaderProps) {
 						<TicketPercent size={RFValue(20)} color="#fff" strokeWidth={2} />
 					</TouchableOpacity>
 					{!isAuthenticated && (
-						<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8} onPress={() => navigate('Login')}>
+						<TouchableOpacity
+							style={styles.entrarBtn}
+							activeOpacity={0.8}
+							onPress={() => requireAuth(() => {})}
+						>
 							<Text style={styles.entrarText}>Entrar</Text>
 						</TouchableOpacity>
 					)}

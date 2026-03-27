@@ -31,8 +31,8 @@ export function AppStack() {
 				name="Login"
 				component={LoginScreen}
 				options={{
+					headerShown: false,
 					animation: 'slide_from_bottom',
-					contentStyle: { backgroundColor: '#01003A' },
 				}}
 			/>
 		</Stack.Navigator>
