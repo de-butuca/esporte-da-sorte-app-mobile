@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily, lightColors } from '@/stampd.config';
 import { House, Zap, Dice5, ClipboardList, Menu } from 'lucide-react-native';
+import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
 
 export type NavTab = 'home' | 'live' | 'cassino' | 'apostas' | 'menu';
 
@@ -52,6 +53,15 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 
 export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	const insets = useSafeAreaInsets();
+	const { open: openSidebar } = useSidebar();
+
+	const handleTabPress = useCallback((key: NavTab) => {
+		if (key === 'menu') {
+			openSidebar();
+			return;
+		}
+		onTabPress(key);
+	}, [onTabPress, openSidebar]);
 	const containerStyle = useMemo(
 		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8) }],
 		[insets.bottom],
@@ -66,7 +76,7 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 						key={tab.key}
 						tab={tab}
 						isActive={activeTab === tab.key}
-						onPress={onTabPress}
+						onPress={handleTabPress}
 					/>
 				))}
 			</View>

@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily, lightColors } from '@/stampd.config';
-import { Search, Settings } from 'lucide-react-native';
+import { Menu, Search, Settings } from 'lucide-react-native';
+import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -24,6 +25,7 @@ interface HomeHeaderProps {
 export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
+	const { open: openSidebar } = useSidebar();
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => {
 		onCategoryChange(category);
@@ -49,6 +51,9 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	return (
 		<View style={containerStyle}>
 			<View style={styles.topRow}>
+				<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7} onPress={openSidebar}>
+					<Menu size={RFValue(22)} color={lightColors.textPrimary} strokeWidth={2} />
+				</TouchableOpacity>
 				<Logo width={RFValue(80)} height={RFValue(28)} />
 
 				<View style={styles.actions}>
