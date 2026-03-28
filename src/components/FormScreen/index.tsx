@@ -132,6 +132,7 @@ interface FormScreenProps {
 	header?: React.ReactNode;
 	footer?: React.ReactNode;
 	paddingHorizontal?: number;
+	backgroundColor?: string;
 }
 
 export function FormScreen({
@@ -139,6 +140,7 @@ export function FormScreen({
 	header,
 	footer,
 	paddingHorizontal = 20,
+	backgroundColor,
 }: FormScreenProps) {
 	const insets = useSafeAreaInsets();
 	const ctx = useContext(FormFieldsContext);
@@ -162,7 +164,7 @@ export function FormScreen({
 	);
 
 	return (
-		<View style={styles.root}>
+		<View style={[styles.root, backgroundColor != null && { backgroundColor }]}>
 			{header}
 
 			<KeyboardAvoidingView

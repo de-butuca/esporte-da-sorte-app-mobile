@@ -34,7 +34,7 @@ const NEW_GAMES = [
 ];
 
 export function HomeCassino() {
-	const { requireAuth } = useAuthGuard();
+	const { requireAuth } = useAuthGuard('cassino');
 
 	const handleGamePress = useCallback(
 		(gameId: string) => {

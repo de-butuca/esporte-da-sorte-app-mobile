@@ -4,7 +4,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Menu, Search, Settings } from 'lucide-react-native';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
-import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, {
 	useAnimatedStyle,
@@ -42,7 +41,9 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => setActiveCategory(category), [setActiveCategory]);
 
-	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
+	const handleLogin = useCallback(() => {
+		requireAuth(() => {}, activeCategory === 'cassino' ? 'cassino' : 'esportes');
+	}, [requireAuth, activeCategory]);
 
 	const handleTabLayout = useCallback(
 		(e: LayoutChangeEvent) => {
