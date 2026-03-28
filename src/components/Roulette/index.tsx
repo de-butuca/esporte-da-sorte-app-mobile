@@ -1,17 +1,16 @@
-import React, { useCallback, useState, useEffect, useMemo } from "react";
+import React, { useCallback, useState, useEffect, useMemo, RefObject } from "react";
 import {
   View,
   StyleSheet,
   Dimensions,
   Pressable,
   Text,
-  Modal,
+  BackHandler,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import Animated, {
   FadeIn,
   FadeOut,
-  SlideInDown,
   FadeInDown,
   useSharedValue,
   useAnimatedStyle,
@@ -20,7 +19,6 @@ import Animated, {
   withTiming,
   withDelay,
   cancelAnimation,
-  Easing,
 } from "react-native-reanimated";
 import { Gift } from "lucide-react-native";
 import { lightColors } from "@/stampd.config";
@@ -103,9 +101,12 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   onResult?: (item: RouletteItem) => void;
+  onSpin?: () => void;
+  onClaim?: () => void;
+  blurTarget?: RefObject<View | null>;
 }
 
-export function Roulette({ visible, onClose, onResult }: Props) {
+export function Roulette({ visible, onClose, onResult, onSpin, onClaim, blurTarget }: Props) {
   const [spinning, setSpinning] = useState(false);
   const [result, setResult] = useState<RouletteItem | null>(null);
 
@@ -113,7 +114,8 @@ export function Roulette({ visible, onClose, onResult }: Props) {
     if (spinning) return;
     setSpinning(true);
     setResult(null);
-  }, [spinning]);
+    onSpin?.();
+  }, [spinning, onSpin]);
 
   const handleFinish = useCallback(
     (item: RouletteItem) => {
@@ -130,21 +132,33 @@ export function Roulette({ visible, onClose, onResult }: Props) {
     onClose();
   }, [onClose]);
 
+  useEffect(() => {
+    if (!visible) return;
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (!spinning && !result) {
+        handleClose();
+        return true;
+      }
+      return true;
+    });
+    return () => sub.remove();
+  }, [visible, spinning, result, handleClose]);
+
   const prize = useMemo(() => (result ? parsePrize(result.label) : null), [result]);
 
-  return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="none"
-      statusBarTranslucent
-      onRequestClose={handleClose}
-    >
-      <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFill} />
+  if (!visible) return null;
 
-      <Animated.View
-        entering={FadeIn.duration(300)}
-        exiting={FadeOut.duration(200)}
+  return (
+    <Animated.View
+      entering={FadeIn.duration(300)}
+      exiting={FadeOut.duration(200)}
+      style={styles.fullscreen}
+    >
+      <BlurView
+        intensity={80}
+        tint="dark"
+        blurTarget={blurTarget}
+        blurMethod="dimezisBlurView"
         style={styles.overlay}
       >
         <Pressable
@@ -152,7 +166,6 @@ export function Roulette({ visible, onClose, onResult }: Props) {
           onPress={!spinning && !result ? handleClose : undefined}
         />
 
-        {/* Roleta */}
         <View style={styles.wheelCenter}>
           <RouletteWheel
             items={WHEEL_PRIZES}
@@ -162,12 +175,10 @@ export function Roulette({ visible, onClose, onResult }: Props) {
           />
         </View>
 
-        {/* Resultado */}
         {result && prize && (
           <>
             {result.value === "proxima" ? (
               <>
-                {/* Não ganhou — tente amanhã */}
                 <Animated.View
                   entering={FadeIn.delay(200).duration(300)}
                   style={styles.parabensWrap}
@@ -195,7 +206,6 @@ export function Roulette({ visible, onClose, onResult }: Props) {
               </>
             ) : (
               <>
-                {/* Ganhou */}
                 <Animated.View
                   entering={FadeIn.delay(200).duration(300)}
                   style={styles.parabensWrap}
@@ -218,7 +228,7 @@ export function Roulette({ visible, onClose, onResult }: Props) {
                   entering={FadeIn.delay(500).duration(300)}
                   style={styles.bottomArea}
                 >
-                  <Pressable style={styles.ctaButton} onPress={handleClose}>
+                  <Pressable style={styles.ctaButton} onPress={onClaim ?? handleClose}>
                     <View style={styles.ctaInner}>
                       <Gift size={20} color={lightColors.background} strokeWidth={2.5} />
                       <Text style={styles.ctaText}>Resgatar agora</Text>
@@ -230,7 +240,6 @@ export function Roulette({ visible, onClose, onResult }: Props) {
           </>
         )}
 
-        {/* Botão girar — só quando não tem resultado */}
         {!result && (
           <View style={styles.bottomArea}>
             <Pressable
@@ -246,12 +255,16 @@ export function Roulette({ visible, onClose, onResult }: Props) {
             </Pressable>
           </View>
         )}
-      </Animated.View>
-    </Modal>
+      </BlurView>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
+  fullscreen: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 999,
+  },
   overlay: {
     flex: 1,
     alignItems: "center",
@@ -270,7 +283,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  // --- Parabéns acima da roleta ---
   parabensWrap: {
     position: "absolute",
     top: 120,
@@ -286,7 +298,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
 
-  // --- Prêmio abaixo da roleta ---
   prizeBlock: {
     alignItems: "center",
     marginTop: 16,
@@ -313,7 +324,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // --- Botões ---
   spinButton: {
     backgroundColor: lightColors.accent,
     paddingVertical: 16,

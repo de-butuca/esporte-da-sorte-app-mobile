@@ -20,15 +20,12 @@ class NativeSplashView(context: Context) : View(context) {
     style = Paint.Style.FILL
   }
 
-  // Animation state
-  private var progress = 0f // 0..1 over the native phases
+  private var progress = 0f
   private var animator: ValueAnimator? = null
 
-  // ViewBox: 1209 x 419
   private val vbW = 1209f
   private val vbH = 419f
 
-  // Parsed paths
   private val eCorpoPath = parsePath("M134 115.48C158.17 114.81 178.54 98.95 185.9 77.11H56.31V77.13C25.24 77.26 0 102.58 0 133.69C0 164.8 25.16 190.03 56.16 190.25L132.41 190.26H185.9C178.54 168.41 158.17 152.55 134 151.89H56.57C46.71 151.89 38.37 143.56 38.37 133.69C38.37 123.82 46.7 115.49 56.57 115.49L134 115.48Z")
   private val eAcentoPath = parsePath("M122.35 0.359985C98.1802 1.02999 77.8102 16.89 70.4502 38.73H179.01C203.18 38.06 223.55 22.2 230.91 0.359985H122.35Z")
 
@@ -52,7 +49,6 @@ class NativeSplashView(context: Context) : View(context) {
     "M1088.09 378.19V378.14H1062.18C1052.33 378.14 1042.99 374.23 1035.9 367.14C1033.73 364.97 1031.86 362.59 1030.31 360.05H1090.35C1116.5 360.05 1137.77 338.78 1137.77 312.63C1137.77 286.48 1116.5 265.21 1090.35 265.21V265.17H1061.36V265.24C1041.56 265.45 1022.91 273.31 1008.77 287.45C994.43 301.79 986.54 320.76 986.54 340.86C986.54 360.96 994.44 379.93 1008.77 394.27C1022.32 407.83 1040.02 415.61 1058.9 416.42V416.5H1088.08H1137.76C1131.97 394.47 1111.9 378.17 1088.08 378.17M1035.91 314.6C1043 307.51 1052.33 303.61 1062.19 303.61V303.56H1090.36V303.6C1095.26 303.6 1099.4 307.74 1099.4 312.64C1099.4 317.54 1095.26 321.68 1090.36 321.68H1030.32C1031.87 319.14 1033.74 316.76 1035.91 314.59"
   ).map { parsePath(it) }
 
-  // Easing
   private fun easeInOutCubic(t: Float): Float =
     if (t < 0.5f) 4f * t * t * t else 1f - (-2f * t + 2f).let { it * it * it } / 2f
 
@@ -68,7 +64,6 @@ class NativeSplashView(context: Context) : View(context) {
   }
 
   fun startAnimation() {
-    // Animation will actually begin on first onDraw (when view is visible)
     animationStarted = false
     invalidate()
   }
@@ -78,15 +73,14 @@ class NativeSplashView(context: Context) : View(context) {
     animationStarted = true
     animationStartTime = System.currentTimeMillis()
     animator = ValueAnimator.ofFloat(0f, 1f).apply {
-      duration = 2976L // phases 1-5
-      interpolator = null // we handle easing per-phase
+      duration = 2976L
+      interpolator = null
       addUpdateListener { anim ->
         progress = anim.animatedValue as Float
         invalidate()
       }
       start()
     }
-    // Auto-hide after animation completes (fallback if JS can't call hide)
     postDelayed({ hide() }, 2976L + 300L)
   }
 
@@ -101,7 +95,6 @@ class NativeSplashView(context: Context) : View(context) {
     super.onDraw(canvas)
     canvas.drawColor(BG_COLOR)
 
-    // Start animation on first actual draw (view is visible on screen)
     beginAnimation()
 
     val screenW = width.toFloat()
@@ -114,11 +107,6 @@ class NativeSplashView(context: Context) : View(context) {
     val offsetY = (screenH - svgH) / 2f
 
     val t = progress
-
-    // Phase timings (normalized 0..1 over 2976ms)
-    // Phase 1: 0-0.097 (288ms), Phase 2: 0.097-0.29 (576ms)
-    // Phase 3: 0.29-0.516 (672ms), Phase 4: 0.516-0.806 (864ms)
-    // Phase 5: 0.806-1.0 (576ms)
 
     var logoAlpha = 255
     var translateX = 0f
@@ -133,7 +121,6 @@ class NativeSplashView(context: Context) : View(context) {
         translateX = (1f - p) * 250f
       }
       t <= 0.29f -> {
-        // Hold
       }
       t <= 0.516f -> {
         val p = easeInOutCubic((t - 0.29f) / 0.226f)
@@ -160,11 +147,9 @@ class NativeSplashView(context: Context) : View(context) {
 
     pathPaint.alpha = logoAlpha
 
-    // Draw É (always visible)
     canvas.drawPath(eCorpoPath, pathPaint)
     canvas.drawPath(eAcentoPath, pathPaint)
 
-    // Draw sportes (clipped)
     if (clipTopW > 0) {
       canvas.save()
       canvas.clipRect(0f, 0f, clipTopW, 248f)
@@ -172,7 +157,6 @@ class NativeSplashView(context: Context) : View(context) {
       canvas.restore()
     }
 
-    // Draw da Sorte (clipped)
     if (clipBotW > 0) {
       canvas.save()
       canvas.clipRect(0f, 226f, clipBotW, 419f)

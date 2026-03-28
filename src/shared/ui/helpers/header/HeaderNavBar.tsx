@@ -8,7 +8,6 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({
   headerHeight = 100,
   intensity = 50,
   tint = "systemUltraThinMaterialDark",
-  // @ts-ignore
   ...props
 }) => {
   const { width: WIDTH } = useWindowDimensions();

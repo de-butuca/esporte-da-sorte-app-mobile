@@ -1,7 +1,5 @@
 import { createTheme } from 'stampd/theme';
 
-// ── Colors ───────────────────────────────────────────────────────────────────
-
 export const lightColors = {
 	primary: '#023697',
 	onPrimary: 'black',
@@ -42,18 +40,13 @@ export const lightColors = {
 
 export const darkColors = lightColors;
 
-// ── Font family ───────────────────────────────────────────────────────────────
-
 export const fontFamily = {
 	regular: 'Inter_400Regular',
 	medium: 'Inter_500Medium',
 	bold: 'Inter_700Bold',
 } as const;
 
-// ── Shadows ───────────────────────────────────────────────────────────────────
-
 export const shadows = {
-	/** Sombra sutil — cards, inputs */
 	level1: {
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 1 },
@@ -61,7 +54,6 @@ export const shadows = {
 		shadowRadius: 2,
 		elevation: 2,
 	},
-	/** Sombra média — botões, chips */
 	level2: {
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 2 },
@@ -69,7 +61,6 @@ export const shadows = {
 		shadowRadius: 4,
 		elevation: 4,
 	},
-	/** Sombra elevada — modais, dropdowns */
 	level3: {
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 4 },
@@ -77,7 +68,6 @@ export const shadows = {
 		shadowRadius: 8,
 		elevation: 8,
 	},
-	/** Sombra forte — bottom sheets, overlays */
 	level4: {
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 8 },
@@ -87,10 +77,7 @@ export const shadows = {
 	},
 };
 
-// ── Theme config ──────────────────────────────────────────────────────────────
-
 export const config = createTheme({
-	// ── Compile-time tokens ──────────────────────────────────────────────────
 	tokens: {
 		spacing: {
 			p1: 4,
@@ -142,15 +129,11 @@ export const config = createTheme({
 			s32: 128,
 		},
 	},
-
-	// ── Runtime theme ────────────────────────────────────────────────────────
 	theme: {
 		light: { colors: lightColors },
 		dark: { colors: darkColors },
 		highContrast: { colors: { background: '#000' } },
 	},
-
-	// ── Fonts ────────────────────────────────────────────────────────────────
 	fonts: {
 		default: { size: 14, family: fontFamily.regular },
 		sizes: { xs: 10, sm: 12, base: 14, md: 16, lg: 18, xl: 20, xl2: 24, xl3: 32 },

@@ -9,9 +9,6 @@ const path = require("path");
 const fs = require("fs");
 
 function withNativeSplash(config) {
-  // ===================== iOS =====================
-
-  // 1. Copy Swift/ObjC source files and add to Xcode project
   config = withXcodeProject(config, async (config) => {
     const project = config.modResults;
     const projectRoot = config.modRequest.projectRoot;
@@ -61,7 +58,6 @@ function withNativeSplash(config) {
     return config;
   });
 
-  // 2. Modify AppDelegate
   config = withAppDelegate(config, (config) => {
     let contents = config.modResults.contents;
 
@@ -70,7 +66,6 @@ function withNativeSplash(config) {
         "return super.application(application, didFinishLaunchingWithOptions: launchOptions)",
         `let result = super.application(application, didFinishLaunchingWithOptions: launchOptions)
 
-    // Show native animated splash on top (after window is fully set up)
     DispatchQueue.main.async { [weak self] in
       if let window = self?.window {
         NativeSplashView.show(in: window)
@@ -85,9 +80,6 @@ function withNativeSplash(config) {
     return config;
   });
 
-  // ===================== Android =====================
-
-  // 3. Copy Kotlin files to Android project
   config = withDangerousMod(config, [
     "android",
     async (config) => {
@@ -124,12 +116,10 @@ function withNativeSplash(config) {
         }
       }
 
-      // Override splash theme to just show #023697 background (no icon needed)
       const resDir = path.join(
         projectRoot, "android", "app", "src", "main", "res"
       );
 
-      // Fix ic_launcher_background.xml to not reference splashscreen_logo
       const bgDrawable = path.join(resDir, "drawable", "ic_launcher_background.xml");
       if (fs.existsSync(bgDrawable)) {
         fs.writeFileSync(bgDrawable,
@@ -139,7 +129,6 @@ function withNativeSplash(config) {
 `);
       }
 
-      // Ensure splashscreen_background matches our color
       const colorsPath = path.join(resDir, "values", "colors.xml");
       if (fs.existsSync(colorsPath)) {
         let colors = fs.readFileSync(colorsPath, "utf8");
@@ -150,7 +139,6 @@ function withNativeSplash(config) {
         fs.writeFileSync(colorsPath, colors);
       }
 
-      // Same for night mode
       const nightColorsPath = path.join(resDir, "values-night", "colors.xml");
       if (fs.existsSync(nightColorsPath)) {
         let colors = fs.readFileSync(nightColorsPath, "utf8");
@@ -165,11 +153,9 @@ function withNativeSplash(config) {
     },
   ]);
 
-  // 4. Modify MainActivity
   config = withMainActivity(config, (config) => {
     let contents = config.modResults.contents;
 
-    // Add imports
     if (!contents.includes("import android.widget.FrameLayout")) {
       contents = contents.replace(
         "import android.os.Bundle",
@@ -179,13 +165,11 @@ import android.widget.FrameLayout`
       );
     }
 
-    // Add splash view after super.onCreate
     if (!contents.includes("NativeSplashView")) {
       contents = contents.replace(
         "super.onCreate(null)",
         `super.onCreate(null)
 
-    // Add native animated splash on top
     val splash = NativeSplashView(this)
     splash.layoutParams = FrameLayout.LayoutParams(
       ViewGroup.LayoutParams.MATCH_PARENT,
@@ -201,7 +185,6 @@ import android.widget.FrameLayout`
     return config;
   });
 
-  // 5. Modify MainApplication to register package
   config = withMainApplication(config, (config) => {
     let contents = config.modResults.contents;
 

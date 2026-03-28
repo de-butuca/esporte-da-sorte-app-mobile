@@ -23,7 +23,7 @@ const Container = Styled.TouchableOpacity({
 	},
 });
 
-const Text = Styled.Text({
+const Label = Styled.Text({
 	style: ({ theme }) => ({
 		color: theme.colors.onPrimary,
 		fontSize: theme.fonts.sizes.base,
@@ -31,4 +31,4 @@ const Text = Styled.Text({
 	}),
 });
 
-export const BBS = { container: Container, Text };
+export const BBS = { container: Container, Label };

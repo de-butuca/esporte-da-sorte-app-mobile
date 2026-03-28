@@ -1,4 +1,3 @@
-// core/session/session.storage.ts
 import * as SecureStore from 'expo-secure-store';
 import { SessionUser } from './session.types';
 

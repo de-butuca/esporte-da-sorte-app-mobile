@@ -1,7 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import { Canvas, Rect as SkiaRect, Group } from "@shopify/react-native-skia";
 import LottieView from "lottie-react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  runOnJS,
+} from "react-native-reanimated";
 import { hideNativeSplash, getNativeAnimationStartTime } from "../native/NativeSplash";
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get("window");
@@ -11,18 +18,11 @@ const BG = lightColors.background;
 
 const LOTTIE_SOURCE = require("../../assets/images/icon-e-animated.json");
 
-// Exact same colors as HTML
 const CONFETTI_COLORS = ["#37E67D", "#0f0", "#fff", "#5BF0A0", "#1A5CC8", "#2AF598", "#00FF88", "#023697", "#FFD700", "#FF6B6B"];
 
-// Phases 6-8 from HTML: 62%-100% of 4800ms = 1824ms
 const DUR = 1824;
-
-// Phase boundaries (normalized within DUR)
-// Phase 6: 0-480ms = 0 to 0.263 (crossfade)
-// Phase 7: 480-1104ms = 0.263 to 0.605 (bounce + confetti)
-// Phase 8: 1104-1824ms = 0.605 to 1.0 (static)
-const P6_END = 480 / DUR;   // 0.263
-const P7_END = 1104 / DUR;  // 0.605
+const P6_END = 480 / DUR;
+const P7_END = 1104 / DUR;
 
 interface ConfettiPiece {
   id: number;
@@ -37,37 +37,68 @@ interface ConfettiPiece {
   wobbleV: number;
 }
 
-interface AnimState {
-  iconOpacity: number;
-  iconScale: number;
-}
-
 interface AnimatedSplashProps {
   onFinish: () => void;
 }
 
-// Exact same easing as HTML
-const eio = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-const eob = (t: number) => { const c = 2.2; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+function eio(t: number) {
+  "worklet";
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function eob(t: number) {
+  "worklet";
+  const c = 2.2;
+  return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2);
+}
+
+const LottieIcon = React.memo(function LottieIcon({
+  lottieRef,
+  width,
+  height,
+}: {
+  lottieRef: React.RefObject<LottieView | null>;
+  width: number;
+  height: number;
+}) {
+  return (
+    <LottieView
+      ref={lottieRef}
+      source={LOTTIE_SOURCE}
+      renderMode="HARDWARE"
+      loop
+      style={{ width, height }}
+    />
+  );
+});
 
 export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   const LOTTIE_W = SCREEN_W * 0.65;
   const LOTTIE_H = LOTTIE_W * (768 / 512);
 
-  const [anim, setAnim] = useState<AnimState>({
-    iconOpacity: 0, iconScale: 0.8,
-  });
   const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
-
   const confettiRef = useRef<ConfettiPiece[]>([]);
   const confettiIdRef = useRef(0);
   const burstRef = useRef(false);
-  const startRef = useRef(0);
   const frameRef = useRef(0);
   const lottieRef = useRef<LottieView>(null);
 
-  // Exact same spawn as HTML
-  const spawnConfetti = (cx: number, cy: number, n: number) => {
+  const progress = useSharedValue(0);
+
+  const iconAnimStyle = useAnimatedStyle(() => {
+    const t = progress.value;
+
+    if (t <= P6_END) {
+      const p = eio(t / P6_END);
+      return { opacity: p, transform: [{ scale: 0.8 + p * 0.2 }] };
+    } else if (t <= P7_END) {
+      const p = eob((t - P6_END) / (P7_END - P6_END));
+      return { opacity: 1, transform: [{ scale: 0.85 + p * 0.15 }] };
+    }
+    return { opacity: 1, transform: [{ scale: 1 }] };
+  });
+
+  const spawnConfetti = useCallback((cx: number, cy: number, n: number) => {
     for (let i = 0; i < n; i++) {
       const a = Math.random() * Math.PI * 2;
       const sp = 3 + Math.random() * 6;
@@ -88,79 +119,67 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
         wobbleV: 0.05 + Math.random() * 0.1,
       });
     }
-  };
+  }, []);
 
   useEffect(() => {
     burstRef.current = false;
 
-    // Wait for native animation (phases 1-5 = 2976ms) to finish,
-    // then hide native splash and start JS animation (phases 6-8)
     const NATIVE_DUR = 2976;
     const nativeStartTime = getNativeAnimationStartTime() || Date.now();
 
     const startJSAnimation = () => {
       hideNativeSplash();
       lottieRef.current?.play(23, 96);
-      startRef.current = Date.now();
-      frameRef.current = requestAnimationFrame(tick);
-    };
 
-    const tick = () => {
-      const el = Date.now() - startRef.current;
-      const t = Math.min(el / DUR, 1);
-      let s: AnimState;
+      progress.value = withTiming(1, {
+        duration: DUR,
+        easing: Easing.linear,
+      }, (finished) => {
+        if (finished) runOnJS(onFinish)();
+      });
 
-      if (t <= P6_END) {
-        // Phase 6: Crossfade — icon fades in, scale 0.8→1.0
-        // HTML: eio((t-.62)/.1) with full DUR → same as eio(t / P6_END) in our DUR
-        const p = eio(t / P6_END);
-        s = { iconOpacity: p, iconScale: 0.8 + p * 0.2 };
-      } else if (t <= P7_END) {
-        // Phase 7: Bounce — icon scale 0.85→1.0, confetti
-        // HTML: eob((t-.72)/.13)
-        const p = eob((t - P6_END) / (P7_END - P6_END));
-        s = { iconOpacity: 1, iconScale: 0.85 + p * 0.15 };
-        if (!burstRef.current && p > 0.4) {
-          burstRef.current = true;
-          spawnConfetti(SCREEN_W / 2, SCREEN_H / 2, 25);
+      const startTime = Date.now();
+      const tickConfetti = () => {
+        const el = Date.now() - startTime;
+        const t = Math.min(el / DUR, 1);
+
+        if (!burstRef.current && t > P6_END) {
+          const p7 = (t - P6_END) / (P7_END - P6_END);
+          if (p7 > 0.4) {
+            burstRef.current = true;
+            spawnConfetti(SCREEN_W / 2, SCREEN_H / 2, 25);
+          }
         }
-      } else {
-        // Phase 8: Static
-        s = { iconOpacity: 1, iconScale: 1 };
-      }
 
-      // Update confetti — exact same physics as HTML drawConfetti()
-      confettiRef.current = confettiRef.current
-        .filter((c) => c.life > 0 && c.y < SCREEN_H + 20)
-        .map((c) => ({
-          ...c,
-          x: c.x + c.vx + Math.sin(c.wobble) * 1.5,
-          y: c.y + c.vy,
-          vy: c.vy + 0.1,
-          vx: c.vx * 0.99,
-          life: c.life - c.decay,
-          rot: c.rot + c.rotV,
-          wobble: c.wobble + c.wobbleV,
-        }));
+        if (confettiRef.current.length > 0) {
+          confettiRef.current = confettiRef.current
+            .filter((c) => c.life > 0 && c.y < SCREEN_H + 20)
+            .map((c) => ({
+              ...c,
+              x: c.x + c.vx + Math.sin(c.wobble) * 1.5,
+              y: c.y + c.vy,
+              vy: c.vy + 0.1,
+              vx: c.vx * 0.99,
+              life: c.life - c.decay,
+              rot: c.rot + c.rotV,
+              wobble: c.wobble + c.wobbleV,
+            }));
+          setConfetti([...confettiRef.current]);
+        }
 
-      setAnim(s);
-      setConfetti([...confettiRef.current]);
+        if (t < 1 || confettiRef.current.length > 0) {
+          frameRef.current = requestAnimationFrame(tickConfetti);
+        }
+      };
 
-      if (t < 1) {
-        frameRef.current = requestAnimationFrame(tick);
-      } else {
-        onFinish();
-      }
+      frameRef.current = requestAnimationFrame(tickConfetti);
     };
 
-    // Calculate how much time the native animation has left
     const elapsed = Date.now() - nativeStartTime;
     const remaining = Math.max(0, NATIVE_DUR - elapsed);
 
-    // Wait for native animation to finish, then start JS part
     const timeout = setTimeout(startJSAnimation, remaining);
 
-    // Safety: if splash is still showing after 8s, force finish
     const safetyTimeout = setTimeout(() => {
       hideNativeSplash();
       onFinish();
@@ -175,7 +194,6 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
 
   return (
     <View style={styles.container}>
-      {/* Confetti */}
       <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
         {confetti.map((c) => (
           <Group
@@ -198,25 +216,19 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
         ))}
       </Canvas>
 
-      {/* Icon (Lottie) */}
-      <View
+      <Animated.View
         style={[
           styles.iconWrap,
-          {
-            width: LOTTIE_W,
-            height: LOTTIE_H,
-            opacity: anim.iconOpacity,
-            transform: [{ scale: anim.iconScale }],
-          },
+          { width: LOTTIE_W, height: LOTTIE_H },
+          iconAnimStyle,
         ]}
       >
-        <LottieView
-          ref={lottieRef}
-          source={LOTTIE_SOURCE}
-          loop
-          style={{ width: LOTTIE_W, height: LOTTIE_H }}
+        <LottieIcon
+          lottieRef={lottieRef}
+          width={LOTTIE_W}
+          height={LOTTIE_H}
         />
-      </View>
+      </Animated.View>
     </View>
   );
 }

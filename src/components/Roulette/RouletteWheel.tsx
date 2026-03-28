@@ -48,10 +48,7 @@ function CenterLogo({ size }: { size: number }) {
   );
 }
 
-// Os setores na imagem vão no sentido ANTI-HORÁRIO a partir do topo.
 const IMAGE_OFFSET_RAD = (270 * Math.PI) / 180;
-
-// Padding extra ao redor do Canvas para que o blur/glow não seja cortado
 const CANVAS_PAD = 60;
 
 export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
@@ -71,7 +68,6 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
   useEffect(() => {
     if (!spinning) return;
 
-    // Só caem: 10 giros Genie's (0), 15 giros Macaco (4), 3 giros Genie's (6)
     const possibleIndexes = [0, 4, 6];
     const targetIndex = possibleIndexes[Math.floor(Math.random() * possibleIndexes.length)];
     targetIndexRef.current = targetIndex;
@@ -97,12 +93,10 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
     transform: [{ rotate: `${rotation.value}rad` }],
   }));
 
-  // Canvas expandido para glow não ser cortado
   const canvasSize = size + CANVAS_PAD * 2;
-  const ccx = canvasSize / 2; // centro no canvas expandido
+  const ccx = canvasSize / 2;
   const ccy = canvasSize / 2;
 
-  // Luzes ao redor — com glow real
   const lightCount = 24;
   const lightRingR = radius + 2;
   const lights = useMemo(
@@ -125,7 +119,6 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
     [ccx, ccy, lightRingR]
   );
 
-  // Pointer — estilo original
   const goldR = size * 0.12;
   const innerR = goldR - 4;
   const tipY = cy - goldR - 18;
@@ -134,7 +127,6 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
 
   return (
     <View style={[styles.container, { width: size, height: size }]}>
-      {/* Glow halo + luzes — canvas expandido para não cortar o blur */}
       <Canvas
         style={{
           position: "absolute",
@@ -145,11 +137,10 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
         }}
         pointerEvents="none"
       >
-        {/* Radial burst — raios de luz saindo do centro */}
         {Array.from({ length: 16 }, (_, i) => {
           const angle = (i / 16) * Math.PI * 2 - Math.PI / 2;
-          const halfSpread = Math.PI / 32; // largura de cada raio
-          const burstR = radius + CANVAS_PAD - 4; // até a borda do canvas
+          const halfSpread = Math.PI / 32;
+          const burstR = radius + CANVAS_PAD - 4;
           const x1 = ccx + Math.cos(angle - halfSpread) * burstR;
           const y1 = ccy + Math.sin(angle - halfSpread) * burstR;
           const x2 = ccx + Math.cos(angle + halfSpread) * burstR;
@@ -163,7 +154,6 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
           );
         })}
 
-        {/* Halo de luz atrás */}
         <Circle cx={ccx} cy={ccy} r={radius + 30} color="rgba(55,230,125,0.06)">
           <BlurMask blur={30} style="normal" />
         </Circle>
@@ -171,11 +161,9 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
           <BlurMask blur={20} style="normal" />
         </Circle>
 
-        {/* Anel externo escuro */}
         <Circle cx={ccx} cy={ccy} r={radius + 4} color="#080c20" />
         <Circle cx={ccx} cy={ccy} r={radius + 1} color="#0d1230" />
 
-        {/* Luzes com glow */}
         {lights.map((l, i) => (
           <Group key={i}>
             <Circle cx={l.x} cy={l.y} r={8} color={l.glowColor}>
@@ -188,7 +176,6 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
         ))}
       </Canvas>
 
-      {/* Imagem da roleta girando */}
       <Animated.View
         style={[
           styles.wheelWrap,
@@ -212,7 +199,6 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
         />
       </Animated.View>
 
-      {/* Ponteiro + centro dourado */}
       <Canvas style={[StyleSheet.absoluteFill, { width: size, height: size }]} pointerEvents="none">
         <SkiaPath path={pointerPath} color="#FFD700">
           <Shadow dx={0} dy={2} blur={6} color="rgba(0,0,0,0.4)" />
@@ -228,7 +214,6 @@ export function RouletteWheel({ items, size, spinning, onFinish }: Props) {
         <Circle cx={cx} cy={cy} r={innerR} color="#0a1a4a" />
       </Canvas>
 
-      {/* Logo central */}
       <CenterLogo size={size} />
     </View>
   );

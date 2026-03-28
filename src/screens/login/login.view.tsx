@@ -46,7 +46,6 @@ function LoginHeader() {
 	);
 }
 
-/** Componente externo: fornece o contexto de campos */
 export default function LoginScreen() {
 	return (
 		<FormFieldsProvider fieldCount={2}>
@@ -55,7 +54,6 @@ export default function LoginScreen() {
 	);
 }
 
-/** Componente interno: usa useFormField (já dentro do Provider) */
 function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const togglePassword = useCallback(() => setShowPassword((s) => !s), []);
@@ -74,12 +72,10 @@ function LoginForm() {
 	return (
 		<FormScreen header={<LoginHeader />}>
 			<View style={styles.content}>
-				{/* Logo */}
 				<View style={styles.logoContainer}>
 					<Logo width={RFValue(100)} height={RFValue(34)} />
 				</View>
 
-				{/* Title */}
 				<View style={styles.titleBlock}>
 					<Text style={styles.title}>Entrar</Text>
 					<Text style={styles.subtitle}>
@@ -87,9 +83,7 @@ function LoginForm() {
 					</Text>
 				</View>
 
-				{/* Form */}
 				<View style={styles.formBlock}>
-					{/* Email */}
 					<Controller
 						control={control}
 						name="email"
@@ -131,7 +125,6 @@ function LoginForm() {
 						)}
 					/>
 
-					{/* Password */}
 					<View>
 						<Controller
 							control={control}
@@ -200,7 +193,6 @@ function LoginForm() {
 					</View>
 				</View>
 
-				{/* Login button */}
 				<TouchableOpacity
 					style={[styles.primaryBtn, !canSubmit && styles.btnDisabled]}
 					onPress={handleLogin}
@@ -214,14 +206,12 @@ function LoginForm() {
 					)}
 				</TouchableOpacity>
 
-				{/* Divider */}
 				<View style={styles.dividerRow}>
 					<View style={styles.dividerLine} />
 					<Text style={styles.dividerText}>ou</Text>
 					<View style={styles.dividerLine} />
 				</View>
 
-				{/* Register button */}
 				<TouchableOpacity
 					style={styles.outlineBtn}
 					onPress={navigateToRegister}
@@ -230,7 +220,6 @@ function LoginForm() {
 					<Text style={styles.outlineBtnText}>Criar conta</Text>
 				</TouchableOpacity>
 
-				{/* Footer */}
 				<View style={styles.footer}>
 					<Text style={styles.footerText}>
 						Jogo responsável · Proibido para menores de 18 anos.

@@ -1,17 +1,24 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
+import { BlurTargetView } from 'expo-blur';
 import { lightColors } from '@/stampd.config';
 import { HomeHeader, CategoryTab } from './Pages/homeCassino/components/HomeHeader';
 import { BottomNavBar, NavTab } from '@/components/BottomNavBar';
 import { HomeCassino } from './Pages/homeCassino/view';
 import { HomeEsportes } from './Pages/homeEsportes/view';
+import { Roulette } from '@/components/Roulette';
+import { markRouletteSpun, setOnRouletteOpen } from '@/core/services/notifications';
+import { useAppNavigation } from '@/navigation/hooks';
 
 export default function HomeScreen() {
+	const navigation = useAppNavigation();
 	const [activeTab, setActiveTab] = useState<NavTab>('home');
 	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
+	const [showRoulette, setShowRoulette] = useState(false);
 	const scrollY = useSharedValue(0);
+	const blurTargetRef = useRef<View>(null);
 
 	const scrollHandler = useAnimatedScrollHandler({
 		onScroll: (event) => {
@@ -27,40 +34,49 @@ export default function HomeScreen() {
 		[scrollY]
 	);
 
+	useEffect(() => {
+		setOnRouletteOpen(() => setShowRoulette(true));
+		return () => setOnRouletteOpen(null);
+	}, []);
+
+	const handleRouletteSpin = useCallback(() => {
+		markRouletteSpun();
+	}, []);
+
+	const handleRouletteClose = useCallback(() => {
+		setShowRoulette(false);
+	}, []);
+
+	const handleRouletteClaim = useCallback(() => {
+		setShowRoulette(false);
+		navigation.navigate('Login');
+	}, [navigation]);
+
 	return (
 		<View style={styles.root}>
-			<HomeHeader scrollY={scrollY} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
+			<BlurTargetView ref={blurTargetRef} style={styles.fill}>
+				<HomeHeader scrollY={scrollY} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
 
-			<Animated.ScrollView
-				style={styles.scroll}
-				contentContainerStyle={styles.scrollContent}
-				showsVerticalScrollIndicator={false}
-				onScroll={scrollHandler}
-				scrollEventThrottle={16}
-			>
-				<BannerCarousel />
+				<Animated.ScrollView
+					style={styles.scroll}
+					contentContainerStyle={styles.scrollContent}
+					showsVerticalScrollIndicator={false}
+					onScroll={scrollHandler}
+					scrollEventThrottle={16}
+				>
+					{activeCategory === 'cassino' ? <HomeCassino /> : <HomeEsportes />}
+				</Animated.ScrollView>
 
-				<View style={styles.section}>
-					<SectionHeader title="Ao vivo" count={12} hasLive />
-					<GameRow games={LIVE_GAMES} cardWidth={RFValue(80)} onGamePress={handleGamePress} />
-				</View>
+				<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
+			</BlurTargetView>
 
-				<View style={styles.section}>
-					<SectionHeader title="Cassino em alta" count={12} />
-					<GameRow games={TRENDING_GAMES} onGamePress={handleGamePress} />
-				</View>
-
-				<PromoBanner />
-
-				<View style={styles.section}>
-					<SectionHeader title="Novos cassinos" count={12} />
-					<GameRow games={NEW_GAMES} onGamePress={handleGamePress} />
-				</View>
-
-				<View style={styles.bottomSpacer} />
-			</Animated.ScrollView>
-
-			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
+			<Roulette
+				visible={showRoulette}
+				onClose={handleRouletteClose}
+				onSpin={handleRouletteSpin}
+				onClaim={handleRouletteClaim}
+				blurTarget={blurTargetRef}
+			/>
 		</View>
 	);
 }
@@ -69,6 +85,9 @@ const styles = StyleSheet.create({
 	root: {
 		flex: 1,
 		backgroundColor: lightColors.background,
+	},
+	fill: {
+		flex: 1,
 	},
 	scroll: {
 		flex: 1,

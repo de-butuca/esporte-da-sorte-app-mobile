@@ -1,8 +1,3 @@
-// ============================================================
-// Casino Mocks — Realistic mock data for casino, iframe
-//                games, tags, reserved categories/games
-// ============================================================
-
 import {
   CasinoGamesTagsResponse,
   CasinoTagsResponse,
@@ -14,9 +9,6 @@ import {
 } from '../models/casino.models';
 import { OdinResponse } from '../models/common.models';
 
-// ---- Casino Games Tags ----
-
-/** Mock de mapeamento jogo → tags: 8 jogos com IDs de tags para filtros. */
 export const mockCasinoGamesTags: CasinoGamesTagsResponse = {
   state: { code: 0, message: 'OK', messageDetails: '', reference: '' },
   list: [
@@ -31,9 +23,6 @@ export const mockCasinoGamesTags: CasinoGamesTagsResponse = {
   ],
 };
 
-// ---- Casino Tags (tag id → name map) ----
-
-/** Mock de catálogo de tags: 12 tags (Popular, Novos, Slots, Mesa, Ao Vivo, Jackpot, etc.). */
 export const mockCasinoTags: CasinoTagsResponse = {
   state: { code: 0, message: 'OK', messageDetails: '', reference: '' },
   map: {
@@ -52,9 +41,6 @@ export const mockCasinoTags: CasinoTagsResponse = {
   },
 };
 
-// ---- Reserved Categories ----
-
-/** Mock de categorias reservadas: Slots, Mesa, Ao Vivo, Crash Games, Jackpot, Novos. */
 export const mockReservedCategories: ReservedCategoryResponse = {
   state: { code: 0, message: 'OK' },
   categories: [
@@ -67,9 +53,6 @@ export const mockReservedCategories: ReservedCategoryResponse = {
   ],
 };
 
-// ---- Reserved Games ----
-
-/** Mock de jogos reservados: Sweet Bonanza, Gates of Olympus, Aviator, Lightning Roulette, etc. */
 export const mockReservedGames: ReservedGameResponse = {
   state: { code: 0, message: 'OK' },
   games: [
@@ -225,9 +208,6 @@ export const mockReservedGames: ReservedGameResponse = {
   ],
 };
 
-// ---- Open Demo Game ----
-
-/** Mock de abertura de jogo demo: URL, dimensões 100% e durações de sessão. */
 export const mockOpenDemoGame: OpenGame = {
   gameUrl: 'https://gameserver.example.com/demo/launch?token=DEMO-abc123&lang=pt&currency=BRL',
   width: '100%',
@@ -237,9 +217,6 @@ export const mockOpenDemoGame: OpenGame = {
   remainingMonthlySessionDuration: 2592000,
 };
 
-// ---- Iframe Game List ----
-
-/** Mock de lista de jogos iframe: Pragmatic Play (5 jogos), Spribe (2), Evolution Gaming (3). */
 export const mockIframeGameList: OdinResponse<GameListRecord[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -406,9 +383,6 @@ export const mockIframeGameList: OdinResponse<GameListRecord[]> = {
   ],
 };
 
-// ---- Launch Demo (Iframe) ----
-
-/** Mock de URL de lançamento de demo via iframe. */
 export const mockLaunchDemo: OdinResponse<LaunchGame> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],

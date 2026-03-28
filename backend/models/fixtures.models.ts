@@ -1,13 +1,5 @@
-// ============================================================
-// Fixtures Models — Sport, Fixture, Season, Category, Odds
-// Generated from OpenAPI spec (Casino API v1.0.0)
-// ============================================================
-
 import { BragiResponseCode } from './common.models';
 
-// ---- Responses ----
-
-/** Resposta padrão da Bragi API para endpoints que retornam lista de esportes com partidas. */
 export interface SportListResponse {
   data?: SportType[];
   responseCodes?: BragiResponseCode[];
@@ -15,7 +7,6 @@ export interface SportListResponse {
   type?: string;
 }
 
-/** Resposta para esportes com jogos hoje (sem árvore completa de categorias). */
 export interface TodaySportListResponse {
   data?: TodaySportType[];
   responseCodes?: BragiResponseCode[];
@@ -23,16 +14,12 @@ export interface TodaySportListResponse {
   type?: string;
 }
 
-/** Resposta com resumo de bet type groups por esporte. */
 export interface BragiResponseListSportBtgMarketsSummary {
   data?: SportBtgMarketsSummary[];
   responseCodes?: BragiResponseCode[];
   success?: boolean;
 }
 
-// ---- Sport Types ----
-
-/** Esporte com contadores básicos — usado em listagens resumidas (hoje). */
 export interface TodaySportType {
   stId: number;
   xid: string;
@@ -49,7 +36,6 @@ export interface TodaySportType {
   stSURL?: string | null;
 }
 
-/** Esporte completo com hierarquia de categorias, temporadas e partidas. Estende TodaySportType. */
 export interface SportType extends TodaySportType {
   cmt?: number | null;
   counts?: EntityCounts | null;
@@ -58,9 +44,6 @@ export interface SportType extends TodaySportType {
   cs?: Category[] | null;
 }
 
-// ---- Entity Counts ----
-
-/** Contadores agregados de entidades de um esporte (categorias, ligas, partidas, odds, etc.). */
 export interface EntityCounts {
   sport: number;
   category: number;
@@ -72,9 +55,6 @@ export interface EntityCounts {
   odd: number;
 }
 
-// ---- Category ----
-
-/** País ou região dentro de um esporte (ex.: Brasil, Espanha). Contém temporadas. */
 export interface Category {
   cId: number;
   xid?: string | null;
@@ -88,9 +68,6 @@ export interface Category {
   cSURL?: string | null;
 }
 
-// ---- Season ----
-
-/** Temporada ou campeonato dentro de uma categoria (ex.: Brasileirão Série A 2026). Contém partidas. */
 export interface Season {
   sId: number;
   lId: number;
@@ -109,9 +86,6 @@ export interface Season {
   fs: Fixture[];
 }
 
-// ---- Fixture ----
-
-/** Partida individual com times, data, status e grupos de tipo de aposta. */
 export interface Fixture {
   fId: number;
   fsd: string;
@@ -151,9 +125,6 @@ export interface Fixture {
   btgs?: FixtureBtg[];
 }
 
-// ---- Fixture Odds ----
-
-/** Odd individual (seleção de aposta) com valor, status e identificação. */
 export interface FixtureOdd {
   foId: number;
   btId: number;
@@ -179,9 +150,6 @@ export interface FixtureOdd {
   taCe?: boolean | null;
 }
 
-// ---- Bet Type Groups ----
-
-/** Grupo de tipos de aposta de uma partida (ex.: Main Markets, Gols, Handicap). */
 export interface FixtureBtg {
   btgId: number;
   btgN: string;
@@ -209,7 +177,6 @@ export interface FixtureBtg {
   lineItem: boolean;
 }
 
-/** Mercado de bet type group com ID, nome e contagem de odds. */
 export interface BtgMarket {
   btgMId: number;
   btgMN: string;
@@ -217,9 +184,6 @@ export interface BtgMarket {
   oCnt: number;
 }
 
-// ---- Match Data ----
-
-/** Dados de partida ao vivo: placar, tempo, informações de período. */
 export interface MatchData {
   st: string;
   sc?: string | null;
@@ -240,16 +204,12 @@ export interface MatchData {
   sud?: string | null;
 }
 
-// ---- Bet Type Group Markets Summary ----
-
-/** Detalhe de cabeçalho (header) de um set de odds. */
 export interface HeaderSetDetailDto {
   id: number;
   name: string;
   viewIndex?: number;
 }
 
-/** Resumo de um bet type group com ordem, promoção e headers. */
 export interface BtgSummary {
   betTypeGroupId: number;
   betTypeGroupName: string;
@@ -267,14 +227,12 @@ export interface BtgSummary {
   ddt?: number | null;
 }
 
-/** Mercado de bet type group summary com nome e lista de grupos. */
 export interface BtgMarketSummary {
   betTypeGroupMarketId: number;
   betTypeGroupMarketName: string;
   betTypeGroups?: BtgSummary[];
 }
 
-/** Resumo de mercados de bet type group agrupado por esporte. */
 export interface SportBtgMarketsSummary {
   sportTypeId?: number;
   betTypeGroupMarkets?: BtgMarketSummary[];

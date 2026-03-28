@@ -36,7 +36,6 @@ export function useLoginViewModel() {
 		try {
 			setIsLoading(true);
 
-			// Fake login - sera substituido por API real
 			const result = await fakeLogin(data.email, data.password);
 
 			await signIn({

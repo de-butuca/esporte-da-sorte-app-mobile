@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-// import Burnt from "burnt"
 import { ToastContext, ToastType } from './ToastContext';
 
 interface Props {
@@ -13,12 +12,6 @@ export function ToastProvider({ children }: Props) {
 			error: 'error',
 			info: 'none',
 		} as const;
-
-		// Burnt.toast({
-		// 	title: title ?? getDefaultTitle(type),
-		// 	message,
-		// 	preset: presetMap[type],
-		// })
 	}
 
 	function getDefaultTitle(type: ToastType) {

@@ -3,8 +3,6 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ButtonText, Label, Box, Button } from './styles';
 
-// BOX com variants
-
 export function VariantTestScreen() {
 	const variants = ['paodoce', 'secondary', 'danger'] as const;
 	const sizes = ['sm', 'md', 'lg'] as const;

@@ -1,7 +1,3 @@
-// ============================================================
-// Fixtures Mocks — Realistic mock data for Sport/Fixture APIs
-// ============================================================
-
 import {
   SportListResponse,
   TodaySportListResponse,
@@ -16,17 +12,12 @@ import {
   SportBtgMarketsSummary,
 } from '../models/fixtures.models';
 
-// ---- Helper data ----
-
 const now = new Date();
 const inTwoHours = new Date(now.getTime() + 2 * 60 * 60 * 1000).toISOString();
 const inFourHours = new Date(now.getTime() + 4 * 60 * 60 * 1000).toISOString();
 const inSixHours = new Date(now.getTime() + 6 * 60 * 60 * 1000).toISOString();
 const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
 
-// ---- Fixture Odds ----
-
-/** Odds mock de Futebol: 1X2 (Casa, Empate, Fora) para partidas brasileiras e espanholas. */
 const mockFixtureOdds: FixtureOdd[] = [
   {
     foId: 980120001,
@@ -69,7 +60,6 @@ const mockFixtureOdds: FixtureOdd[] = [
   },
 ];
 
-/** Odds mock de Basquete: Money Line (Casa, Fora) para NBA. */
 const mockFixtureOddsBasketball: FixtureOdd[] = [
   {
     foId: 980130001,
@@ -99,9 +89,6 @@ const mockFixtureOddsBasketball: FixtureOdd[] = [
   },
 ];
 
-// ---- Fixture Btgs ----
-
-/** Grupos de tipo de aposta: Main Markets para futebol. */
 const mockFixtureBtgs: FixtureBtg[] = [
   {
     btgId: 1001,
@@ -118,9 +105,6 @@ const mockFixtureBtgs: FixtureBtg[] = [
   },
 ];
 
-// ---- Fixtures ----
-
-/** Partidas mock: Flamengo×Palmeiras, Barcelona×Real Madrid, Lakers×Warriors. */
 const mockFixtures: Fixture[] = [
   {
     fId: 5501001,
@@ -258,9 +242,6 @@ const mockFixtures: Fixture[] = [
   },
 ];
 
-// ---- Seasons ----
-
-/** Temporadas mock: Brasileirão Série A, La Liga, NBA 2025–26. */
 const mockSeasons: Season[] = [
   {
     sId: 30001,
@@ -309,9 +290,6 @@ const mockSeasons: Season[] = [
   },
 ];
 
-// ---- Categories ----
-
-/** Categorias mock: Brasil, Espanha, EUA (com temporadas). */
 const mockCategories: Category[] = [
   {
     cId: 700,
@@ -347,9 +325,6 @@ const mockCategories: Category[] = [
   },
 ];
 
-// ---- Sport Types ----
-
-/** Esportes mock: Futebol (2 categorias), Basquete (1), Tênis (0 partidas). */
 const mockSportTypes: SportType[] = [
   {
     stId: 1,
@@ -422,8 +397,6 @@ const mockTodaySportTypes: TodaySportType[] = [
   { stId: 4, xid: 'sr:sport:23', stN: 'Vôlei', iconId: 23, pid: 1, lvt: true, fCnt: 8, oCnt: 180, aCnt: 0, stSURL: 'volei' },
 ];
 
-// ---- Bet Type Group Markets Summary ----
-
 const mockBtgMarketsSummary: SportBtgMarketsSummary[] = [
   {
     sportTypeId: 1,
@@ -461,9 +434,6 @@ const mockBtgMarketsSummary: SportBtgMarketsSummary[] = [
   },
 ];
 
-// ---- Exported mock responses ----
-
-/** Mock de resposta `SportListResponse` com 3 esportes, categorias, temporadas e partidas com odds. */
 export const mockSportListResponse: SportListResponse = {
   data: mockSportTypes,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -471,7 +441,6 @@ export const mockSportListResponse: SportListResponse = {
   type: 'sportList',
 };
 
-/** Mock de resposta `TodaySportListResponse` com 4 esportes e contagens de partidas. */
 export const mockTodaySportListResponse: TodaySportListResponse = {
   data: mockTodaySportTypes,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -479,7 +448,6 @@ export const mockTodaySportListResponse: TodaySportListResponse = {
   type: 'todaySportList',
 };
 
-/** Mock de resposta `BragiResponseListSportBtgMarketsSummary` para Futebol e Basquete. */
 export const mockBtgMarketsResponse: BragiResponseListSportBtgMarketsSummary = {
   data: mockBtgMarketsSummary,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],

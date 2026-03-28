@@ -1,8 +1,6 @@
 import { Gamepad2, Trophy, Info, User } from 'lucide-react-native';
 import { Dimensions } from 'react-native';
 
-// export const TAB_WIDTH = (width * 0.9) / 4;
-
 export const TAB_ITEMS = [
 	{
 		path: 'Minigames',

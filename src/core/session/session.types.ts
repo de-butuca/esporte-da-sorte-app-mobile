@@ -1,5 +1,3 @@
-// core/session/session.types.ts
-
 export interface SessionUser {
 	id: string
 	name: string

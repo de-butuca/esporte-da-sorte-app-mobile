@@ -38,7 +38,7 @@ export const useSessionStore = create<SessionState>((set) => {
 
 				setSession(user, token);
 
-				return !!user && !!token; // ✅ correto
+				return !!user && !!token;
 			} catch {
 				setSession(null, null);
 				return false;

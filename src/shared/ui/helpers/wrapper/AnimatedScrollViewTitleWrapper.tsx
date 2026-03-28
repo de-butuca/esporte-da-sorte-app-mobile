@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center", // This centers items vertically
-    position: "relative", // Make the container relative for absolute positioning
+    alignItems: "center",
+    position: "relative",
   },
 });
