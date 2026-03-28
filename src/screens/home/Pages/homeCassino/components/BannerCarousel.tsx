@@ -101,7 +101,7 @@ export function BannerCarousel() {
 			/>
 			<BCS.dots>
 				{BANNERS.map((_, i) => (
-					<BCS.dot key={i} state={i === activeIndex ? 'active' : 'inactive'} />
+					<BCS.dot key={i} {...({ state: i === activeIndex ? 'active' : 'inactive' } as any)} />
 				))}
 			</BCS.dots>
 		</BCS.container>

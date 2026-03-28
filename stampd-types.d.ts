@@ -73,6 +73,7 @@ declare global {
       family: {
         regular: "Inter_400Regular";
         medium: "Inter_500Medium";
+        semibold: "Inter_600SemiBold";
         bold: "Inter_700Bold";
       };
     };
@@ -85,6 +86,7 @@ declare global {
       onBackground: "#FFFFFF";
       bgNav: "#02003D";
       bgCard: "#0A0F2E";
+      bgSecondary: "#101828";
       accent: "#38E67D";
       accentText: "#37E67D";
       textPrimary: "#FFFFFF";
@@ -92,6 +94,7 @@ declare global {
       textMuted: "#A0A0B0";
       textInactive: "#6B6B8A";
       live: "#FF3B3B";
+      success: "#22C55E";
       label: "#fff";
       inputText: "#000000";
       inputPlaceholder: "#a0a0a0";

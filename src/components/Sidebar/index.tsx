@@ -220,7 +220,7 @@ export function Sidebar({ onClose }: SidebarProps) {
 
 				<SS.divider />
 
-				<SS.navItem onPress={() => { onClose(); navigate('Settings'); }}>
+				<SS.navItem onPress={() => { onClose(); navigate('Settings' as any); }}>
 					<Settings size={20} color={lightColors.textMuted} strokeWidth={1.8} />
 					<SS.navLabel>Configurações</SS.navLabel>
 				</SS.navItem>

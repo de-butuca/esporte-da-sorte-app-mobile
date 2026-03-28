@@ -14,6 +14,7 @@ export const lightColors = {
 
 	bgNav: '#02003D',
 	bgCard: '#0A0F2E',
+	bgSecondary: '#101828',
 
 	accent: '#38E67D',
 	accentText: '#37E67D',
@@ -24,6 +25,7 @@ export const lightColors = {
 	textInactive: '#6B6B8A',
 
 	live: '#FF3B3B',
+	success: '#22C55E',
 
 	label: '#fff',
 	inputText: '#000000',
@@ -52,6 +54,7 @@ export const darkColors = {
 
 	bgNav: '#02003D',
 	bgCard: '#0A0F2E',
+	bgSecondary: '#101828',
 
 	accent: '#38E67D',
 	accentText: '#37E67D',
@@ -62,6 +65,7 @@ export const darkColors = {
 	textInactive: '#6B6B8A',
 
 	live: '#FF3B3B',
+	success: '#22C55E',
 
 	label: '#fff',
 	inputText: '#000000',
@@ -83,6 +87,7 @@ export const darkColors = {
 export const fontFamily = {
 	regular: 'Inter_400Regular',
 	medium: 'Inter_500Medium',
+	semibold: 'Inter_600SemiBold',
 	bold: 'Inter_700Bold',
 } as const;
 
@@ -193,6 +198,7 @@ export const config = createTheme({
 		family: {
 			regular: fontFamily.regular,
 			medium: fontFamily.medium,
+			semibold: fontFamily.semibold,
 			bold: fontFamily.bold,
 		},
 	},
