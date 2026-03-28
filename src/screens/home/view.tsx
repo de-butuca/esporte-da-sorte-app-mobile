@@ -10,12 +10,14 @@ import { HomeStyled } from './home.styled';
 import { setOnRouletteOpen } from '@/core/services/notifications';
 import { useSessionContext } from '@/contexts/SessionContext';
 import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
+import { useStampdUI, ThemeMode } from 'stampd/context';
 
 export default function HomeScreen() {
 	const [activeTab, setActiveTab] = useState<NavTab>('home');
 	const [showRoulette, setShowRoulette] = useState(false);
 	const { activeCategory } = useSessionContext();
 	const setVariant = useAuthThemeStore((s) => s.setVariant);
+	const { setThemeMode } = useStampdUI();
 	const scrollY = useSharedValue(0);
 
 	const scrollHandler = useAnimatedScrollHandler({
@@ -29,10 +31,11 @@ export default function HomeScreen() {
 		return () => setOnRouletteOpen(null);
 	}, []);
 
-	// Sync auth theme store with active category
+	// Sync both theme systems with active category
 	useEffect(() => {
 		setVariant(activeCategory === 'cassino' ? 'cassino' : 'esportes');
-	}, [activeCategory, setVariant]);
+		setThemeMode(activeCategory === 'cassino' ? ThemeMode.LIGHT : ThemeMode.DARK);
+	}, [activeCategory, setVariant, setThemeMode]);
 
 	return (
 		<HomeStyled.Root>

@@ -9,8 +9,8 @@ import {
 	View,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { lightColors } from '@/stampd.config';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useStampdUI } from 'stampd/context';
 import { BCS } from '../homeCassino.styled';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -55,6 +55,7 @@ const BANNERS: Banner[] = [
 export function BannerCarousel() {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const flatListRef = useRef<FlatList>(null);
+	const { theme } = useStampdUI();
 
 	const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
 		const index = Math.round(e.nativeEvent.contentOffset.x / (BANNER_W + BANNER_GAP));
@@ -65,7 +66,7 @@ export function BannerCarousel() {
 		({ item }: { item: Banner }) => (
 			<View style={styles.bannerContainer}>
 				<LinearGradient
-					colors={[lightColors.secondary, lightColors.primary]}
+					colors={[theme.colors.secondary, theme.colors.primary]}
 					start={{ x: 0, y: 0.5 }}
 					end={{ x: 1, y: 0.5 }}
 					style={styles.banner}
@@ -78,7 +79,7 @@ export function BannerCarousel() {
 				</LinearGradient>
 			</View>
 		),
-		[]
+		[theme]
 	);
 
 	const keyExtractor = useCallback((item: Banner) => item.id, []);

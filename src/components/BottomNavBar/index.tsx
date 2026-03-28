@@ -2,10 +2,9 @@ import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily } from '@/stampd.config';
 import { House, Zap, Dice5, ClipboardList, Menu } from 'lucide-react-native';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
-import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
+import { useStampdUI } from 'stampd/context';
 
 export type NavTab = 'home' | 'live' | 'cassino' | 'apostas' | 'menu';
 
@@ -29,8 +28,8 @@ interface TabItemProps {
 }
 
 const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemProps) {
-	const colors = useAuthThemeStore((s) => s.colors);
-	const color = isActive ? colors.accent : colors.textMuted;
+	const { theme } = useStampdUI();
+	const color = isActive ? theme.colors.accent : theme.colors.textMuted;
 	const handlePress = useCallback(() => onPress(tab.key), [onPress, tab.key]);
 
 	return (
@@ -43,12 +42,12 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 			<Text
 				style={[
 					styles.label,
-					{ color, fontFamily: isActive ? fontFamily.bold : fontFamily.regular },
+					{ color, fontFamily: isActive ? theme.fonts.family.bold : theme.fonts.family.regular },
 				]}
 			>
 				{tab.label}
 			</Text>
-			{isActive && <View style={[styles.activeDot, { backgroundColor: colors.accent }]} />}
+			{isActive && <View style={[styles.activeDot, { backgroundColor: theme.colors.accent }]} />}
 		</TouchableOpacity>
 	);
 });
@@ -56,7 +55,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	const insets = useSafeAreaInsets();
 	const { open: openSidebar } = useSidebar();
-	const colors = useAuthThemeStore((s) => s.colors);
+	const { theme } = useStampdUI();
 
 	const handleTabPress = useCallback((key: NavTab) => {
 		if (key === 'menu') {
@@ -67,8 +66,8 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	}, [onTabPress, openSidebar]);
 
 	const containerStyle = useMemo(
-		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8), backgroundColor: colors.bgNav }],
-		[insets.bottom, colors.bgNav],
+		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8), backgroundColor: theme.colors.bgNav }],
+		[insets.bottom, theme.colors.bgNav],
 	);
 
 	return (

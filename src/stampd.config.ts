@@ -7,12 +7,12 @@ export const lightColors = {
 	secondary: '#625B71',
 	onSecondary: '#FFFFFF',
 
-	background: '#dddddd',
+	background: '#0D0A1A',
 	onBackground: '#FFFFFF',
 
-	bgNav: '#02003D',
-	bgCard: '#0A0F2E',
-	bgSecondary: '#101828',
+	bgNav: '#120E22',
+	bgCard: '#1A1229',
+	bgSecondary: '#120E22',
 
 	accent: '#38E67D',
 	accentText: '#37E67D',
@@ -40,43 +40,44 @@ export const lightColors = {
 	onError: '#FFFFFF',
 };
 
+/** Dark = Esportes (Dark Arena — navy/green) */
 export const darkColors = {
-	primary: '#023697',
-	onPrimary: 'black',
+	primary: '#00E878',
+	onPrimary: '#0B1120',
 
-	secondary: '#625B71',
+	secondary: '#1B1464',
 	onSecondary: '#FFFFFF',
 
-	background: '#01003A',
+	background: '#0B1120',
 	onBackground: '#FFFFFF',
 
-	bgNav: '#02003D',
-	bgCard: '#0A0F2E',
+	bgNav: '#101828',
+	bgCard: '#1A2332',
 	bgSecondary: '#101828',
 
-	accent: '#38E67D',
-	accentText: '#37E67D',
+	accent: '#00E878',
+	accentText: '#00E878',
 
 	textPrimary: '#FFFFFF',
-	textSecondary: '#F0F0F0',
-	textMuted: '#A0A0B0',
-	textInactive: '#6B6B8A',
+	textSecondary: '#94A3B8',
+	textMuted: '#94A3B8',
+	textInactive: '#475569',
 
-	live: '#FF3B3B',
+	live: '#FF3B30',
 	success: '#22C55E',
 
-	label: '#fff',
-	inputText: '#000000',
-	inputPlaceholder: '#a0a0a0',
-	inputIcon: '#7D5260',
-	inputBackground: '#f5c542',
-	inputPrimary: '#4245d0',
-	inputSercundary: '#ae3c91',
+	label: '#FFFFFF',
+	inputText: '#FFFFFF',
+	inputPlaceholder: '#475569',
+	inputIcon: '#94A3B8',
+	inputBackground: '#1A2332',
+	inputPrimary: '#00E878',
+	inputSercundary: '#00B4D8',
 
-	surface: '#FFFBFE',
-	onSurface: '#1C1B1F',
+	surface: '#1A2332',
+	onSurface: '#E2E8F0',
 
-	error: '#B3261E',
+	error: '#EF4444',
 	onError: '#FFFFFF',
 };
 // ── Theme variants (Cassino / Esportes) ──────────────────────────────────────
