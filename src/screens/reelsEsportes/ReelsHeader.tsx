@@ -108,12 +108,12 @@ export function ReelsHeader({ currentIndex, totalMatches, isLoading, onProgressE
 			</ProgressContainer>
 
 			{/* Info row */}
-			<InfoContainer>
+			{/* <InfoContainer>
 				<StoreLabel></StoreLabel>
 				<IndexText>
 					{currentIndex + 1} / {totalMatches}
 				</IndexText>
-			</InfoContainer>
+			</InfoContainer> */}
 		</Container>
 	);
 }
