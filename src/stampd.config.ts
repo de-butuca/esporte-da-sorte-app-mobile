@@ -189,7 +189,7 @@ export type AppThemeColors = {
 export type LoginThemeColors = AppThemeColors;
 
 export function getThemeColors(variant: ThemeVariant): AppThemeColors {
-	return variant === 'cassino' ? cassinoColors : esportesColors;
+	return { ...(variant === 'cassino' ? cassinoColors : esportesColors) };
 }
 
 /** @deprecated use getThemeColors */

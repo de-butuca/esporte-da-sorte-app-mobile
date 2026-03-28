@@ -7,7 +7,7 @@ import { lightColors } from '@/stampd.config';
 import { useAppNavigation } from '@/navigation/hooks';
 import { useSessionStore } from '@/core/session/useSessionStore';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import { useSessionContext } from '@/contexts/SessionContext';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 interface SidebarProps {
 	onClose: () => void;
@@ -150,9 +150,8 @@ export function Sidebar({ onClose }: SidebarProps) {
 	const { navigate } = useAppNavigation();
 	const user = useSessionStore((s) => s.user);
 	const signOut = useSessionStore((s) => s.signOut);
-	const { activeCategory } = useSessionContext();
 	const { requireAuth } = useRequireAuth();
-	const authVariant = activeCategory === 'cassino' ? 'cassino' : 'esportes';
+	const authVariant = useAuthThemeStore((s) => s.variant);
 
 	const handleSignOut = useCallback(() => {
 		onClose();

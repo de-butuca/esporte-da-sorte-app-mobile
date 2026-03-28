@@ -4,7 +4,8 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ButtonBase } from '@/components/Button';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import { PromotionHeroViewModel } from '../promotions.types';
 
 interface PromotionsHeroProps {
@@ -13,6 +14,7 @@ interface PromotionsHeroProps {
 }
 
 export function PromotionsHero({ hero, onPress }: PromotionsHeroProps) {
+	const colors = useAuthThemeStore((s) => s.colors);
 	const [useFallbackImage, setUseFallbackImage] = useState(false);
 
 	return (
@@ -20,7 +22,7 @@ export function PromotionsHero({ hero, onPress }: PromotionsHeroProps) {
 			<LinearGradient colors={hero.gradient as [string, string, ...string[]]} style={styles.card}>
 				<View style={styles.content}>
 					<Text style={styles.eyebrow}>{hero.eyebrow}</Text>
-					<Text style={styles.title}>{hero.title}</Text>
+					<Text style={[styles.title, { color: colors.textPrimary }]}>{hero.title}</Text>
 					<Text style={styles.description}>{hero.description}</Text>
 					<ButtonBase
 						text={hero.ctaLabel}
@@ -71,7 +73,6 @@ const styles = StyleSheet.create({
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(24),
 		lineHeight: RFValue(26),
-		color: lightColors.textPrimary,
 		marginBottom: RFValue(10),
 	},
 	description: {

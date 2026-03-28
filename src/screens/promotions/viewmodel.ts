@@ -6,7 +6,7 @@ import { mapPromotionsScreenData } from './promotions.mapper';
 import { PromotionCardViewModel, PromotionCategory, PromotionHeroViewModel } from './promotions.types';
 import { useAppNavigation } from '@/navigation/hooks';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import { useSessionContext } from '@/contexts/SessionContext';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 const configService = new MockConfigService();
 
@@ -90,8 +90,7 @@ async function getPromotionsScreenData() {
 export function usePromotionsViewModel() {
 	const navigation = useAppNavigation();
 	const { requireAuth } = useRequireAuth();
-	const { activeCategory: sessionCategory } = useSessionContext();
-	const authVariant = sessionCategory === 'cassino' ? 'cassino' : 'esportes';
+	const authVariant = useAuthThemeStore((s) => s.variant);
 	const [selectedCategory, setSelectedCategory] = useState<PromotionCategory>('Todas');
 
 	const query = useQuery({

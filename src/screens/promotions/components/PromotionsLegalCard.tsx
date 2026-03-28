@@ -2,7 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ClipboardList, ChevronRight } from 'lucide-react-native';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import { PromotionsLegalViewModel } from '../promotions.types';
 
 interface PromotionsLegalCardProps {
@@ -11,17 +12,19 @@ interface PromotionsLegalCardProps {
 }
 
 export function PromotionsLegalCard({ legal, onPress }: PromotionsLegalCardProps) {
+	const colors = useAuthThemeStore((s) => s.colors);
+
 	return (
-		<View style={styles.card}>
-			<View style={styles.iconWrap}>
-				<ClipboardList size={RFValue(18)} color={lightColors.accent} strokeWidth={2} />
+		<View style={[styles.card, { backgroundColor: colors.surface2, borderColor: colors.border }]}>
+			<View style={[styles.iconWrap, { backgroundColor: `${colors.accent}1F` }]}>
+				<ClipboardList size={RFValue(18)} color={colors.accent} strokeWidth={2} />
 			</View>
 			<View style={styles.content}>
-				<Text style={styles.title}>{legal.title}</Text>
-				<Text style={styles.description}>{legal.description}</Text>
+				<Text style={[styles.title, { color: colors.textPrimary }]}>{legal.title}</Text>
+				<Text style={[styles.description, { color: colors.textMuted }]}>{legal.description}</Text>
 				<TouchableOpacity style={styles.link} onPress={onPress} activeOpacity={0.8}>
-					<Text style={styles.linkText}>{legal.linkLabel}</Text>
-					<ChevronRight size={RFValue(14)} color={lightColors.accent} strokeWidth={2.2} />
+					<Text style={[styles.linkText, { color: colors.accent }]}>{legal.linkLabel}</Text>
+					<ChevronRight size={RFValue(14)} color={colors.accent} strokeWidth={2.2} />
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -33,9 +36,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: RFValue(20),
 		borderRadius: RFValue(16),
 		padding: RFValue(16),
-		backgroundColor: '#111B36',
 		borderWidth: 1,
-		borderColor: 'rgba(255,255,255,0.04)',
 		flexDirection: 'row',
 		gap: RFValue(14),
 	},
@@ -43,7 +44,6 @@ const styles = StyleSheet.create({
 		width: RFValue(34),
 		height: RFValue(34),
 		borderRadius: RFValue(12),
-		backgroundColor: 'rgba(56,230,125,0.12)',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -54,13 +54,11 @@ const styles = StyleSheet.create({
 	title: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(16),
-		color: lightColors.textPrimary,
 	},
 	description: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(12),
 		lineHeight: RFValue(18),
-		color: lightColors.textMuted,
 	},
 	link: {
 		flexDirection: 'row',
@@ -71,6 +69,5 @@ const styles = StyleSheet.create({
 	linkText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(12),
-		color: lightColors.accent,
 	},
 });

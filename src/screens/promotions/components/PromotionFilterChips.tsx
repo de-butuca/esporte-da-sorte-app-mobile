@@ -1,7 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import { PromotionCategory } from '../promotions.types';
 
 interface PromotionFilterChipsProps {
@@ -15,6 +16,8 @@ export function PromotionFilterChips({
 	selectedFilter,
 	onSelectFilter,
 }: PromotionFilterChipsProps) {
+	const colors = useAuthThemeStore((s) => s.colors);
+
 	return (
 		<View style={styles.wrapper}>
 			<ScrollView
@@ -27,11 +30,23 @@ export function PromotionFilterChips({
 					return (
 						<TouchableOpacity
 							key={filter}
-							style={[styles.chip, isActive && styles.chipActive]}
+							style={[
+								styles.chip,
+								{ backgroundColor: colors.surface2, borderColor: colors.border },
+								isActive && { backgroundColor: colors.accent, borderColor: colors.accent },
+							]}
 							onPress={() => onSelectFilter(filter)}
 							activeOpacity={0.8}
 						>
-							<Text style={[styles.chipText, isActive && styles.chipTextActive]}>{filter}</Text>
+							<Text
+								style={[
+									styles.chipText,
+									{ color: colors.textMuted },
+									isActive && { fontFamily: fontFamily.bold, color: colors.onPrimary },
+								]}
+							>
+								{filter}
+							</Text>
 						</TouchableOpacity>
 					);
 				})}
@@ -52,21 +67,10 @@ const styles = StyleSheet.create({
 		paddingHorizontal: RFValue(16),
 		paddingVertical: RFValue(10),
 		borderRadius: RFValue(14),
-		backgroundColor: '#161A4A',
 		borderWidth: 1,
-		borderColor: 'rgba(160,160,200,0.18)',
-	},
-	chipActive: {
-		backgroundColor: lightColors.accent,
-		borderColor: lightColors.accent,
 	},
 	chipText: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(12),
-		color: lightColors.textMuted,
-	},
-	chipTextActive: {
-		fontFamily: fontFamily.bold,
-		color: lightColors.bgNav,
 	},
 });
