@@ -11,12 +11,12 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { fontFamily } from '@/stampd.config';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
-import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import HomeIcon from '@assets/icons/homeIcon.svg';
 import BallIcon from '@assets/icons/ballIcon.svg';
 import CupIcon from '@assets/icons/cupIcon.svg';
 import ProfileIcon from '@assets/icons/profileIcon.svg';
 import PointIcon from '@assets/icons/pointIcon.svg';
+import { useStampdUI } from 'stampd/context';
 
 export type NavTab = 'home' | 'partidas' | 'ranking' | 'perfil';
 
@@ -52,6 +52,8 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 		progress.value = withTiming(isActive ? 1 : 0, TIMING);
 	}, [isActive]);
 
+	const { theme } = useStampdUI();
+	const color = isActive ? theme.colors.accent : theme.colors.textMuted;
 	const handlePress = useCallback(() => onPress(tab.key), [onPress, tab.key]);
 
 	const bgStyle = useAnimatedStyle(() => ({
@@ -110,7 +112,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	const insets = useSafeAreaInsets();
 	const { open: openSidebar } = useSidebar();
-	const colors = useAuthThemeStore((s) => s.colors);
+	const { theme } = useStampdUI();
 
 	const handleTabPress = useCallback((key: NavTab) => {
 		if (key === 'perfil') {
@@ -121,8 +123,8 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	}, [onTabPress, openSidebar]);
 
 	const containerStyle = useMemo(
-		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8), backgroundColor: colors.bgNav }],
-		[insets.bottom, colors.bgNav],
+		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8), backgroundColor: theme.colors.bgNav }],
+		[insets.bottom, theme.colors.bgNav],
 	);
 
 	return (
