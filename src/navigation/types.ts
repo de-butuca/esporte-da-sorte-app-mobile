@@ -15,6 +15,7 @@ export type RootStackParamList = {
 	Register: undefined;
 	Propaganda: undefined;
 	Settings: { tab?: string };
+	ReelsEsportesScreen: undefined;
 };
 
 export type GamePages = {

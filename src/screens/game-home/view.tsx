@@ -6,8 +6,6 @@ import {
   Pressable,
   StatusBar,
   Animated,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from "react-native";
 import { SportradarLMT } from "@/components/SportradarLMT";
 import {
@@ -17,11 +15,23 @@ import {
   ChevronDown,
   Info,
 } from "lucide-react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useAppNavigation } from "@/navigation/hooks";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { fontFamily } from "@/stampd.config";
+import Logo from "@assets/esporteDaSorteCompleto.svg";
 
 const FLAG_BRA = "🇧🇷";
 const FLAG_FRA = "🇫🇷";
+
+const BG = "#0B1120";
+const SURFACE1 = "#1A2332";
+const SURFACE2 = "#243447";
+const NAV_BG = "#101828";
+const TEXT_PRIMARY = "#FFFFFF";
+const TEXT_SECONDARY = "#94A3B8";
+const TEXT_MUTED = "#475569";
+const ACCENT = "#00E878";
+const LIVE = "#FF3B30";
 
 function StatItem({ icon, value }: { icon: string; value: string }) {
   return (
@@ -44,7 +54,7 @@ function OddsButton({ label, odds }: { label: string; odds: string }) {
 export default function GameHomeScreen() {
   const insets = useSafeAreaInsets();
   const topInset = insets.top;
-  const navigation = useNavigation();
+  const navigation = useAppNavigation();
   const scrollY = useRef(new Animated.Value(0)).current;
   const [activeTab, setActiveTab] = useState("Principais");
 
@@ -80,14 +90,15 @@ export default function GameHomeScreen() {
         <View style={[styles.topBarWrap, { paddingTop: topInset }]}>
           <View style={styles.topBar}>
             <Pressable style={styles.topBtn} onPress={() => navigation.goBack()}>
-              <ChevronLeft size={14} color="#fff" />
+              <ChevronLeft size={14} color={TEXT_PRIMARY} />
             </Pressable>
+            <Logo width={149} height={16} />
             <View style={styles.topBarRight}>
               <Pressable style={styles.topBtn}>
-                <Share2 size={15} color="#fff" />
+                <Share2 size={15} color={TEXT_PRIMARY} />
               </Pressable>
               <Pressable style={styles.topBtn}>
-                <MoreVertical size={14} color="#fff" />
+                <MoreVertical size={14} color={TEXT_PRIMARY} />
               </Pressable>
             </View>
           </View>
@@ -95,6 +106,7 @@ export default function GameHomeScreen() {
 
         <View style={styles.matchCard}>
           <View style={styles.timeBadge}>
+            <View style={styles.liveDot} />
             <Text style={styles.timeBadgeText}>73:06</Text>
           </View>
 
@@ -124,16 +136,15 @@ export default function GameHomeScreen() {
               <Text style={styles.statValue}>0.73-1.29</Text>
             </View>
           </View>
-
         </View>
 
         <SportradarLMT
           matchId="67613698"
           height={280}
-          backgroundColor="#F0F0F0"
+          backgroundColor={SURFACE1}
         />
 
-        <View style={[styles.bottomTabsRow, { marginTop: -20 }]}>
+        <View style={[styles.bottomTabsRow, { marginTop: 12 }]}>
           {tabs.map((t) => (
             <Pressable
               key={t}
@@ -152,8 +163,8 @@ export default function GameHomeScreen() {
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Resultado Final</Text>
               <View style={styles.marketCardActions}>
-                <Info size={14} color="#999" />
-                <ChevronDown size={16} color="#01003A" />
+                <Info size={14} color={TEXT_MUTED} />
+                <ChevronDown size={16} color={TEXT_SECONDARY} />
               </View>
             </View>
             <View style={styles.oddsRow}>
@@ -171,7 +182,7 @@ export default function GameHomeScreen() {
                 </View>
                 <Text style={styles.marketCardTitle}>Total de Gols</Text>
               </View>
-              <ChevronDown size={16} color="#01003A" />
+              <ChevronDown size={16} color={TEXT_SECONDARY} />
             </View>
             <View style={styles.oddsRow}>
               <OddsButton label="Acima 2.5" odds="1.85" />
@@ -182,7 +193,7 @@ export default function GameHomeScreen() {
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Ambas Marcam</Text>
-              <ChevronDown size={16} color="#01003A" />
+              <ChevronDown size={16} color={TEXT_SECONDARY} />
             </View>
             <View style={styles.oddsRow}>
               <OddsButton label="Sim" odds="1.75" />
@@ -193,12 +204,12 @@ export default function GameHomeScreen() {
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <View style={styles.marketTitleRow}>
-                <View style={[styles.popularTag, { backgroundColor: "rgba(58,231,126,0.15)" }]}>
-                  <Text style={[styles.popularTxt, { color: "#1B8A4A" }]}>NOVO</Text>
+                <View style={styles.newTag}>
+                  <Text style={styles.newTxt}>NOVO</Text>
                 </View>
                 <Text style={styles.marketCardTitle}>Handicap Asiático</Text>
               </View>
-              <ChevronDown size={16} color="#01003A" />
+              <ChevronDown size={16} color={TEXT_SECONDARY} />
             </View>
             <View style={styles.oddsRow}>
               <OddsButton label="Brasil -0.5" odds="2.30" />
@@ -209,7 +220,7 @@ export default function GameHomeScreen() {
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Total de Escanteios</Text>
-              <ChevronDown size={16} color="#01003A" />
+              <ChevronDown size={16} color={TEXT_SECONDARY} />
             </View>
             <View style={styles.oddsRow}>
               <OddsButton label="Acima 8.5" odds="1.90" />
@@ -220,7 +231,7 @@ export default function GameHomeScreen() {
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Próximo Gol</Text>
-              <ChevronDown size={16} color="#01003A" />
+              <ChevronDown size={16} color={TEXT_SECONDARY} />
             </View>
             <View style={styles.oddsRow}>
               <OddsButton label="Brasil" odds="1.85" />
@@ -245,9 +256,9 @@ export default function GameHomeScreen() {
           },
         ]}
       >
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: "#01003A" }]} />
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: NAV_BG }]} />
         <Pressable style={styles.topBtn} onPress={() => navigation.goBack()}>
-          <ChevronLeft size={14} color="#fff" />
+          <ChevronLeft size={14} color={TEXT_PRIMARY} />
         </Pressable>
         <View style={styles.navMatchInfo}>
           <View style={styles.navTeam}>
@@ -274,35 +285,47 @@ export default function GameHomeScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: BG,
   },
   scrollView: {
     flex: 1,
   },
   topBarWrap: {
-    backgroundColor: "#01003A",
+    backgroundColor: NAV_BG,
+    paddingHorizontal: 16,
+    paddingBottom: 14,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 8,
   },
   topBar: {
     flexDirection: "row", justifyContent: "space-between", alignItems: "center",
-    paddingHorizontal: 16, paddingTop: 10, paddingBottom: 10,
+    paddingTop: 14,
   },
   topBarRight: { flexDirection: "row", gap: 10 },
   topBtn: {
     width: 36, height: 36, borderRadius: 12,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "rgba(255,255,255,0.08)",
     alignItems: "center", justifyContent: "center",
   },
   matchCard: {
-    backgroundColor: "#fff",
+    backgroundColor: SURFACE1,
     paddingHorizontal: 16, paddingVertical: 16,
     alignItems: "center", gap: 10,
   },
   timeBadge: {
-    backgroundColor: "#01003A",
+    backgroundColor: LIVE,
     paddingHorizontal: 14, paddingVertical: 4, borderRadius: 12,
+    flexDirection: "row", alignItems: "center", gap: 6,
+  },
+  liveDot: {
+    width: 6, height: 6, borderRadius: 3,
+    backgroundColor: TEXT_PRIMARY,
   },
   timeBadgeText: {
-    fontFamily: "Inter_700Bold", fontSize: 12, color: "#fff",
+    fontFamily: fontFamily.bold, fontSize: 12, color: TEXT_PRIMARY,
   },
   teamsRow: {
     flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 16,
@@ -312,19 +335,19 @@ const styles = StyleSheet.create({
   },
   flagEmoji: { fontSize: 28 },
   teamName: {
-    fontFamily: "Inter_700Bold", fontSize: 16, color: "#01003A",
+    fontFamily: fontFamily.bold, fontSize: 16, color: TEXT_PRIMARY,
   },
   scoreText: {
-    fontFamily: "Inter_700Bold", fontSize: 32, color: "#01003A",
-    fontWeight: "900", letterSpacing: 2,
+    fontFamily: fontFamily.bold, fontSize: 32, color: TEXT_PRIMARY,
+    letterSpacing: 2,
   },
   goalScorers: {
-    fontFamily: "Inter_700Bold", fontSize: 11, color: "#666",
+    fontFamily: fontFamily.medium, fontSize: 11, color: TEXT_SECONDARY,
   },
   statsRow: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
     gap: 16, paddingVertical: 8,
-    borderTopWidth: 1, borderTopColor: "#F0F0F0",
+    borderTopWidth: 1, borderTopColor: "rgba(148,163,184,0.1)",
     width: "100%",
   },
   statItem: {
@@ -332,43 +355,14 @@ const styles = StyleSheet.create({
   },
   statIcon: { fontSize: 12 },
   statLabel: {
-    fontFamily: "Inter_700Bold", fontSize: 10, color: "#666",
+    fontFamily: fontFamily.bold, fontSize: 10, color: TEXT_SECONDARY,
   },
   statValue: {
-    fontFamily: "Inter_700Bold", fontSize: 12, color: "#01003A",
-  },
-  eventTicker: {
-    flexDirection: "row", alignItems: "center", gap: 8,
-    backgroundColor: "#F0F0F0", borderRadius: 10,
-    paddingHorizontal: 12, paddingVertical: 8,
-    width: "100%",
-  },
-  eventIcon: { fontSize: 14 },
-  eventText: {
-    flex: 1, fontFamily: "Inter_700Bold", fontSize: 11, color: "#333",
-  },
-  fieldTabsRow: {
-    flexDirection: "row", gap: 8,
-    paddingHorizontal: 16, paddingVertical: 10,
-    backgroundColor: "#F0F0F0",
-  },
-  fieldTabActive: {
-    flex: 1, backgroundColor: "#01003A",
-    borderRadius: 12, paddingVertical: 12, alignItems: "center",
-  },
-  fieldTabActiveText: {
-    fontFamily: "Inter_700Bold", fontSize: 14, color: "#fff",
-  },
-  fieldTab: {
-    flex: 1, backgroundColor: "#fff",
-    borderRadius: 12, paddingVertical: 12, alignItems: "center",
-  },
-  fieldTabText: {
-    fontFamily: "Inter_700Bold", fontSize: 14, color: "#01003A",
+    fontFamily: fontFamily.bold, fontSize: 12, color: TEXT_PRIMARY,
   },
   bottomTabsRow: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: SURFACE1,
     paddingHorizontal: 16, paddingVertical: 12,
     gap: 6,
   },
@@ -377,26 +371,28 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   bottomTabActive: {
-    backgroundColor: "#01003A",
+    backgroundColor: ACCENT,
   },
   bottomTabText: {
-    fontFamily: "Inter_700Bold", fontSize: 12, color: "#666",
+    fontFamily: fontFamily.semibold, fontSize: 12, color: TEXT_SECONDARY,
   },
   bottomTabTextActive: {
-    color: "#fff",
+    color: BG,
   },
   marketsSection: {
-    paddingHorizontal: 12, paddingTop: 8, gap: 8,
+    paddingHorizontal: 12, paddingTop: 12, gap: 8,
   },
   marketCard: {
-    backgroundColor: "#fff",
-    borderRadius: 16, padding: 16, gap: 12,
+    backgroundColor: SURFACE1,
+    borderRadius: 12, padding: 16, gap: 12,
+    borderWidth: 1,
+    borderColor: "rgba(148,163,184,0.1)",
   },
   marketCardHeader: {
     flexDirection: "row", justifyContent: "space-between", alignItems: "center",
   },
   marketCardTitle: {
-    fontFamily: "Inter_700Bold", fontSize: 15, color: "#01003A",
+    fontFamily: fontFamily.bold, fontSize: 15, color: TEXT_PRIMARY,
   },
   marketCardActions: {
     flexDirection: "row", alignItems: "center", gap: 10,
@@ -405,22 +401,30 @@ const styles = StyleSheet.create({
     flexDirection: "row", alignItems: "center", gap: 8,
   },
   popularTag: {
-    backgroundColor: "rgba(1,0,58,0.08)",
+    backgroundColor: "rgba(148,163,184,0.1)",
     paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4,
   },
   popularTxt: {
-    fontFamily: "Inter_700Bold", fontSize: 9, color: "#01003A",
+    fontFamily: fontFamily.bold, fontSize: 9, color: TEXT_SECONDARY,
+    letterSpacing: 0.5, textTransform: "uppercase",
+  },
+  newTag: {
+    backgroundColor: "rgba(0,232,120,0.1)",
+    paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4,
+  },
+  newTxt: {
+    fontFamily: fontFamily.bold, fontSize: 9, color: ACCENT,
     letterSpacing: 0.5, textTransform: "uppercase",
   },
   oddsRow: { flexDirection: "row", gap: 8 },
   oddsButton: {
     flex: 1, height: 52, borderRadius: 12,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: SURFACE2,
     alignItems: "center", justifyContent: "center",
   },
-  oddsLabel: { fontFamily: "Inter_700Bold", fontSize: 10, color: "#666" },
+  oddsLabel: { fontFamily: fontFamily.medium, fontSize: 10, color: TEXT_SECONDARY },
   oddsValue: {
-    fontFamily: "Inter_700Bold", fontSize: 15, color: "#01003A", fontWeight: "900",
+    fontFamily: fontFamily.bold, fontSize: 15, color: ACCENT,
   },
   stickyNav: {
     position: "absolute", top: 0, left: 0, right: 0,
@@ -436,19 +440,19 @@ const styles = StyleSheet.create({
   },
   navFlag: { fontSize: 18 },
   navTeamName: {
-    fontFamily: "Inter_700Bold", fontSize: 13, color: "#fff",
+    fontFamily: fontFamily.bold, fontSize: 13, color: TEXT_PRIMARY,
   },
   navScoreWrap: {
     alignItems: "center", gap: 2,
   },
   navScore: {
-    fontFamily: "Inter_700Bold", fontSize: 16, color: "#fff", fontWeight: "900",
+    fontFamily: fontFamily.bold, fontSize: 16, color: TEXT_PRIMARY,
   },
   navTimeBadge: {
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: "rgba(255,255,255,0.15)",
     paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6,
   },
   navTimeText: {
-    fontFamily: "Inter_700Bold", fontSize: 9, color: "#fff", letterSpacing: 0.5,
+    fontFamily: fontFamily.bold, fontSize: 9, color: TEXT_PRIMARY, letterSpacing: 0.5,
   },
 });

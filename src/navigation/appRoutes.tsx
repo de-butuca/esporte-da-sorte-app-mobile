@@ -59,8 +59,7 @@ export function AppStack() {
 				name="GameHome"
 				component={GameHomeScreen}
 				options={{
-					contentStyle: { backgroundColor: lightColors.background },
-					gestureEnabled: false,
+					contentStyle: { backgroundColor: '#0B1120' },
 				}}
 			/>
 			<Stack.Screen

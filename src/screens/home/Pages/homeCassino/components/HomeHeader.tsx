@@ -17,11 +17,11 @@ import Animated, {
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useStampdUI } from 'stampd/context';
 import { useAppNavigation } from '@/navigation/hooks';
+import { useSessionContext } from '@/contexts/SessionContext';
 import { HHS } from '../homeHeader.styled';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
 import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
-import { useSessionContext } from '@/contexts/SessionContext';
 
 const EXPANDED_HEIGHT = RFValue(72);
 const PILL_SPRING = { damping: 22, stiffness: 380, mass: 0.7 } as const;

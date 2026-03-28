@@ -65,8 +65,8 @@ export const PromotionCard = React.memo(function PromotionCard({ card, onPress }
 
 const styles = StyleSheet.create({
 	shell: {
-		backgroundColor: '#101735',
-		borderRadius: RFValue(18),
+		backgroundColor: '#1A2332',
+		borderRadius: 12,
 		padding: RFValue(14),
 		marginHorizontal: RFValue(20),
 		borderWidth: 1,
@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
 	},
 	hero: {
 		height: RFValue(126),
-		borderRadius: RFValue(16),
+		borderRadius: 12,
 		padding: RFValue(14),
 		justifyContent: 'space-between',
 	},
 	iconBubble: {
 		width: RFValue(34),
 		height: RFValue(34),
-		borderRadius: RFValue(12),
+		borderRadius: 12,
 		backgroundColor: 'rgba(255,255,255,0.14)',
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
 		top: RFValue(12),
 		right: RFValue(12),
 		backgroundColor: 'rgba(1,0,58,0.72)',
-		borderRadius: RFValue(7),
+		borderRadius: 8,
 		paddingHorizontal: RFValue(8),
 		paddingVertical: RFValue(4),
 	},
