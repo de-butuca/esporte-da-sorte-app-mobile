@@ -3,7 +3,8 @@ import { View, Image, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Search, Settings } from 'lucide-react-native';
-import Logo from '@assets/images/logo-square.svg';
+import LogoVerde from '@assets/esportesDaSorteExtensoVerde.svg';
+import LogoBranco from '@assets/esportesDaSorteExtensoBranco.svg';
 import Animated, {
 	useAnimatedStyle,
 	SharedValue,
@@ -39,9 +40,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => setActiveCategory(category), [setActiveCategory]);
 
-	const handleLogin = useCallback(() => {
-		requireAuth(() => {}, activeCategory === 'cassino' ? 'cassino' : 'esportes');
-	}, [requireAuth, activeCategory]);
+	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
 
 	const handleTabLayout = useCallback(
 		(e: LayoutChangeEvent) => {
@@ -79,7 +78,11 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	return (
 		<View style={containerStyle}>
 			<HHS.topRow>
-				<Logo width={RFValue(80)} height={RFValue(28)} />
+				{activeCategory === 'esportes' ? (
+					<LogoVerde width={92} height={32} />
+				) : (
+					<LogoBranco width={101} height={35} />
+				)}
 
 				<HHS.actions>
 					<HHS.iconBtn>
@@ -101,11 +104,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 					<Animated.View style={[styles.pill, { backgroundColor: theme.colors.bgNav }, pillStyle]} />
 
 					<HHS.categoryTab onPress={() => handleCategoryPress('cassino')} onLayout={handleTabLayout}>
-						<Image
-							source={CASSINO_ICON}
-							style={[styles.categoryIcon, activeCategory === 'cassino' && styles.active]}
-							resizeMode="contain"
-						/>
+						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
 						{activeCategory === 'cassino' ? (
 							<HHS.categoryLabelActive>Cassino</HHS.categoryLabelActive>
 						) : (
@@ -114,11 +113,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 					</HHS.categoryTab>
 
 					<HHS.categoryTab onPress={() => handleCategoryPress('esportes')}>
-						<Image
-							source={SOCCER_ICON}
-							style={[styles.categoryIcon, activeCategory === 'esportes' && styles.active]}
-							resizeMode="contain"
-						/>
+						<Image source={SOCCER_ICON} style={styles.categoryIcon} resizeMode="contain" />
 						{activeCategory === 'esportes' ? (
 							<HHS.categoryLabelActive>Esportes</HHS.categoryLabelActive>
 						) : (
@@ -154,9 +149,5 @@ const styles = StyleSheet.create({
 	categoryIcon: {
 		width: 16,
 		height: 16,
-		opacity: 0.4,
-	},
-	active: {
-		opacity: 1,
 	},
 });
