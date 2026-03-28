@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useSessionStore } from '@/core/session/useSessionStore';
-import { useAppNavigation } from '@/navigation/hooks';
+import { navigate } from '@/navigation/rootNavigation';
 import type { LoginVariant } from '@/stampd.config';
 import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
@@ -17,7 +17,6 @@ const CATEGORY_TO_VARIANT: Record<GameCategory, LoginVariant> = {
 
 export function useRequireAuth() {
 	const isAuthenticated = useSessionStore((s) => s.isAuthenticated);
-	const navigation = useAppNavigation();
 	const setVariant = useAuthThemeStore((s) => s.setVariant);
 
 	const guardNavigation = useCallback(
@@ -28,9 +27,9 @@ export function useRequireAuth() {
 			}
 
 			setVariant(CATEGORY_TO_VARIANT[category]);
-			navigation.navigate('Login');
+			navigate('Login');
 		},
-		[isAuthenticated, navigation, setVariant],
+		[isAuthenticated, setVariant],
 	);
 
 	const requireAuth = useCallback(
@@ -41,9 +40,9 @@ export function useRequireAuth() {
 			}
 
 			setVariant(variant);
-			navigation.navigate('Login');
+			navigate('Login');
 		},
-		[isAuthenticated, navigation, setVariant],
+		[isAuthenticated, setVariant],
 	);
 
 	return {

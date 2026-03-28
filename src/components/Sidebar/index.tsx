@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
-import { ScrollView, StyleSheet, Image } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ClipboardList, Dices, Gift, HelpCircle, House, LogOut, Settings, Trophy, X } from 'lucide-react-native';
 import { Styled } from 'stampd/styled';
 import { lightColors } from '@/stampd.config';
-import { useAppNavigation } from '@/navigation/hooks';
+import { navigate } from '@/navigation/rootNavigation';
 import { useSessionStore } from '@/core/session/useSessionStore';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import LogoImage from '@assets/images/logo-text.svg';
 
 interface SidebarProps {
 	onClose: () => void;
@@ -142,12 +143,8 @@ const SS = {
 	}),
 };
 
-import LogoImage from '@assets/images/logo-text.svg';
-
 export function Sidebar({ onClose }: SidebarProps) {
 	const insets = useSafeAreaInsets();
-	const { navigate } = useAppNavigation();
-	const user = useSessionStore((s) => s.user);
 	const signOut = useSessionStore((s) => s.signOut);
 	const { requireAuth } = useRequireAuth();
 
@@ -215,8 +212,6 @@ export function Sidebar({ onClose }: SidebarProps) {
 			},
 		},
 	];
-
-	const initial = user?.name?.[0]?.toUpperCase() ?? '?';
 
 	return (
 		<SS.root>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { StampdUIProvider, ThemeMode, useStampdUI } from 'stampd/context';
+import { StampdUIProvider } from 'stampd/context';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,6 +12,7 @@ import { ApiRepositoryProvider } from './contexts/ApiRepositoryContext';
 import { SidebarProvider } from './contexts/Sidebar/SidebarProvider';
 import { SessionProvider } from './contexts/SessionContext';
 import { config } from './stampd.config';
+import { navigationRef } from './navigation/rootNavigation';
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,7 @@ export function AppProviders({ children }: IAppProvidersProps) {
 			<SafeAreaProvider>
 				<QueryClientProvider client={queryClient}>
 					<StampdUIProvider config={config}>
-						<NavigationContainer>
+						<NavigationContainer ref={navigationRef}>
 							<ApiRepositoryProvider>
 								<ToastProvider>
 									<SidebarProvider>
@@ -44,10 +45,9 @@ export function AppProviders({ children }: IAppProvidersProps) {
 }
 
 function AppContent({ children }: IAppProvidersProps) {
-	const { themeMode } = useStampdUI();
 	return (
 		<View style={styles.fill}>
-			<StatusBar style={themeMode == ThemeMode.LIGHT ? 'light' : 'light'} animated />
+			<StatusBar style="light" animated />
 			{children}
 		</View>
 	);
