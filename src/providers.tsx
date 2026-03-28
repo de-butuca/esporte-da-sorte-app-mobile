@@ -29,11 +29,11 @@ export function AppProviders({ children }: IAppProvidersProps) {
 						<NavigationContainer ref={navigationRef}>
 							<ApiRepositoryProvider>
 								<ToastProvider>
-									<SidebarProvider>
-										<SessionProvider>
+									<SessionProvider>
+										<SidebarProvider>
 											<AppContent>{children}</AppContent>
-										</SessionProvider>
-									</SidebarProvider>
+										</SidebarProvider>
+									</SessionProvider>
 								</ToastProvider>
 							</ApiRepositoryProvider>
 						</NavigationContainer>
