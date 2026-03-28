@@ -82,11 +82,11 @@ declare global {
       onPrimary: "black";
       secondary: "#625B71";
       onSecondary: "#FFFFFF";
-      background: "#dddddd";
+      background: "#0D0A1A";
       onBackground: "#FFFFFF";
-      bgNav: "#02003D";
-      bgCard: "#0A0F2E";
-      bgSecondary: "#101828";
+      bgNav: "#120E22";
+      bgCard: "#1A1229";
+      bgSecondary: "#120E22";
       accent: "#38E67D";
       accentText: "#37E67D";
       textPrimary: "#FFFFFF";
