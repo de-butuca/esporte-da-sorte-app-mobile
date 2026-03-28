@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Image, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Menu, Search, Settings } from 'lucide-react-native';
-import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import { Search, Settings } from 'lucide-react-native';
 import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, {
@@ -36,7 +35,6 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	const insets = useSafeAreaInsets();
 	const { theme } = useStampdUI();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
-	const { open: openSidebar } = useSidebar();
 	const [tabWidth, setTabWidth] = useState(0);
 	const pillX = useSharedValue(0);
 
@@ -80,9 +78,6 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	return (
 		<View style={containerStyle}>
 			<HHS.topRow>
-				<HHS.iconBtn onPress={openSidebar}>
-					<Menu size={RFValue(22)} color={theme.colors.textPrimary} strokeWidth={2} />
-				</HHS.iconBtn>
 				<Logo width={RFValue(80)} height={RFValue(28)} />
 
 				<HHS.actions>

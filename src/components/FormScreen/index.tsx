@@ -16,7 +16,7 @@ import {
 	View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { lightColors } from '@/theme/design-tokens';
+import { lightColors } from '@/stampd.config';
 
 // ── Context para vincular inputs ──────────────────────────────────
 

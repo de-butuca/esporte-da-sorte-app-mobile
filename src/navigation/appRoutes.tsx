@@ -12,6 +12,7 @@ import PromotionsScreen from '@/screens/promotions/view';
 import SearchScreen from '@/screens/search/view';
 import SupportScreen from '@/screens/support/view';
 import SettingsScreen from '@/screens/settings/view';
+import BolaoScreen from '@/screens/bolao/view';
 
 const Stack = createNativeStackNavigator();
 
@@ -72,6 +73,14 @@ export function AppStack() {
 				options={{
 					headerShown: false,
 					animation: 'slide_from_right',
+				}}
+			/>
+			<Stack.Screen
+				name="Bolao"
+				component={BolaoScreen}
+				options={{
+					headerShown: false,
+					contentStyle: { backgroundColor: '#0B1120' },
 				}}
 			/>
 			<Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />

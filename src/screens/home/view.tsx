@@ -15,6 +15,9 @@ import { useAppNavigation } from '@/navigation/hooks';
 export default function HomeScreen() {
 	const navigation = useAppNavigation();
 	const [activeTab, setActiveTab] = useState<NavTab>('home');
+	const handleTabPress = useCallback((tab: NavTab) => {
+		setActiveTab(tab);
+	}, []);
 	const [activeCategory, setActiveCategory] = useState<CategoryTab>('cassino');
 	const [showRoulette, setShowRoulette] = useState(false);
 	const scrollY = useSharedValue(0);
@@ -66,7 +69,7 @@ export default function HomeScreen() {
 				{activeCategory === 'cassino' ? <HomeCassino /> : <HomeEsportes />}
 			</Animated.ScrollView>
 
-			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
+			<BottomNavBar activeTab={activeTab} onTabPress={handleTabPress} />
 		</HomeStyled.Root>
 	);
 }

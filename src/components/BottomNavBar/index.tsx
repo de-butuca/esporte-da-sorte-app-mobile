@@ -1,25 +1,42 @@
-import React, { useCallback, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import Animated, {
+	useSharedValue,
+	useAnimatedStyle,
+	withTiming,
+	interpolateColor,
+	interpolate,
+	Easing,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
-import { House, Zap, Dice5, ClipboardList, Menu } from 'lucide-react-native';
+import { fontFamily } from '@/stampd.config';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import HomeIcon from '@assets/icons/homeIcon.svg';
+import BallIcon from '@assets/icons/ballIcon.svg';
+import CupIcon from '@assets/icons/cupIcon.svg';
+import ProfileIcon from '@assets/icons/profileIcon.svg';
+import PointIcon from '@assets/icons/pointIcon.svg';
 
-export type NavTab = 'home' | 'live' | 'cassino' | 'apostas' | 'menu';
+export type NavTab = 'home' | 'partidas' | 'ranking' | 'perfil';
 
 interface BottomNavBarProps {
 	activeTab: NavTab;
 	onTabPress: (tab: NavTab) => void;
 }
 
-const TABS: { key: NavTab; label: string; Icon: typeof House }[] = [
-	{ key: 'home', label: 'Início', Icon: House },
-	{ key: 'live', label: 'Ao Vivo', Icon: Zap },
-	{ key: 'cassino', label: 'Cassino', Icon: Dice5 },
-	{ key: 'apostas', label: 'Apostas', Icon: ClipboardList },
-	{ key: 'menu', label: 'Menu', Icon: Menu },
+const ICON_SIZE = 22;
+const ACTIVE_COLOR = '#22C55E';
+const INACTIVE_COLOR = '#6B7280';
+const TIMING = { duration: 250, easing: Easing.bezier(0.4, 0, 0.2, 1) };
+
+const TABS: { key: NavTab; label: string; Icon: typeof HomeIcon }[] = [
+	{ key: 'home', label: 'Inicio', Icon: HomeIcon },
+	{ key: 'partidas', label: 'Partidas', Icon: BallIcon },
+	{ key: 'ranking', label: 'Ranking', Icon: CupIcon },
+	{ key: 'perfil', label: 'Perfil', Icon: ProfileIcon },
 ];
+
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 interface TabItemProps {
 	tab: typeof TABS[number];
@@ -28,26 +45,63 @@ interface TabItemProps {
 }
 
 const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemProps) {
-	const color = isActive ? lightColors.accent : lightColors.textMuted;
+	const progress = useSharedValue(isActive ? 1 : 0);
+
+	useEffect(() => {
+		progress.value = withTiming(isActive ? 1 : 0, TIMING);
+	}, [isActive]);
+
 	const handlePress = useCallback(() => onPress(tab.key), [onPress, tab.key]);
 
+	const bgStyle = useAnimatedStyle(() => ({
+		backgroundColor: interpolateColor(
+			progress.value,
+			[0, 1],
+			['transparent', 'rgba(16,185,129,0.1)'],
+		),
+		height: interpolate(progress.value, [0, 1], [56, 72]),
+	}));
+
+	const dotStyle = useAnimatedStyle(() => ({
+		opacity: progress.value,
+		transform: [{ scale: progress.value }],
+	}));
+
+	const colorStyle = useAnimatedStyle(() => ({
+		color: interpolateColor(progress.value, [0, 1], [INACTIVE_COLOR, ACTIVE_COLOR]),
+	}));
+
+	const activeIconStyle = useAnimatedStyle(() => ({
+		opacity: progress.value,
+	}));
+
+	const inactiveIconStyle = useAnimatedStyle(() => ({
+		opacity: 1 - progress.value,
+	}));
+
 	return (
-		<TouchableOpacity
-			style={styles.tab}
-			onPress={handlePress}
-			activeOpacity={0.7}
-		>
-			<tab.Icon size={RFValue(18)} color={color} strokeWidth={isActive ? 2.2 : 1.5} />
-			<Text
-				style={[
-					styles.label,
-					{ color, fontFamily: isActive ? fontFamily.bold : fontFamily.regular },
-				]}
+		<View style={styles.tabSlot}>
+			<AnimatedTouchable
+				style={[styles.tab, bgStyle]}
+				onPress={handlePress}
+				activeOpacity={0.7}
 			>
-				{tab.label}
-			</Text>
-			{isActive && <View style={styles.activeDot} />}
-		</TouchableOpacity>
+				<Animated.View style={[styles.dotContainer, dotStyle]}>
+					<PointIcon width={28} height={28} />
+				</Animated.View>
+				<View style={styles.iconContainer}>
+					<Animated.View style={[styles.iconWrap, activeIconStyle]}>
+						<tab.Icon width={ICON_SIZE} height={ICON_SIZE} color={ACTIVE_COLOR} />
+					</Animated.View>
+					<Animated.View style={[styles.iconWrap, inactiveIconStyle]}>
+						<tab.Icon width={ICON_SIZE} height={ICON_SIZE} color={INACTIVE_COLOR} />
+					</Animated.View>
+				</View>
+				<Animated.Text style={[styles.label, colorStyle]} numberOfLines={1}>
+					{tab.label}
+				</Animated.Text>
+			</AnimatedTouchable>
+		</View>
 	);
 });
 
@@ -56,12 +110,13 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	const { open: openSidebar } = useSidebar();
 
 	const handleTabPress = useCallback((key: NavTab) => {
-		if (key === 'menu') {
+		if (key === 'perfil') {
 			openSidebar();
 			return;
 		}
 		onTabPress(key);
 	}, [onTabPress, openSidebar]);
+
 	const containerStyle = useMemo(
 		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8) }],
 		[insets.bottom],
@@ -69,7 +124,6 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 
 	return (
 		<View style={containerStyle}>
-			<View style={styles.divider} />
 			<View style={styles.tabRow}>
 				{TABS.map((tab) => (
 					<TabItem
@@ -86,35 +140,59 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: lightColors.bgNav,
-	},
-	divider: {
-		height: 1,
-		backgroundColor: 'rgba(160,160,200,0.15)',
+		backgroundColor: '#101828',
+		paddingTop: 8,
+		paddingHorizontal: 24,
+		...Platform.select({
+			ios: {
+				shadowColor: '#000000',
+				shadowOffset: { width: 0, height: -8 },
+				shadowOpacity: 0.3,
+				shadowRadius: 12,
+			},
+			android: {
+				elevation: 12,
+			},
+		}),
 	},
 	tabRow: {
 		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		paddingHorizontal: RFValue(12),
-		paddingTop: RFValue(6),
-		height: RFValue(46),
+		alignItems: 'flex-start',
+		gap: 15,
 	},
-	tab: {
+	tabSlot: {
 		flex: 1,
 		alignItems: 'center',
+	},
+	tab: {
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		gap: 4,
+		paddingTop: 8,
+		paddingHorizontal: 20,
+		borderRadius: 16,
+		height: 56,
+	},
+	dotContainer: {
+		height: 4,
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		overflow: 'visible',
+	},
+	iconContainer: {
+		width: 22,
+		height: 28,
+		alignItems: 'center',
 		justifyContent: 'center',
-		gap: RFValue(2),
+	},
+	iconWrap: {
+		position: 'absolute',
 	},
 	label: {
-		fontSize: RFValue(9),
+		fontFamily: fontFamily.semibold,
+		fontSize: 10,
 		textAlign: 'center',
-	},
-	activeDot: {
-		width: 4,
-		height: 4,
-		borderRadius: 2,
-		backgroundColor: lightColors.accent,
-		marginTop: 2,
+		includeFontPadding: false,
+		lineHeight: 15,
 	},
 });
