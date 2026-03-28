@@ -9,6 +9,8 @@ export type RootStackParamList = {
 	GameHome: undefined;
 	SearchGames: undefined;
 	Bolao: undefined;
+	FaceVerification: undefined;
+	FaceCapture: undefined;
 	Login: undefined;
 	Register: undefined;
 	Propaganda: undefined;
