@@ -5,13 +5,15 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { ArrowLeft, Search } from 'lucide-react-native';
 import { SectionHeader } from '@/components/SectionHeader';
 import { PromotionsSupportCard } from '@/screens/promotions/components/PromotionsSupportCard';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import Logo from '@assets/esporteDaSorteCompleto.svg';
 import { SupportFaqItem } from './components/SupportFaqItem';
 import { useSupportViewModel } from './viewmodel';
 
 export default function SupportScreen() {
 	const insets = useSafeAreaInsets();
+	const colors = useAuthThemeStore((s) => s.colors);
 	const {
 		title,
 		searchQuery,
@@ -27,11 +29,11 @@ export default function SupportScreen() {
 	} = useSupportViewModel();
 
 	return (
-		<View style={styles.root}>
-			<View style={[styles.header, { paddingTop: insets.top }]}>
+		<View style={[styles.root, { backgroundColor: colors.background }]}>
+			<View style={[styles.header, { paddingTop: insets.top, backgroundColor: colors.bgSecondary }]}>
 				<View style={styles.headerRow}>
 					<TouchableOpacity onPress={handleBack} activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-						<ArrowLeft size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+						<ArrowLeft size={RFValue(20)} color={colors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					<Logo width={149} height={16} />
 					<View style={{ width: RFValue(20) }} />
@@ -43,18 +45,18 @@ export default function SupportScreen() {
 				contentContainerStyle={styles.content}
 				keyboardShouldPersistTaps="handled"
 			>
-				<View style={styles.searchCard}>
-					<Text style={styles.searchTitle}>Como podemos ajudar?</Text>
+				<View style={[styles.searchCard, { backgroundColor: colors.surface1 }]}>
+					<Text style={[styles.searchTitle, { color: colors.textPrimary }]}>Como podemos ajudar?</Text>
 
-					<View style={styles.searchField}>
-						<Search size={RFValue(18)} color={lightColors.textMuted} strokeWidth={2} />
+					<View style={[styles.searchField, { borderColor: `${colors.accent}48`, backgroundColor: colors.surface2 }]}>
+						<Search size={RFValue(18)} color={colors.textMuted} strokeWidth={2} />
 						<TextInput
 							value={searchQuery}
 							onChangeText={setSearchQuery}
 							placeholder="Buscar por assunto"
-							placeholderTextColor={lightColors.textInactive}
-							style={styles.searchInput}
-							cursorColor={lightColors.accent}
+							placeholderTextColor={colors.textDisabled}
+							style={[styles.searchInput, { color: colors.textPrimary }]}
+							cursorColor={colors.accent}
 						/>
 					</View>
 				</View>
@@ -69,11 +71,23 @@ export default function SupportScreen() {
 							return (
 								<TouchableOpacity
 									key={shortcut.id}
-									style={[styles.shortcutChip, isActive && styles.shortcutChipActive]}
+									style={[
+										styles.shortcutChip,
+										{ backgroundColor: colors.surface1 },
+										isActive && { backgroundColor: `${colors.accent}28` },
+									]}
 									onPress={() => toggleShortcut(shortcut.tag)}
 									activeOpacity={0.8}
 								>
-									<Text style={[styles.shortcutLabel, isActive && styles.shortcutLabelActive]}>{shortcut.label}</Text>
+									<Text
+										style={[
+											styles.shortcutLabel,
+											{ color: colors.textPrimary },
+											isActive && styles.shortcutLabelActive,
+										]}
+									>
+										{shortcut.label}
+									</Text>
 								</TouchableOpacity>
 							);
 						})}
@@ -81,8 +95,8 @@ export default function SupportScreen() {
 				</View>
 
 				<View style={styles.sectionBlock}>
-					<Text style={styles.faqTitle}>Perguntas frequentes</Text>
-					<View style={styles.faqCard}>
+					<Text style={[styles.faqTitle, { color: colors.textPrimary }]}>Perguntas frequentes</Text>
+					<View style={[styles.faqCard, { backgroundColor: colors.surface1 }]}>
 						{visibleFaqs.length ? (
 							visibleFaqs.map((item, index) => (
 								<SupportFaqItem
@@ -95,8 +109,8 @@ export default function SupportScreen() {
 							))
 						) : (
 							<View style={styles.emptyState}>
-								<Text style={styles.emptyTitle}>Nada encontrado</Text>
-								<Text style={styles.emptyDescription}>
+								<Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>Nada encontrado</Text>
+								<Text style={[styles.emptyDescription, { color: colors.textMuted }]}>
 									Tente outro assunto ou limpe os atalhos para ver todas as perguntas.
 								</Text>
 							</View>
@@ -123,10 +137,8 @@ export default function SupportScreen() {
 const styles = StyleSheet.create({
 	root: {
 		flex: 1,
-		backgroundColor: '#0B1120',
 	},
 	header: {
-		backgroundColor: '#101828',
 		paddingHorizontal: 16,
 		paddingBottom: RFValue(14),
 		shadowColor: '#000000',
@@ -141,18 +153,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		paddingTop: RFValue(14),
 	},
-	backButton: {
-		width: RFValue(40),
-		height: RFValue(40),
-		borderRadius: RFValue(12),
-		borderWidth: 1,
-		borderColor: '#1A2340',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	headerSpacer: {
-		width: RFValue(40),
-	},
 	content: {
 		paddingHorizontal: 16,
 		paddingBottom: RFValue(28),
@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
 		gap: RFValue(22),
 	},
 	searchCard: {
-		backgroundColor: '#1A2332',
 		borderRadius: 12,
 		padding: RFValue(18),
 		gap: RFValue(14),
@@ -169,14 +168,11 @@ const styles = StyleSheet.create({
 		fontFamily: fontFamily.bold,
 		fontSize: 20,
 		lineHeight: 30,
-		color: lightColors.textPrimary,
 	},
 	searchField: {
 		height: RFValue(44),
 		borderRadius: 12,
 		borderWidth: 1.5,
-		borderColor: 'rgba(56,230,125,0.28)',
-		backgroundColor: '#1C2538',
 		paddingHorizontal: RFValue(16),
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -186,7 +182,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(14),
-		color: lightColors.textPrimary,
 	},
 	sectionBlock: {
 		gap: RFValue(14),
@@ -203,33 +198,24 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 12,
 		paddingVertical: 6,
 		borderRadius: 9999,
-		backgroundColor: '#1A2332',
 		alignItems: 'center',
 		justifyContent: 'center',
-	},
-	shortcutChipActive: {
-		backgroundColor: 'rgba(56,230,125,0.16)',
-		borderColor: 'rgba(56,230,125,0.34)',
 	},
 	shortcutLabel: {
 		fontFamily: fontFamily.medium,
 		fontSize: 14,
 		lineHeight: 21,
-		color: lightColors.textPrimary,
 	},
 	shortcutLabelActive: {
 		fontFamily: fontFamily.bold,
-		color: lightColors.textPrimary,
 	},
 	faqTitle: {
 		fontFamily: fontFamily.bold,
 		fontSize: 16,
 		lineHeight: 24,
-		color: lightColors.textPrimary,
 		paddingLeft: 4,
 	},
 	faqCard: {
-		backgroundColor: '#1A2332',
 		borderRadius: 12,
 		overflow: 'hidden',
 	},
@@ -241,14 +227,12 @@ const styles = StyleSheet.create({
 	emptyTitle: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(16),
-		color: lightColors.textPrimary,
 		marginBottom: RFValue(8),
 	},
 	emptyDescription: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(12),
 		lineHeight: RFValue(18),
-		color: lightColors.textMuted,
 		textAlign: 'center',
 	},
 });

@@ -43,7 +43,10 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => setActiveCategory(category), [setActiveCategory]);
 
-	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
+	const handleLogin = useCallback(
+		() => requireAuth(() => { }, activeCategory === 'cassino' ? 'cassino' : 'esportes'),
+		[requireAuth, activeCategory],
+	);
 
 	const handleTabLayout = useCallback(
 		(e: LayoutChangeEvent) => {
