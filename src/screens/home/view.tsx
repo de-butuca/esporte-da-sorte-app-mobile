@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import Animated, { useSharedValue, useAnimatedScrollHandler } from 'react-native-reanimated';
@@ -38,26 +38,7 @@ export default function HomeScreen() {
 				onScroll={scrollHandler}
 				scrollEventThrottle={16}
 			>
-				<BannerCarousel />
-
-				<View style={styles.section}>
-					<SectionHeader title="Ao vivo" count={12} hasLive />
-					<GameRow games={LIVE_GAMES} cardWidth={RFValue(80)} onGamePress={handleGamePress} />
-				</View>
-
-				<View style={styles.section}>
-					<SectionHeader title="Cassino em alta" count={12} />
-					<GameRow games={TRENDING_GAMES} onGamePress={handleGamePress} />
-				</View>
-
-				<PromoBanner />
-
-				<View style={styles.section}>
-					<SectionHeader title="Novos cassinos" count={12} />
-					<GameRow games={NEW_GAMES} onGamePress={handleGamePress} />
-				</View>
-
-				<View style={styles.bottomSpacer} />
+				{activeCategory === 'cassino' ? <HomeCassino /> : <HomeEsportes />}
 			</Animated.ScrollView>
 
 			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
@@ -76,11 +57,5 @@ const styles = StyleSheet.create({
 	scrollContent: {
 		gap: RFValue(20),
 		paddingTop: RFValue(14),
-	},
-	section: {
-		gap: RFValue(8),
-	},
-	bottomSpacer: {
-		height: RFValue(12),
 	},
 });
