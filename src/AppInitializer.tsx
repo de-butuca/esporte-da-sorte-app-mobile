@@ -8,13 +8,15 @@ import {
 import React, { useEffect, useState } from 'react';
 import { InteractionManager, Platform, StyleSheet, View } from 'react-native';
 import { useSessionStore } from './core/session/useSessionStore';
-import { lightColors } from './stampd.config';
+import { darkColors } from './stampd.config';
 import AnimatedSplash from './components/AnimatedSplash';
 import {
 	requestNotificationPermissions,
 	setupAppLifecycleNotifications,
 	cleanupNotifications,
 } from './core/services/notifications';
+import { useStampdUI, ThemeMode } from 'stampd/context';
+import { loadPreferences } from './core/preferences/preferences.storage';
 
 interface IAppInitializerProps {
 	children: React.ReactNode;
@@ -25,6 +27,7 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 	const [splashDone, setSplashDone] = useState(false);
 	const [splashError, setSplashError] = useState(false);
 	const loadSession = useSessionStore((s) => s.loadSession);
+	const { setThemeMode, setHighContrast } = useStampdUI();
 
 	const [fontsLoaded] = useFonts({
 		Inter_400Regular,
@@ -36,7 +39,11 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 	useEffect(() => {
 		async function init() {
 			try {
-				await loadSession();
+				const [, prefs] = await Promise.all([loadSession(), loadPreferences()]);
+				if (prefs) {
+					setThemeMode(prefs.themeMode as ThemeMode);
+					setHighContrast(prefs.highContrast);
+				}
 			} catch (e) {
 				if (__DEV__) console.warn(e);
 			} finally {
@@ -61,11 +68,7 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 	}, [loadSession]);
 
 	if (!splashDone && !splashError) {
-		return (
-			<AnimatedSplash
-				onFinish={() => setSplashDone(true)}
-			/>
-		);
+		return <AnimatedSplash onFinish={() => setSplashDone(true)} />;
 	}
 
 	if (!isReady || !fontsLoaded) {
@@ -78,7 +81,7 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 const styles = StyleSheet.create({
 	loading: {
 		flex: 1,
-		backgroundColor: lightColors.background,
+		backgroundColor: darkColors.primary,
 	},
 });
 

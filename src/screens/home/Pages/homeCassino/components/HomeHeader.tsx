@@ -1,19 +1,28 @@
-import React, { useCallback, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { View, Image, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
 import { Menu, Search, Settings } from 'lucide-react-native';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
 import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
-import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
+import Animated, {
+	useAnimatedStyle,
+	SharedValue,
+	interpolate,
+	Extrapolation,
+	useSharedValue,
+	withSpring,
+} from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { useStampdUI } from 'stampd/context';
+import { HHS } from '../homeHeader.styled';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
 import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
 
-const EXPANDED_HEIGHT = RFValue(62);
+const EXPANDED_HEIGHT = RFValue(72);
+const PILL_SPRING = { damping: 22, stiffness: 380, mass: 0.7 } as const;
 
 export type CategoryTab = 'cassino' | 'esportes';
 
@@ -25,23 +34,35 @@ interface HomeHeaderProps {
 
 export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
-	const navigation = useAppNavigation();
+	const { theme } = useStampdUI();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
 	const { open: openSidebar } = useSidebar();
+	const [tabWidth, setTabWidth] = useState(0);
+	const pillX = useSharedValue(0);
 
-	const handleCategoryPress = useCallback((category: CategoryTab) => {
-		onCategoryChange(category);
-	}, [onCategoryChange]);
+	const handleCategoryPress = useCallback((category: CategoryTab) => onCategoryChange(category), [onCategoryChange]);
 
-	const handleLogin = useCallback(() => {
-		requireAuth(() => { });
-	}, [requireAuth]);
+	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
 
-	const handleSearchPress = useCallback(() => {
-		navigation.navigate('Search', {
-			initialSportSlug: activeCategory === 'esportes' ? 'futebol' : undefined,
-		});
-	}, [activeCategory, navigation]);
+	const handleTabLayout = useCallback(
+		(e: LayoutChangeEvent) => {
+			const width = e.nativeEvent.layout.width;
+			if (tabWidth !== 0) return;
+			setTabWidth(width);
+			pillX.value = activeCategory === 'cassino' ? 0 : width;
+		},
+		[tabWidth, activeCategory, pillX]
+	);
+
+	useEffect(() => {
+		if (tabWidth === 0) return;
+		pillX.value = withSpring(activeCategory === 'cassino' ? 0 : tabWidth, PILL_SPRING);
+	}, [activeCategory, tabWidth, pillX]);
+
+	const pillStyle = useAnimatedStyle(() => ({
+		width: tabWidth,
+		transform: [{ translateX: pillX.value }],
+	}));
 
 	const wrapperStyle = useAnimatedStyle(() => {
 		const progress = interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP);
@@ -52,54 +73,55 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	});
 
 	const containerStyle = useMemo(
-		() => [styles.container, { paddingTop: insets.top }],
-		[insets.top],
+		() => [styles.container, { paddingTop: insets.top, backgroundColor: theme.colors.background }],
+		[insets.top, theme.colors.background]
 	);
 
 	return (
 		<View style={containerStyle}>
-			<View style={styles.topRow}>
-				<Logo width={RFValue(70)} height={RFValue(24)} />
+			<HHS.topRow>
+				<HHS.iconBtn onPress={openSidebar}>
+					<Menu size={RFValue(22)} color={theme.colors.textPrimary} strokeWidth={2} />
+				</HHS.iconBtn>
+				<Logo width={RFValue(80)} height={RFValue(28)} />
 
-				<View style={styles.actions}>
-					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Search size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2} />
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Settings size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2} />
-					</TouchableOpacity>
+				<HHS.actions>
+					<HHS.iconBtn>
+						<Search size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
+					</HHS.iconBtn>
+					<HHS.iconBtn>
+						<Settings size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
+					</HHS.iconBtn>
 					{!isAuthenticated && (
-						<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8} onPress={handleLogin}>
-							<Text style={styles.entrarText}>Entrar</Text>
-						</TouchableOpacity>
+						<HHS.entrarBtn onPress={handleLogin}>
+							<HHS.entrarText>Entrar</HHS.entrarText>
+						</HHS.entrarBtn>
 					)}
-				</View>
-			</View>
+				</HHS.actions>
+			</HHS.topRow>
 
 			<Animated.View style={[styles.tabsWrapper, wrapperStyle]}>
-				<View style={styles.categoryTabs}>
-					<TouchableOpacity
-						style={[styles.categoryTab, activeCategory === 'cassino' && styles.categoryTabActive]}
-						onPress={() => handleCategoryPress('cassino')}
-						activeOpacity={0.7}
-					>
-						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text style={[styles.categoryLabel, activeCategory === 'cassino' && styles.categoryLabelActive]}>
-							Cassino
-						</Text>
-					</TouchableOpacity>
+				<HHS.categoryTabs>
+					<Animated.View style={[styles.pill, { backgroundColor: theme.colors.bgNav }, pillStyle]} />
 
-					<TouchableOpacity
-						style={[styles.categoryTab, activeCategory === 'esportes' && styles.categoryTabActive]}
-						onPress={() => handleCategoryPress('esportes')}
-						activeOpacity={0.7}
-					>
+					<HHS.categoryTab onPress={() => handleCategoryPress('cassino')} onLayout={handleTabLayout}>
+						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
+						{activeCategory === 'cassino' ? (
+							<HHS.categoryLabelActive>Cassino</HHS.categoryLabelActive>
+						) : (
+							<HHS.categoryLabel>Cassino</HHS.categoryLabel>
+						)}
+					</HHS.categoryTab>
+
+					<HHS.categoryTab onPress={() => handleCategoryPress('esportes')}>
 						<Image source={SOCCER_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text style={[styles.categoryLabel, activeCategory === 'esportes' && styles.categoryLabelActive]}>
-							Esportes
-						</Text>
-					</TouchableOpacity>
-				</View>
+						{activeCategory === 'esportes' ? (
+							<HHS.categoryLabelActive>Esportes</HHS.categoryLabelActive>
+						) : (
+							<HHS.categoryLabel>Esportes</HHS.categoryLabel>
+						)}
+					</HHS.categoryTab>
+				</HHS.categoryTabs>
 			</Animated.View>
 		</View>
 	);
@@ -107,75 +129,26 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: lightColors.background,
-		paddingHorizontal: RFValue(14),
-		paddingBottom: RFValue(8),
+		paddingHorizontal: 20,
+		paddingBottom: 12,
 		shadowColor: '#000',
 		shadowOffset: { width: 0, height: 4 },
 		shadowOpacity: 0.3,
 		shadowRadius: 4,
 		elevation: 8,
 	},
-	topRow: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		marginTop: RFValue(6),
-	},
-	actions: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: RFValue(12),
-	},
-	iconBtn: {
-		padding: RFValue(4),
-	},
-	entrarBtn: {
-		backgroundColor: lightColors.accent,
-		paddingHorizontal: RFValue(16),
-		paddingVertical: RFValue(8),
-		borderRadius: RFValue(8),
-	},
-	entrarText: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(11),
-		color: lightColors.bgNav,
-		letterSpacing: 0.1,
-	},
 	tabsWrapper: {
 		overflow: 'hidden',
 	},
-	categoryTabs: {
-		flexDirection: 'row',
-		backgroundColor: 'rgba(255,255,255,0.08)',
-		borderRadius: RFValue(10),
-		padding: RFValue(3),
-		marginTop: RFValue(12),
-	},
-	categoryTab: {
-		flex: 1,
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		paddingVertical: RFValue(8),
-		borderRadius: RFValue(8),
-		gap: RFValue(6),
-	},
-	categoryTabActive: {
-		backgroundColor: lightColors.bgNav,
+	pill: {
+		position: 'absolute',
+		top: 4,
+		left: 4,
+		bottom: 4,
+		borderRadius: 10,
 	},
 	categoryIcon: {
-		width: RFValue(14),
-		height: RFValue(14),
-	},
-	categoryLabel: {
-		fontFamily: fontFamily.medium,
-		fontSize: RFValue(11),
-		color: lightColors.textMuted,
-		letterSpacing: 0.08,
-	},
-	categoryLabelActive: {
-		color: lightColors.textPrimary,
-		fontFamily: fontFamily.bold,
+		width: 16,
+		height: 16,
 	},
 });

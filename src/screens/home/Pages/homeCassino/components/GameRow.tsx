@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { GameCard } from './GameCard';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { GAME_ROW_CONTENT_STYLE } from '../homeCassino.styled';
 
 interface Game {
 	id: string;
@@ -22,27 +23,30 @@ interface GameRowProps {
 export function GameRow({ games, cardWidth = RFValue(110), onGamePress }: GameRowProps) {
 	const { guardNavigation } = useRequireAuth();
 
-	const handleGamePress = useCallback((game: Game) => {
-		const category = game.badge === 'live' ? 'live' : 'casino';
+	const handleGamePress = useCallback(
+		(game: Game) => {
+			const category = game.badge === 'live' ? 'live' : 'casino';
+			guardNavigation(category, () => {
+				if (onGamePress) onGamePress(game.id);
+			});
+		},
+		[guardNavigation, onGamePress]
+	);
 
-		guardNavigation(category, () => {
-			if (onGamePress) {
-				onGamePress(game.id);
-			}
-		});
-	}, [guardNavigation, onGamePress]);
-
-	const renderItem = useCallback(({ item }: { item: Game }) => (
-		<GameCard
-			image={item.image}
-			name={item.name}
-			provider={item.provider}
-			badge={item.badge}
-			players={item.players}
-			width={cardWidth}
-			onPress={() => handleGamePress(item)}
-		/>
-	), [cardWidth, handleGamePress]);
+	const renderItem = useCallback(
+		({ item }: { item: Game }) => (
+			<GameCard
+				image={item.image}
+				name={item.name}
+				provider={item.provider}
+				badge={item.badge}
+				players={item.players}
+				width={cardWidth}
+				onPress={() => handleGamePress(item)}
+			/>
+		),
+		[cardWidth, handleGamePress]
+	);
 
 	const keyExtractor = useCallback((item: Game) => item.id, []);
 
@@ -52,15 +56,8 @@ export function GameRow({ games, cardWidth = RFValue(110), onGamePress }: GameRo
 			keyExtractor={keyExtractor}
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			contentContainerStyle={styles.content}
+			contentContainerStyle={GAME_ROW_CONTENT_STYLE}
 			renderItem={renderItem}
 		/>
 	);
 }
-
-const styles = StyleSheet.create({
-	content: {
-		paddingHorizontal: RFValue(14),
-		gap: RFValue(8),
-	},
-});

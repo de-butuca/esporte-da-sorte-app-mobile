@@ -8,8 +8,8 @@ import { HomeHeader, CategoryTab } from './Pages/homeCassino/components/HomeHead
 import { BottomNavBar, NavTab } from '@/components/BottomNavBar';
 import { HomeCassino } from './Pages/homeCassino/view';
 import { HomeEsportes } from './Pages/homeEsportes/view';
-import { Roulette } from '@/components/Roulette';
-import { markRouletteSpun, setOnRouletteOpen } from '@/core/services/notifications';
+import { HomeStyled } from './home.styled';
+import { setOnRouletteOpen, markRouletteSpun } from '@/core/services/notifications';
 import { useAppNavigation } from '@/navigation/hooks';
 
 export default function HomeScreen() {
@@ -53,53 +53,29 @@ export default function HomeScreen() {
 	}, [navigation]);
 
 	return (
-		<View style={styles.root}>
-			<BlurTargetView ref={blurTargetRef} style={styles.fill}>
-				<HomeHeader scrollY={scrollY} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
+		<HomeStyled.Root>
+			<HomeHeader scrollY={scrollY} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
 
-				<Animated.ScrollView
-					style={styles.scroll}
-					contentContainerStyle={styles.scrollContent}
-					showsVerticalScrollIndicator={false}
-					onScroll={scrollHandler}
-					scrollEventThrottle={16}
-				>
-					{activeCategory === 'cassino' ? <HomeCassino /> : <HomeEsportes />}
-				</Animated.ScrollView>
+			<Animated.ScrollView
+				style={styles.scroll}
+				contentContainerStyle={styles.scrollContent}
+				showsVerticalScrollIndicator={false}
+				onScroll={scrollHandler}
+				scrollEventThrottle={16}
+			>
+				{activeCategory === 'cassino' ? <HomeCassino /> : <HomeEsportes />}
+			</Animated.ScrollView>
 
-				<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
-			</BlurTargetView>
-
-			<Roulette
-				visible={showRoulette}
-				onClose={handleRouletteClose}
-				onSpin={handleRouletteSpin}
-				onClaim={handleRouletteClaim}
-				blurTarget={blurTargetRef}
-			/>
-		</View>
+			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
+		</HomeStyled.Root>
 	);
 }
 
 const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-		backgroundColor: lightColors.background,
-	},
-	fill: {
-		flex: 1,
-	},
 	scroll: {
 		flex: 1,
 	},
 	scrollContent: {
 		gap: RFValue(20),
-		paddingTop: RFValue(14),
-	},
-	section: {
-		gap: RFValue(8),
-	},
-	bottomSpacer: {
-		height: RFValue(12),
 	},
 });

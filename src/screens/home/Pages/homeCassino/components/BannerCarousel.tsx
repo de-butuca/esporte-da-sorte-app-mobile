@@ -1,17 +1,17 @@
 import React, { useCallback, useRef, useState } from 'react';
 import {
-	View,
-	Text,
 	StyleSheet,
 	FlatList,
 	Dimensions,
 	NativeSyntheticEvent,
 	NativeScrollEvent,
 	ImageBackground,
+	View,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { lightColors } from '@/stampd.config';
 import { LinearGradient } from 'expo-linear-gradient';
+import { BCS } from '../homeCassino.styled';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 const BANNER_W = SCREEN_W - RFValue(32);
@@ -61,31 +61,30 @@ export function BannerCarousel() {
 		setActiveIndex(index);
 	}, []);
 
-	const renderBanner = useCallback(({ item }: { item: Banner }) => (
-		<View style={styles.bannerContainer}>
-			<LinearGradient
-				colors={[lightColors.secondary, lightColors.primary]}
-				start={{ x: 0, y: 0.5 }}
-				end={{ x: 1, y: 0.5 }}
-				style={styles.banner}
-			>
-				<View style={styles.bannerContent}>
-					<Text style={styles.bannerSubtitle}>{item.subtitle}</Text>
-					<Text style={styles.bannerTitle}>{item.title}</Text>
-				</View>
-				<ImageBackground
-					source={item.image}
-					style={styles.bannerImage}
-					resizeMode="cover"
-				/>
-			</LinearGradient>
-		</View>
-	), []);
+	const renderBanner = useCallback(
+		({ item }: { item: Banner }) => (
+			<View style={styles.bannerContainer}>
+				<LinearGradient
+					colors={[lightColors.secondary, lightColors.primary]}
+					start={{ x: 0, y: 0.5 }}
+					end={{ x: 1, y: 0.5 }}
+					style={styles.banner}
+				>
+					<BCS.bannerContent>
+						<BCS.bannerSubtitle>{item.subtitle}</BCS.bannerSubtitle>
+						<BCS.bannerTitle>{item.title}</BCS.bannerTitle>
+					</BCS.bannerContent>
+					<ImageBackground source={item.image} style={styles.bannerImage} resizeMode="cover" />
+				</LinearGradient>
+			</View>
+		),
+		[]
+	);
 
 	const keyExtractor = useCallback((item: Banner) => item.id, []);
 
 	return (
-		<View style={styles.container}>
+		<BCS.container>
 			<FlatList
 				ref={flatListRef}
 				data={BANNERS}
@@ -100,22 +99,16 @@ export function BannerCarousel() {
 				onScroll={onScroll}
 				scrollEventThrottle={16}
 			/>
-			<View style={styles.dots}>
+			<BCS.dots>
 				{BANNERS.map((_, i) => (
-					<View
-						key={i}
-						style={[styles.dot, i === activeIndex ? styles.dotActive : styles.dotInactive]}
-					/>
+					<BCS.dot key={i} {...({ state: i === activeIndex ? 'active' : 'inactive' } as any)} />
 				))}
-			</View>
-		</View>
+			</BCS.dots>
+		</BCS.container>
 	);
 }
 
 const styles = StyleSheet.create({
-	container: {
-		gap: RFValue(8),
-	},
 	listContent: {
 		paddingHorizontal: RFValue(14),
 		gap: BANNER_GAP,
@@ -132,47 +125,10 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		overflow: 'hidden',
 	},
-	bannerContent: {
-		flex: 1,
-		justifyContent: 'center',
-		paddingLeft: RFValue(16),
-		gap: RFValue(3),
-		zIndex: 1,
-	},
-	bannerSubtitle: {
-		fontFamily: fontFamily.medium,
-		fontSize: RFValue(9),
-		color: 'rgba(255,255,255,0.8)',
-	},
-	bannerTitle: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(20),
-		color: lightColors.textPrimary,
-		textTransform: 'uppercase',
-		lineHeight: RFValue(22),
-	},
 	bannerImage: {
 		width: RFValue(140),
 		height: BANNER_H + RFValue(16),
 		marginTop: RFValue(-10),
 		marginRight: RFValue(-8),
-	},
-	dots: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		gap: RFValue(5),
-	},
-	dot: {
-		borderRadius: RFValue(3),
-		height: RFValue(3),
-	},
-	dotActive: {
-		backgroundColor: lightColors.accent,
-		width: RFValue(16),
-	},
-	dotInactive: {
-		backgroundColor: 'rgba(160,160,200,0.4)',
-		width: RFValue(3),
 	},
 });
