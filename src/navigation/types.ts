@@ -7,6 +7,7 @@ export type RootStackParamList = {
 	Promotions: undefined;
 	Support: undefined;
 	GameHome: undefined;
+	SearchGames: undefined;
 	Login: undefined;
 	Register: undefined;
 	Propaganda: undefined;

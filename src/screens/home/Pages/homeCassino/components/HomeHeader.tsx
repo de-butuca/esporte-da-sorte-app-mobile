@@ -15,6 +15,7 @@ import Animated, {
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useStampdUI } from 'stampd/context';
 import { useSessionContext } from '@/contexts/SessionContext';
+import { useAppNavigation } from '@/navigation/hooks';
 import { HHS } from '../homeHeader.styled';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
@@ -32,6 +33,7 @@ interface HomeHeaderProps {
 export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const { theme } = useStampdUI();
+	const navigation = useAppNavigation();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
 	const { activeCategory, setActiveCategory } = useSessionContext();
 	const [tabWidth, setTabWidth] = useState(0);
@@ -82,7 +84,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 				<Logo width={RFValue(80)} height={RFValue(28)} />
 
 				<HHS.actions>
-					<HHS.iconBtn>
+					<HHS.iconBtn onPress={() => navigation.navigate(activeCategory === 'cassino' ? 'SearchGames' : 'Search')}>
 						<Search size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
 					</HHS.iconBtn>
 					<HHS.iconBtn>

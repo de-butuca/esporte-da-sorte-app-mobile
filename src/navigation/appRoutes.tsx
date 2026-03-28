@@ -10,6 +10,7 @@ import LoginScreen from '@/screens/login/login.view';
 import RegisterScreen from '@/screens/register/register.view';
 import PromotionsScreen from '@/screens/promotions/view';
 import SearchScreen from '@/screens/search/view';
+import SearchGamesScreen from '@/screens/search-games/view';
 import SupportScreen from '@/screens/support/view';
 import SettingsScreen from '@/screens/settings/view';
 import ReelsEsportesScreen from '@/screens/reelsEsportes/view';
@@ -74,6 +75,11 @@ export function AppStack() {
 					headerShown: false,
 					animation: 'slide_from_right',
 				}}
+			/>
+			<Stack.Screen
+				name="SearchGames"
+				component={SearchGamesScreen}
+				options={{ headerShown: false }}
 			/>
 			<Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
 			<Stack.Screen name="ReelsEsportesScreen" component={ReelsEsportesScreen} options={{ headerShown: false }} />
