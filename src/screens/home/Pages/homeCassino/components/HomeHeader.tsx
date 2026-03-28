@@ -15,6 +15,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useStampdUI } from 'stampd/context';
+import { useSessionContext } from '@/contexts/SessionContext';
 import { HHS } from '../homeHeader.styled';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
@@ -27,18 +28,17 @@ export type CategoryTab = 'cassino' | 'esportes';
 
 interface HomeHeaderProps {
 	scrollY: SharedValue<number>;
-	activeCategory: CategoryTab;
-	onCategoryChange: (category: CategoryTab) => void;
 }
 
-export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
+export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const { theme } = useStampdUI();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
+	const { activeCategory, setActiveCategory } = useSessionContext();
 	const [tabWidth, setTabWidth] = useState(0);
 	const pillX = useSharedValue(0);
 
-	const handleCategoryPress = useCallback((category: CategoryTab) => onCategoryChange(category), [onCategoryChange]);
+	const handleCategoryPress = useCallback((category: CategoryTab) => setActiveCategory(category), [setActiveCategory]);
 
 	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
 

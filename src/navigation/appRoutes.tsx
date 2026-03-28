@@ -13,6 +13,7 @@ import SearchScreen from '@/screens/search/view';
 import SupportScreen from '@/screens/support/view';
 import SettingsScreen from '@/screens/settings/view';
 import BolaoScreen from '@/screens/bolao/view';
+import ReelsEsportesScreen from '@/screens/reelsEsportes/view';
 
 const Stack = createNativeStackNavigator();
 

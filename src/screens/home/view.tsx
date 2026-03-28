@@ -48,7 +48,7 @@ export default function HomeScreen() {
 				{activeCategory === 'cassino' ? <HomeCassino /> : <HomeEsportes />}
 			</Animated.ScrollView>
 
-			<BottomNavBar activeTab={activeTab} onTabPress={handleTabPress} />
+			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
 		</HomeStyled.Root>
 	);
 }

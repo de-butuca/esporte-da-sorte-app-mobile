@@ -11,6 +11,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { fontFamily } from '@/stampd.config';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import HomeIcon from '@assets/icons/homeIcon.svg';
 import BallIcon from '@assets/icons/ballIcon.svg';
 import CupIcon from '@assets/icons/cupIcon.svg';
@@ -60,6 +61,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 			['transparent', 'rgba(16,185,129,0.1)'],
 		),
 		height: interpolate(progress.value, [0, 1], [56, 72]),
+		paddingTop: interpolate(progress.value, [0, 1], [8, 14]),
 	}));
 
 	const dotStyle = useAnimatedStyle(() => ({
@@ -164,6 +166,8 @@ const styles = StyleSheet.create({
 	tabSlot: {
 		flex: 1,
 		alignItems: 'center',
+		height: 80,
+		overflow: 'visible',
 	},
 	tab: {
 		alignItems: 'center',
