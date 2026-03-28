@@ -15,12 +15,12 @@ import { useLoginViewModel } from './login.viewmodel';
 import { useAppNavigation } from '@/navigation/hooks';
 import { FormFieldsProvider, FormScreen, useFormField } from '@/components/FormScreen';
 import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
-import Logo from '@assets/images/logo-square.svg';
+import Logo from '@assets/esporteDaSorteCompleto.svg';
 import { ArrowLeft, MessageSquare, Eye, EyeOff } from 'lucide-react-native';
 
 function LoginHeader({ colors }: { colors: LoginThemeColors }) {
 	const insets = useSafeAreaInsets();
-	const { canGoBack, goBack } = useAppNavigation();
+	const { canGoBack, goBack, navigate } = useAppNavigation();
 
 	return (
 		<View style={[styles.header, { backgroundColor: colors.bgSecondary, paddingTop: insets.top }]}>
@@ -36,8 +36,9 @@ function LoginHeader({ colors }: { colors: LoginThemeColors }) {
 				) : (
 					<View style={{ width: RFValue(20) }} />
 				)}
-				<Logo width={101} height={35} />
+				<Logo width={149} height={16} />
 				<TouchableOpacity
+					onPress={() => navigate('Support')}
 					activeOpacity={0.7}
 					hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 				>
@@ -76,7 +77,7 @@ function LoginForm() {
 	const themed = useMemo(() => createThemedStyles(colors), [colors]);
 
 	return (
-		<FormScreen header={<LoginHeader colors={colors} />} backgroundColor={colors.background}>
+		<FormScreen header={<LoginHeader colors={colors} />} backgroundColor={colors.background} paddingHorizontal={24}>
 			<View style={styles.content}>
 				<View style={styles.titleBlock}>
 					<Text style={[styles.title, { color: colors.textPrimary }]}>Entrar</Text>
@@ -267,7 +268,7 @@ function createThemedStyles(colors: LoginThemeColors) {
 
 const styles = StyleSheet.create({
 	header: {
-		paddingHorizontal: RFValue(20),
+		paddingHorizontal: 24,
 		paddingBottom: RFValue(14),
 		shadowColor: '#000000',
 		shadowOffset: { width: 0, height: 4 },
