@@ -14,11 +14,17 @@ interface PromotionCardProps {
 }
 
 export const PromotionCard = React.memo(function PromotionCard({ card, onPress }: PromotionCardProps) {
+	const IconSvg = card.iconSvg;
+
 	return (
 		<View style={styles.shell}>
 			<LinearGradient colors={card.gradient as [string, string, ...string[]]} style={styles.hero}>
 				<View style={styles.iconBubble}>
-					<Image source={card.iconAsset} style={styles.icon} contentFit="contain" />
+					{IconSvg ? (
+						<IconSvg width={RFValue(18)} height={RFValue(18)} />
+					) : card.iconAsset ? (
+						<Image source={card.iconAsset} style={styles.icon} contentFit="contain" />
+					) : null}
 				</View>
 				{card.badge && (
 					<View style={styles.badge}>

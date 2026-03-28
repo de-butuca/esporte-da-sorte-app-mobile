@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Image } from 'expo-image';
@@ -10,7 +10,6 @@ import { fontFamily, lightColors } from '@/stampd.config';
 import Logo from '@assets/esporteDaSorteCompleto.svg';
 import { PromotionCard } from './components/PromotionCard';
 import { PromotionFilterChips } from './components/PromotionFilterChips';
-import { PromotionsHero } from './components/PromotionsHero';
 import { PromotionsLegalCard } from './components/PromotionsLegalCard';
 import { PromotionsSupportCard } from './components/PromotionsSupportCard';
 import { PromotionCardViewModel } from './promotions.types';

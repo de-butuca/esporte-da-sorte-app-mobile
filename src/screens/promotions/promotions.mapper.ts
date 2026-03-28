@@ -12,13 +12,13 @@ import {
 	PromotionTag,
 	PromotionsScreenViewModel,
 } from './promotions.types';
+import TicketPercentIcon from '@assets/images/icons/ticket-percent.svg';
 
 const HERO_FALLBACK = require('@assets/images/banners/banner-1.png');
 const BONUS_FALLBACK = require('@assets/images/banners/banner-3.png');
 const SPORTS_FALLBACK = require('@assets/images/banners/banner-2.png');
 const CASINO_FALLBACK = require('@assets/images/banners/banner-4.png');
 
-const TICKET_ICON = require('@assets/images/icons/ticket-percent.svg');
 const SPORTS_ICON = require('@assets/images/icons/soccer-ball-icon.png');
 const CASINO_ICON = require('@assets/images/icons/cassino-coin-icon.png');
 
@@ -158,7 +158,7 @@ function mapNewsToPromotionCard(news: News): PromotionCardWithOrder {
 		badge: pickBadge(categories),
 		imageUrl: news.bigImage ?? news.smallImage,
 		fallbackAsset,
-		iconAsset: pickIcon(categories),
+		...pickIcon(categories),
 		gradient: pickGradient(categories, title),
 		detailsUrl: news.url,
 		source: 'news',
@@ -191,6 +191,7 @@ function mapCustomEventToPromotionCard(event: CustomEventsModule): PromotionCard
 		imageUrl: undefined,
 		fallbackAsset: SPORTS_FALLBACK,
 		iconAsset: SPORTS_ICON,
+		iconSvg: undefined,
 		gradient: ['#00D37F', '#04B67B', '#044D55'],
 		detailsUrl: undefined,
 		source: 'custom-event',
@@ -287,10 +288,10 @@ function pickGradient(categories: PromotionTag[], title: string) {
 }
 
 function pickIcon(categories: PromotionTag[]) {
-	if (categories.includes('Esportes')) return SPORTS_ICON;
-	if (categories.includes('Cassino')) return CASINO_ICON;
+	if (categories.includes('Esportes')) return { iconAsset: SPORTS_ICON, iconSvg: undefined };
+	if (categories.includes('Cassino')) return { iconAsset: CASINO_ICON, iconSvg: undefined };
 
-	return TICKET_ICON;
+	return { iconAsset: undefined, iconSvg: TicketPercentIcon };
 }
 
 function pickFallbackAsset(categories: PromotionTag[]) {

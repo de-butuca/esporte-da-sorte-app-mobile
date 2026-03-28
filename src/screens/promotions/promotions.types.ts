@@ -1,4 +1,6 @@
+import type { ComponentType } from 'react';
 import { ImageSourcePropType } from 'react-native';
+import type { SvgProps } from 'react-native-svg';
 
 export type PromotionCategory =
 	| 'Todas'
@@ -24,7 +26,8 @@ export interface PromotionCardViewModel {
 	badge?: 'EXCLUSIVO' | 'LIMITADO';
 	imageUrl?: string;
 	fallbackAsset: ImageSourcePropType;
-	iconAsset: ImageSourcePropType;
+	iconAsset?: ImageSourcePropType;
+	iconSvg?: ComponentType<SvgProps>;
 	gradient: string[];
 	detailsUrl?: string;
 	source: 'news' | 'custom-event';
