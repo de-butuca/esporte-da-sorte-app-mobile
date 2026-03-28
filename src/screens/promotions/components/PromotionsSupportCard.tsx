@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { HelpCircle } from 'lucide-react-native';
-import { ButtonBase } from '@/components/Button';
 import { fontFamily, lightColors } from '@/stampd.config';
 import { PromotionsSupportViewModel } from '../promotions.types';
 
@@ -19,9 +18,9 @@ export function PromotionsSupportCard({ support, onPress }: PromotionsSupportCar
 			</View>
 			<Text style={styles.title}>{support.title}</Text>
 			<Text style={styles.description}>{support.description}</Text>
-			<View style={styles.buttonWrap}>
-				<ButtonBase text={support.buttonLabel} size="full" variant="accent" onPress={onPress} />
-			</View>
+			<TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.8}>
+				<Text style={styles.buttonText}>{support.buttonLabel}</Text>
+			</TouchableOpacity>
 			<Text style={styles.helperText}>{support.helperText}</Text>
 		</View>
 	);
@@ -29,10 +28,10 @@ export function PromotionsSupportCard({ support, onPress }: PromotionsSupportCar
 
 const styles = StyleSheet.create({
 	card: {
-		marginHorizontal: RFValue(20),
-		borderRadius: RFValue(18),
+		marginHorizontal: 0,
+		borderRadius: 12,
 		padding: RFValue(20),
-		backgroundColor: '#111B36',
+		backgroundColor: '#1A2332',
 		borderWidth: 1,
 		borderColor: 'rgba(255,255,255,0.04)',
 		alignItems: 'center',
@@ -61,9 +60,19 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		marginBottom: RFValue(18),
 	},
-	buttonWrap: {
+	button: {
 		width: '100%',
+		height: 48,
+		borderRadius: 12,
+		backgroundColor: '#00E878',
+		alignItems: 'center',
+		justifyContent: 'center',
 		marginBottom: RFValue(12),
+	},
+	buttonText: {
+		fontFamily: fontFamily.semibold,
+		fontSize: 16,
+		color: '#0B1120',
 	},
 	helperText: {
 		fontFamily: fontFamily.medium,

@@ -2,7 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Image, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Search, Settings } from 'lucide-react-native';
+import { Search } from 'lucide-react-native';
+import { useAppNavigation } from '@/navigation/hooks';
+import GiftIcon from '@assets/icons/gift.svg';
 import LogoVerde from '@assets/esportesDaSorteExtensoVerde.svg';
 import LogoBranco from '@assets/esportesDaSorteExtensoBranco.svg';
 import Animated, {
@@ -81,7 +83,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 		<View style={containerStyle}>
 			<HHS.topRow>
 				{activeCategory === 'esportes' ? (
-					<LogoVerde width={92} height={32} />
+					<LogoVerde width={101} height={35} />
 				) : (
 					<LogoBranco width={101} height={35} />
 				)}
@@ -90,8 +92,8 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 					<HHS.iconBtn onPress={() => navigation.navigate(activeCategory === 'cassino' ? 'SearchGames' : 'Search')}>
 						<Search size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
 					</HHS.iconBtn>
-					<HHS.iconBtn>
-						<Settings size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
+					<HHS.iconBtn onPress={() => navigation.navigate('Promotions')}>
+						<GiftIcon width={RFValue(20)} height={RFValue(20)} />
 					</HHS.iconBtn>
 					{!isAuthenticated && (
 						<HHS.entrarBtn onPress={handleLogin}>
