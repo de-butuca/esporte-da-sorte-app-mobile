@@ -105,7 +105,7 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 					<Animated.View style={[styles.pill, { backgroundColor: theme.colors.bgNav }, pillStyle]} />
 
 					<HHS.categoryTab onPress={() => handleCategoryPress('cassino')} onLayout={handleTabLayout}>
-						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
+						<Image source={CASSINO_ICON} style={[styles.categoryIcon, activeCategory === 'cassino' && styles.active]} resizeMode="contain" />
 						{activeCategory === 'cassino' ? (
 							<HHS.categoryLabelActive>Cassino</HHS.categoryLabelActive>
 						) : (
@@ -114,7 +114,7 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 					</HHS.categoryTab>
 
 					<HHS.categoryTab onPress={() => handleCategoryPress('esportes')}>
-						<Image source={SOCCER_ICON} style={styles.categoryIcon} resizeMode="contain" />
+						<Image source={SOCCER_ICON} style={[styles.categoryIcon, activeCategory === 'esportes' && styles.active]} resizeMode="contain" />
 						{activeCategory === 'esportes' ? (
 							<HHS.categoryLabelActive>Esportes</HHS.categoryLabelActive>
 						) : (
@@ -150,5 +150,9 @@ const styles = StyleSheet.create({
 	categoryIcon: {
 		width: 16,
 		height: 16,
+		opacity: 0.4,
+	},
+	active: {
+		opacity: 1,
 	},
 });

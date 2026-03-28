@@ -39,19 +39,6 @@ export default function HomeScreen() {
 		return () => setOnRouletteOpen(null);
 	}, []);
 
-	const handleRouletteSpin = useCallback(() => {
-		markRouletteSpun();
-	}, []);
-
-	const handleRouletteClose = useCallback(() => {
-		setShowRoulette(false);
-	}, []);
-
-	const handleRouletteClaim = useCallback(() => {
-		setShowRoulette(false);
-		navigation.navigate('Login');
-	}, [navigation]);
-
 	return (
 		<HomeStyled.Root>
 			<HomeHeader scrollY={scrollY} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
