@@ -290,7 +290,47 @@ export const config = createTheme({
 	theme: {
 		light: { colors: lightColors },
 		dark: { colors: darkColors },
-		highContrast: { colors: { background: '#000' } },
+		highContrast: {
+			colors: {
+				primary: '#00D46A',
+				onPrimary: '#fffb00',
+
+				secondary: '#1B1464',
+				onSecondary: 'yellow',
+
+				background: '#000000',
+				onBackground: 'yellow',
+
+				bgNav: '#101828',
+				bgCard: '#1E293B',
+				bgSecondary: '#101828',
+
+				accent: '#00D46A',
+				accentText: '#00FF88',
+
+				textPrimary: 'yellow',
+				textSecondary: 'yellow',
+				textMuted: 'yellow',
+				textInactive: 'yellow',
+
+				live: '#FF3B30',
+				success: '#22C55E',
+
+				label: 'yellow',
+				inputText: 'yellow',
+				inputPlaceholder: '#94A3B8',
+				inputIcon: '#CBD5F5',
+				inputBackground: '#0F172A',
+				inputPrimary: '#00D46A',
+				inputSercundary: '#00B4D8',
+
+				surface: '#1E293B',
+				onSurface: '#F1F5F9',
+
+				error: '#EF4444',
+				onError: 'yellow',
+			},
+		},
 	},
 	fonts: {
 		default: { size: 14, family: fontFamily.regular },

@@ -1,7 +1,9 @@
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import { Styled } from 'stampd/styled';
 import { Bell } from 'lucide-react-native';
 import { lightColors } from '@/stampd.config';
+import { useAppNavigation } from '@/navigation/hooks';
 
 interface MatchBettingOdds {
 	label: string;
@@ -106,22 +108,26 @@ const MBC = {
 };
 
 export function MatchBettingCard({ time, homeTeam, awayTeam, competition, odds }: MatchBettingCardProps) {
+	const navigation = useAppNavigation();
+
 	return (
 		<MBC.container>
-			<MBC.header>
-				<MBC.timeText>{time}</MBC.timeText>
-				<Bell size={18} color={lightColors.textMuted} strokeWidth={1.8} />
-			</MBC.header>
+			<TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate('GameHome')}>
+				<MBC.header>
+					<MBC.timeText>{time}</MBC.timeText>
+					<Bell size={18} color={lightColors.textMuted} strokeWidth={1.8} />
+				</MBC.header>
 
-			<MBC.matchInfo>
-				<MBC.teamsRow>
-					<MBC.teamText numberOfLines={1}>{homeTeam}</MBC.teamText>
-				</MBC.teamsRow>
-				<MBC.teamsRow>
-					<MBC.teamText numberOfLines={1}>{awayTeam}</MBC.teamText>
-				</MBC.teamsRow>
-				<MBC.competition>{competition}</MBC.competition>
-			</MBC.matchInfo>
+				<MBC.matchInfo>
+					<MBC.teamsRow>
+						<MBC.teamText numberOfLines={1}>{homeTeam}</MBC.teamText>
+					</MBC.teamsRow>
+					<MBC.teamsRow>
+						<MBC.teamText numberOfLines={1}>{awayTeam}</MBC.teamText>
+					</MBC.teamsRow>
+					<MBC.competition>{competition}</MBC.competition>
+				</MBC.matchInfo>
+			</TouchableOpacity>
 
 			<MBC.oddsRow>
 				{odds.map((odd, index) => (

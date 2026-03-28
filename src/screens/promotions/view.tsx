@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { ArrowLeft } from 'lucide-react-native';
+import { Image } from 'expo-image';
+import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import { ButtonBase } from '@/components/Button';
 import { SectionHeader } from '@/components/SectionHeader';
 import { fontFamily, lightColors } from '@/stampd.config';
+import Logo from '@assets/esporteDaSorteCompleto.svg';
 import { PromotionCard } from './components/PromotionCard';
 import { PromotionFilterChips } from './components/PromotionFilterChips';
 import { PromotionsHero } from './components/PromotionsHero';
@@ -13,9 +15,13 @@ import { PromotionsLegalCard } from './components/PromotionsLegalCard';
 import { PromotionsSupportCard } from './components/PromotionsSupportCard';
 import { PromotionCardViewModel } from './promotions.types';
 import { usePromotionsViewModel } from './viewmodel';
+import { useAppNavigation } from '@/navigation/hooks';
+
+const BOLAO_BG = require('@assets/bolaodacopa.png');
 
 export default function PromotionsScreen() {
 	const insets = useSafeAreaInsets();
+	const navigation = useAppNavigation();
 	const {
 		screen,
 		isLoading,
@@ -43,17 +49,14 @@ export default function PromotionsScreen() {
 	}, [refetch]);
 
 	return (
-		<View style={[styles.root, { paddingTop: insets.top + RFValue(10) }]}>
-			<View style={styles.header}>
-				<TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.8}>
-					<ArrowLeft size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2.2} />
-				</TouchableOpacity>
-
-				<View style={styles.headerCopy}>
-					<Text style={styles.headerTitle}>{screen?.headerTitle ?? 'Promoções'}</Text>
-					<Text style={styles.headerDescription}>
-						{screen?.headerDescription ?? 'Campanhas especiais, bônus e benefícios pensados para o seu jogo no mobile.'}
-					</Text>
+		<View style={styles.root}>
+			<View style={[styles.header, { paddingTop: insets.top }]}>
+				<View style={styles.headerRow}>
+					<TouchableOpacity onPress={handleBack} activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+						<ArrowLeft size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+					</TouchableOpacity>
+					<Logo width={149} height={16} />
+					<View style={{ width: RFValue(20) }} />
 				</View>
 			</View>
 
@@ -77,14 +80,50 @@ export default function PromotionsScreen() {
 					contentContainerStyle={styles.listContent}
 					ItemSeparatorComponent={renderSeparator}
 					ListHeaderComponent={
-						<View style={styles.headerContent}>
-							{screen.hero && <PromotionsHero hero={screen.hero} onPress={handleOpenPromotion} />}
+						<View style={styles.listHeader}>
+							<View style={styles.titleBlock}>
+								<Text style={styles.title}>{screen?.headerTitle ?? 'Promoções'}</Text>
+								<Text style={styles.subtitle}>
+									{screen?.headerDescription ?? 'Campanhas especiais, bônus e benefícios pensados para o seu jogo no mobile.'}
+								</Text>
+							</View>
+
 							<PromotionFilterChips
 								filters={screen.filters}
 								selectedFilter={selectedCategory}
 								onSelectFilter={setSelectedCategory}
 							/>
 							<SectionHeader title="Promoções ativas" />
+
+							<View style={styles.bolaoShell}>
+								<Image source={BOLAO_BG} style={styles.bolaoHero} contentFit="cover" contentPosition="top" />
+								<View style={styles.bolaoBody}>
+									<Text style={styles.bolaoTitle}>Bolão Copa 2026</Text>
+									<Text style={styles.bolaoBenefit}>Faça seus palpites e concorra a prêmios!</Text>
+									<Text style={styles.bolaoDescription}>
+										Monte seu bolão da Copa do Mundo 2026. Escolha os vencedores de cada partida e dispute com outros jogadores.
+									</Text>
+									<View style={styles.bolaoHighlights}>
+										<View style={styles.bolaoHighlightRow}>
+											<View style={styles.bolaoHighlightDot} />
+											<Text style={styles.bolaoHighlightText}>48 partidas para palpitar</Text>
+										</View>
+										<View style={styles.bolaoHighlightRow}>
+											<View style={styles.bolaoHighlightDot} />
+											<Text style={styles.bolaoHighlightText}>Ranking entre jogadores</Text>
+										</View>
+									</View>
+									<View style={{ paddingTop: RFValue(6) }}>
+										<ButtonBase
+											text="Participar agora"
+											size="full"
+											variant="accent"
+											rightIcon={<ChevronRight size={RFValue(16)} color={lightColors.bgNav} strokeWidth={2.3} />}
+											onPress={() => navigation.navigate('Bolao')}
+										/>
+									</View>
+								</View>
+							</View>
 						</View>
 					}
 					ListEmptyComponent={
@@ -96,7 +135,9 @@ export default function PromotionsScreen() {
 					ListFooterComponent={
 						<View style={styles.footerStack}>
 							<PromotionsLegalCard legal={screen.legal} onPress={handleOpenTerms} />
-							<PromotionsSupportCard support={screen.support} onPress={handleOpenSupport} />
+							<View style={styles.supportWrap}>
+								<PromotionsSupportCard support={screen.support} onPress={handleOpenSupport} />
+							</View>
 							<View style={styles.footerCard}>
 								<Text style={styles.footerResponsible}>{screen.footer.responsibleText}</Text>
 								<Text style={styles.footerAge}>{screen.footer.ageLabel}</Text>
@@ -149,57 +190,115 @@ function PromotionsFeedbackState({ title, description, actionLabel, onAction }: 
 const styles = StyleSheet.create({
 	root: {
 		flex: 1,
-		backgroundColor: lightColors.background,
+		backgroundColor: '#0B1120',
 	},
 	header: {
-		paddingHorizontal: RFValue(20),
-		paddingBottom: RFValue(10),
+		backgroundColor: '#101828',
+		paddingHorizontal: 16,
+		paddingBottom: RFValue(14),
+		shadowColor: '#000000',
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.15,
+		shadowRadius: 12,
+		elevation: 8,
+	},
+	headerRow: {
 		flexDirection: 'row',
-		alignItems: 'flex-start',
-		gap: RFValue(14),
-	},
-	backButton: {
-		width: RFValue(36),
-		height: RFValue(36),
-		borderRadius: RFValue(12),
-		backgroundColor: 'rgba(255,255,255,0.08)',
 		alignItems: 'center',
-		justifyContent: 'center',
-		marginTop: RFValue(4),
-	},
-	headerCopy: {
-		flex: 1,
-		paddingTop: RFValue(2),
-	},
-	headerTitle: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(24),
-		color: lightColors.textPrimary,
-		marginBottom: RFValue(4),
-	},
-	headerDescription: {
-		fontFamily: fontFamily.regular,
-		fontSize: RFValue(12),
-		lineHeight: RFValue(18),
-		color: lightColors.textMuted,
-		maxWidth: '95%',
+		justifyContent: 'space-between',
+		paddingTop: RFValue(14),
 	},
 	listContent: {
 		paddingBottom: RFValue(28),
 	},
-	headerContent: {
+	listHeader: {
 		gap: RFValue(18),
+		paddingTop: 32,
 		paddingBottom: RFValue(6),
+	},
+	titleBlock: {
+		paddingHorizontal: 16,
+		gap: 4,
+	},
+	title: {
+		fontFamily: fontFamily.bold,
+		fontSize: 20,
+		lineHeight: 30,
+		color: '#FFFFFF',
+	},
+	subtitle: {
+		fontFamily: fontFamily.regular,
+		fontSize: 13,
+		lineHeight: 19.5,
+		color: '#94A3B8',
+	},
+	bolaoShell: {
+		backgroundColor: '#1A2332',
+		borderRadius: 12,
+		padding: RFValue(14),
+		marginHorizontal: RFValue(20),
+		borderWidth: 1,
+		borderColor: 'rgba(255,255,255,0.04)',
+	},
+	bolaoHero: {
+		width: '100%',
+		height: RFValue(126),
+		borderRadius: 12,
+	},
+	bolaoBody: {
+		paddingTop: RFValue(16),
+		gap: RFValue(10),
+	},
+	bolaoTitle: {
+		fontFamily: fontFamily.bold,
+		fontSize: RFValue(24),
+		lineHeight: RFValue(28),
+		color: '#FFFFFF',
+	},
+	bolaoBenefit: {
+		fontFamily: fontFamily.bold,
+		fontSize: RFValue(13),
+		color: lightColors.textSecondary,
+	},
+	bolaoDescription: {
+		fontFamily: fontFamily.regular,
+		fontSize: RFValue(12),
+		lineHeight: RFValue(18),
+		color: lightColors.textMuted,
+	},
+	bolaoHighlights: {
+		gap: RFValue(8),
+		paddingTop: RFValue(4),
+	},
+	bolaoHighlightRow: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: RFValue(8),
+	},
+	bolaoHighlightDot: {
+		width: RFValue(6),
+		height: RFValue(6),
+		borderRadius: RFValue(3),
+		backgroundColor: lightColors.accent,
+	},
+	bolaoHighlightText: {
+		flex: 1,
+		fontFamily: fontFamily.regular,
+		fontSize: RFValue(11),
+		color: lightColors.textSecondary,
 	},
 	separator: {
 		height: RFValue(16),
+	},
+	supportWrap: {
+		paddingHorizontal: 16,
 	},
 	footerStack: {
 		gap: RFValue(16),
 		paddingTop: RFValue(16),
 	},
 	footerCard: {
-		marginHorizontal: RFValue(20),
+		marginHorizontal: 16,
 		paddingVertical: RFValue(4),
 		alignItems: 'center',
 	},
@@ -225,14 +324,14 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	loadingContainer: {
-		paddingHorizontal: RFValue(20),
-		paddingTop: RFValue(12),
+		paddingHorizontal: 16,
+		paddingTop: 32,
 		gap: RFValue(16),
 	},
 	loadingHero: {
 		height: RFValue(162),
-		borderRadius: RFValue(18),
-		backgroundColor: '#111B36',
+		borderRadius: 12,
+		backgroundColor: '#1A2332',
 	},
 	loadingChips: {
 		flexDirection: 'row',
@@ -241,40 +340,40 @@ const styles = StyleSheet.create({
 	loadingChipLarge: {
 		width: RFValue(88),
 		height: RFValue(40),
-		borderRadius: RFValue(14),
-		backgroundColor: '#111B36',
+		borderRadius: 12,
+		backgroundColor: '#1A2332',
 	},
 	loadingChip: {
 		width: RFValue(72),
 		height: RFValue(40),
-		borderRadius: RFValue(14),
-		backgroundColor: '#111B36',
+		borderRadius: 12,
+		backgroundColor: '#1A2332',
 	},
 	loadingCard: {
 		height: RFValue(298),
-		borderRadius: RFValue(18),
-		backgroundColor: '#111B36',
+		borderRadius: 12,
+		backgroundColor: '#1A2332',
 	},
 	feedbackCard: {
-		marginHorizontal: RFValue(20),
-		marginTop: RFValue(20),
+		marginHorizontal: 16,
+		marginTop: 32,
 		padding: RFValue(20),
-		borderRadius: RFValue(18),
-		backgroundColor: '#111B36',
+		borderRadius: 12,
+		backgroundColor: '#1A2332',
 		alignItems: 'center',
 	},
 	feedbackTitle: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(18),
-		color: lightColors.textPrimary,
+		fontSize: 18,
+		color: '#FFFFFF',
 		textAlign: 'center',
 		marginBottom: RFValue(8),
 	},
 	feedbackDescription: {
 		fontFamily: fontFamily.regular,
-		fontSize: RFValue(12),
-		lineHeight: RFValue(18),
-		color: lightColors.textMuted,
+		fontSize: 13,
+		lineHeight: 19.5,
+		color: '#94A3B8',
 		textAlign: 'center',
 	},
 	feedbackButtonWrap: {

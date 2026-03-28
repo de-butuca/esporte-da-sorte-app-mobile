@@ -23,8 +23,11 @@ export function SportradarLMT({
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; background: ${backgroundColor}; overflow: hidden; }
+html, body { width: 100%; height: 100%; background: ${backgroundColor}; overflow: hidden; color: #FFFFFF; }
 #sr-widget { width: 100%; height: 100%; }
+#sr-widget, #sr-widget * { color: #FFFFFF !important; }
+#sr-widget [class*="background"], #sr-widget [style*="background"] { background-color: ${backgroundColor} !important; }
+#sr-widget [class*="pitch"], #sr-widget [class*="field"], #sr-widget svg rect[fill="#4CAF50"], #sr-widget svg rect[fill="#388E3C"], #sr-widget svg rect[fill="#43A047"] { fill: #1B5E20 !important; background-color: #1B5E20 !important; }
 </style>
 </head>
 <body>

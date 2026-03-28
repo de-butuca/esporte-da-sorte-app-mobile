@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Image, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Search } from 'lucide-react-native';
-import { useAppNavigation } from '@/navigation/hooks';
 import GiftIcon from '@assets/icons/gift.svg';
 import LogoVerde from '@assets/esportesDaSorteExtensoVerde.svg';
 import LogoBranco from '@assets/esportesDaSorteExtensoBranco.svg';
@@ -17,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useStampdUI } from 'stampd/context';
+import { useAppNavigation } from '@/navigation/hooks';
 import { useSessionContext } from '@/contexts/SessionContext';
 import { HHS } from '../homeHeader.styled';
 
@@ -44,7 +44,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	const handleCategoryPress = useCallback((category: CategoryTab) => setActiveCategory(category), [setActiveCategory]);
 
 	const handleLogin = useCallback(
-		() => requireAuth(() => {}, activeCategory === 'cassino' ? 'cassino' : 'esportes'),
+		() => requireAuth(() => { }, activeCategory === 'cassino' ? 'cassino' : 'esportes'),
 		[requireAuth, activeCategory],
 	);
 
@@ -84,11 +84,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	return (
 		<View style={containerStyle}>
 			<HHS.topRow>
-				{activeCategory === 'esportes' ? (
-					<LogoVerde width={101} height={35} />
-				) : (
-					<LogoBranco width={101} height={35} />
-				)}
+				{activeCategory === 'esportes' ? <LogoVerde width={101} height={35} /> : <LogoBranco width={101} height={35} />}
 
 				<HHS.actions>
 					<HHS.iconBtn onPress={() => navigation.navigate(activeCategory === 'cassino' ? 'SearchGames' : 'Search')}>
