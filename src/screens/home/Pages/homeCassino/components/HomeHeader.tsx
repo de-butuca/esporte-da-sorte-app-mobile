@@ -34,6 +34,7 @@ interface HomeHeaderProps {
 
 export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
+	const navigation = useAppNavigation();
 	const { theme } = useStampdUI();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
 	const { open: openSidebar } = useSidebar();
@@ -43,6 +44,8 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	const handleCategoryPress = useCallback((category: CategoryTab) => onCategoryChange(category), [onCategoryChange]);
 
 	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
+	const handleOpenSearch = useCallback(() => navigation.navigate('Search'), [navigation]);
+	const handleOpenSettings = useCallback(() => navigation.navigate('Settings', {}), [navigation]);
 
 	const handleTabLayout = useCallback(
 		(e: LayoutChangeEvent) => {
@@ -86,10 +89,10 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 				<Logo width={RFValue(80)} height={RFValue(28)} />
 
 				<HHS.actions>
-					<HHS.iconBtn>
+					<HHS.iconBtn onPress={handleOpenSearch}>
 						<Search size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
 					</HHS.iconBtn>
-					<HHS.iconBtn>
+					<HHS.iconBtn onPress={handleOpenSettings}>
 						<Settings size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
 					</HHS.iconBtn>
 					{!isAuthenticated && (

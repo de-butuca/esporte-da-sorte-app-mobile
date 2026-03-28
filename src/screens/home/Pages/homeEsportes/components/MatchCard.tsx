@@ -1,7 +1,7 @@
 import React from 'react';
-import { ImageSourcePropType } from 'react-native';
-import { Image } from 'expo-image';
-import { Styled } from 'stampd/styled';
+import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
+import { fontFamily, lightColors } from '@/stampd.config';
 
 export interface Match {
 	id: string;
@@ -16,70 +16,60 @@ interface MatchCardProps {
 	onPress?: (match: Match) => void;
 }
 
-const AVATAR_SIZE = 64;
-
-const MCS = {
-	container: Styled.TouchableOpacity({
-		style: {
-			alignItems: 'center',
-
-			width: 80,
-		},
-		attrs: { activeOpacity: 0.8 },
-	}),
-
-	avatarRing: Styled.View({
-		style: ({ theme }) => ({
-			width: AVATAR_SIZE,
-			height: AVATAR_SIZE,
-			borderRadius: theme.radius.roundedFull,
-			borderWidth: 2.5,
-			borderColor: theme.colors.accent,
-			overflow: 'hidden',
-			marginBottom: theme.size.s1,
-		}),
-	}),
-
-	placeholder: Styled.View({
-		style: ({ theme }) => ({
-			width: '100%',
-			height: '100%',
-			backgroundColor: theme.colors.bgCard,
-		}),
-	}),
-
-	label: Styled.Text({
-		style: ({ theme }) => ({
-			fontFamily: theme.fonts.family.bold,
-			fontSize: theme.fonts.sizes.xs,
-			color: theme.colors.textPrimary,
-			textAlign: 'center',
-		}),
-	}),
-
-	time: Styled.Text({
-		style: ({ theme }) => ({
-			fontSize: 10,
-			color: theme.colors.textMuted,
-			textAlign: 'center',
-		}),
-	}),
-};
-
 export const MatchCard = React.memo(function MatchCard({ match, onPress }: MatchCardProps) {
 	return (
-		<MCS.container onPress={() => onPress?.(match)}>
-			<MCS.avatarRing>
+		<TouchableOpacity style={styles.container} onPress={() => onPress?.(match)} activeOpacity={0.8}>
+			<View style={styles.avatarRing}>
 				{match.thumbnail ? (
-					<Image source={match.thumbnail} style={{ width: '100%', height: '100%' }} contentFit="cover" />
+					<Image source={match.thumbnail} style={styles.thumbnailImage} resizeMode="cover" />
 				) : (
-					<MCS.placeholder />
+					<View style={styles.placeholder} />
 				)}
-			</MCS.avatarRing>
-			<MCS.label numberOfLines={1}>
+			</View>
+			<Text style={styles.label} numberOfLines={1}>
 				{match.homeTeam} x {match.awayTeam}
-			</MCS.label>
-			<MCS.time numberOfLines={1}>{match.scheduledAt}</MCS.time>
-		</MCS.container>
+			</Text>
+			<Text style={styles.time} numberOfLines={1}>
+				{match.scheduledAt}
+			</Text>
+		</TouchableOpacity>
 	);
+});
+
+const styles = StyleSheet.create({
+	container: {
+		alignItems: 'center',
+		width: RFValue(80),
+	},
+	avatarRing: {
+		width: RFValue(64),
+		height: RFValue(64),
+		borderRadius: RFValue(999),
+		borderWidth: 2.5,
+		borderColor: lightColors.accent,
+		overflow: 'hidden',
+		marginBottom: RFValue(4),
+		backgroundColor: lightColors.bgCard,
+	},
+	thumbnailImage: {
+		width: '100%',
+		height: '100%',
+	},
+	placeholder: {
+		width: '100%',
+		height: '100%',
+		backgroundColor: lightColors.bgCard,
+	},
+	label: {
+		fontFamily: fontFamily.bold,
+		fontSize: RFValue(10),
+		color: lightColors.textPrimary,
+		textAlign: 'center',
+	},
+	time: {
+		fontFamily: fontFamily.medium,
+		fontSize: RFValue(10),
+		color: lightColors.textMuted,
+		textAlign: 'center',
+	},
 });

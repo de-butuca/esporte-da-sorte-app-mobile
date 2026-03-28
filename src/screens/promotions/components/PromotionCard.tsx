@@ -1,16 +1,32 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { ChevronRight } from 'lucide-react-native';
+import { ChevronRight, CircleDollarSign, Dice5, Trophy } from 'lucide-react-native';
 import { ButtonBase } from '@/components/Button';
 import { fontFamily, lightColors } from '@/stampd.config';
-import { PromotionCardViewModel } from '../promotions.types';
+import { PromotionCardViewModel, PromotionIconKey } from '../promotions.types';
 
 interface PromotionCardProps {
 	card: PromotionCardViewModel;
 	onPress: (card: PromotionCardViewModel) => void;
+}
+
+function PromotionCardIcon({ iconKey }: { iconKey: PromotionIconKey }) {
+	const commonProps = {
+		size: RFValue(18),
+		color: lightColors.textPrimary,
+		strokeWidth: 2.2,
+	};
+
+	switch (iconKey) {
+		case 'sports':
+			return <Trophy {...commonProps} />;
+		case 'casino':
+			return <Dice5 {...commonProps} />;
+		default:
+			return <CircleDollarSign {...commonProps} />;
+	}
 }
 
 export const PromotionCard = React.memo(function PromotionCard({ card, onPress }: PromotionCardProps) {
@@ -18,7 +34,7 @@ export const PromotionCard = React.memo(function PromotionCard({ card, onPress }
 		<View style={styles.shell}>
 			<LinearGradient colors={card.gradient as [string, string, ...string[]]} style={styles.hero}>
 				<View style={styles.iconBubble}>
-					<Image source={card.iconAsset} style={styles.icon} contentFit="contain" />
+					<PromotionCardIcon iconKey={card.iconKey} />
 				</View>
 				{card.badge && (
 					<View style={styles.badge}>
@@ -85,10 +101,6 @@ const styles = StyleSheet.create({
 		backgroundColor: 'rgba(255,255,255,0.14)',
 		alignItems: 'center',
 		justifyContent: 'center',
-	},
-	icon: {
-		width: RFValue(18),
-		height: RFValue(18),
 	},
 	badge: {
 		position: 'absolute',

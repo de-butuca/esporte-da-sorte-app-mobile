@@ -1,11 +1,43 @@
 import { AppState, AppStateStatus, NativeModules, Platform } from "react-native";
 
-let Notifications: typeof import("expo-notifications") | null = null;
+type NotificationsModule = typeof import("expo-notifications");
+
+let Notifications: NotificationsModule | null = null;
+let notificationsChecked = false;
+let notificationsUnavailableLogged = false;
+
+function logNotificationsUnavailable(error?: unknown) {
+  if (!__DEV__ || notificationsUnavailableLogged) return;
+  notificationsUnavailableLogged = true;
+  console.warn(
+    "expo-notifications indisponivel neste runtime. As notificacoes promocionais foram desativadas.",
+    error
+  );
+}
 
 function getNotifications() {
-  if (!Notifications && Platform.OS === "android") {
-    Notifications = require("expo-notifications");
-    Notifications!.setNotificationHandler({
+  if (Platform.OS !== "android") return null;
+  if (notificationsChecked) return Notifications;
+
+  notificationsChecked = true;
+
+  try {
+    const candidate = require("expo-notifications") as Partial<NotificationsModule> | undefined;
+
+    if (
+      !candidate?.setNotificationHandler ||
+      !candidate?.scheduleNotificationAsync ||
+      !candidate?.cancelScheduledNotificationAsync ||
+      !candidate?.getPermissionsAsync ||
+      !candidate?.requestPermissionsAsync ||
+      !candidate?.SchedulableTriggerInputTypes
+    ) {
+      logNotificationsUnavailable();
+      return null;
+    }
+
+    Notifications = candidate as NotificationsModule;
+    Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: false,
         shouldShowBanner: false,
@@ -14,7 +46,11 @@ function getNotifications() {
         shouldSetBadge: false,
       }),
     });
+  } catch (error) {
+    logNotificationsUnavailable(error);
+    Notifications = null;
   }
+
   return Notifications;
 }
 

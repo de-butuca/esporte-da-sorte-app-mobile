@@ -1,5 +1,7 @@
 import { ImageSourcePropType } from 'react-native';
 
+export type PromotionIconKey = 'ticket' | 'sports' | 'casino';
+
 export type PromotionCategory =
 	| 'Todas'
 	| 'Bônus'
@@ -24,7 +26,7 @@ export interface PromotionCardViewModel {
 	badge?: 'EXCLUSIVO' | 'LIMITADO';
 	imageUrl?: string;
 	fallbackAsset: ImageSourcePropType;
-	iconAsset: ImageSourcePropType;
+	iconKey: PromotionIconKey;
 	gradient: string[];
 	detailsUrl?: string;
 	source: 'news' | 'custom-event';

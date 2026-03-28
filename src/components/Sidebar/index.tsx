@@ -1,8 +1,7 @@
-import React, { useCallback } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-	ClipboardList,
 	Dices,
 	Gift,
 	HelpCircle,
@@ -11,23 +10,41 @@ import {
 	Settings,
 	Trophy,
 	X,
+	Zap,
+	CircleDollarSign,
 } from 'lucide-react-native';
+import { useQuery } from '@tanstack/react-query';
 import { Styled } from 'stampd/styled';
 import { lightColors } from '@/stampd.config';
 import { useAppNavigation } from '@/navigation/hooks';
 import { useSessionStore } from '@/core/session/useSessionStore';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import {
+	IConfigService,
+	MockConfigService,
+} from '../../../backend/services/config.service';
+import {
+	getSidebarFallbackItems,
+	mapSidebarNavbar,
+	SidebarIconKey,
+	SidebarNavItemViewModel,
+} from './sidebar.mapper';
 
 interface SidebarProps {
 	onClose: () => void;
 }
 
-interface NavItem {
-	key: string;
-	label: string;
-	Icon: typeof House;
-	onPress: () => void;
-}
+const configService: IConfigService = new MockConfigService();
+
+const ICON_BY_KEY = {
+	home: House,
+	sports: Trophy,
+	casino: Dices,
+	promo: Gift,
+	support: HelpCircle,
+	live: Zap,
+	jackpot: CircleDollarSign,
+} satisfies Record<SidebarIconKey, typeof House>;
 
 const SS = {
 	root: Styled.View({
@@ -131,56 +148,55 @@ const SS = {
 	}),
 };
 
+async function getSidebarMenuData() {
+	const response = await configService.getTraderNavbar('esportes-da-sorte', 'm');
+	return mapSidebarNavbar(response.data ?? []);
+}
+
 export function Sidebar({ onClose }: SidebarProps) {
 	const insets = useSafeAreaInsets();
-	const { navigate } = useAppNavigation();
-	const user = useSessionStore((s) => s.user);
-	const signOut = useSessionStore((s) => s.signOut);
+	const navigation = useAppNavigation();
+	const user = useSessionStore((state) => state.user);
+	const signOut = useSessionStore((state) => state.signOut);
 	const { requireAuth } = useRequireAuth();
+	const query = useQuery({
+		queryKey: ['sidebar-navbar'],
+		queryFn: getSidebarMenuData,
+	});
+
+	const navItems = useMemo(() => {
+		if (query.isLoading) return [];
+		if (query.isError) return getSidebarFallbackItems();
+		return query.data ?? getSidebarFallbackItems();
+	}, [query.data, query.isError, query.isLoading]);
 
 	const handleSignOut = useCallback(() => {
 		onClose();
 		signOut();
 	}, [onClose, signOut]);
 
-	const NAV_ITEMS: NavItem[] = [
-		{
-			key: 'home',
-			label: 'Início',
-			Icon: House,
-			onPress: () => { onClose(); navigate('Home'); },
+	const handleNavPress = useCallback(
+		(item: SidebarNavItemViewModel) => {
+			const navigateToItem = () => {
+				onClose();
+
+				if (item.target === 'alert') {
+					Alert.alert(item.alertTitle ?? item.label, item.alertMessage ?? 'Destino ainda indisponivel.');
+					return;
+				}
+
+				navigation.navigate(item.target);
+			};
+
+			if (item.authRequired) {
+				requireAuth(navigateToItem);
+				return;
+			}
+
+			navigateToItem();
 		},
-		{
-			key: 'cassino',
-			label: 'Cassino',
-			Icon: Dices,
-			onPress: () => { onClose(); navigate('Home'); },
-		},
-		{
-			key: 'esportes',
-			label: 'Esportes',
-			Icon: Trophy,
-			onPress: () => { onClose(); navigate('GameHome'); },
-		},
-		{
-			key: 'apostas',
-			label: 'Apostas',
-			Icon: ClipboardList,
-			onPress: () => { requireAuth(() => { onClose(); }); },
-		},
-		{
-			key: 'promocoes',
-			label: 'Promoções',
-			Icon: Gift,
-			onPress: () => { requireAuth(() => { onClose(); navigate('Promotions'); }); },
-		},
-		{
-			key: 'support',
-			label: 'Suporte',
-			Icon: HelpCircle,
-			onPress: () => { onClose(); navigate('Support'); },
-		},
-	];
+		[navigation, onClose, requireAuth],
+	);
 
 	const initial = user?.name?.[0]?.toUpperCase() ?? '?';
 
@@ -196,43 +212,59 @@ export function Sidebar({ onClose }: SidebarProps) {
 						<SS.avatarInitial>{initial}</SS.avatarInitial>
 					</SS.avatar>
 					<SS.root style={styles.flex}>
-						<SS.userName numberOfLines={1}>
-							{user?.name ?? 'Visitante'}
-						</SS.userName>
+						<SS.userName numberOfLines={1}>{user?.name ?? 'Visitante'}</SS.userName>
 						<SS.userSubtitle numberOfLines={1}>
-							{user ? 'Minha conta' : 'Faça login para continuar'}
+							{user ? 'Minha conta' : 'Faca login para continuar'}
 						</SS.userSubtitle>
 					</SS.root>
 				</SS.userSection>
 			</SS.header>
 
-			<ScrollView
-				style={styles.flex}
-				contentContainerStyle={styles.scrollContent}
-				showsVerticalScrollIndicator={false}
-			>
-				{NAV_ITEMS.map((item) => (
-					<SS.navItem key={item.key} onPress={item.onPress}>
-						<item.Icon size={20} color={lightColors.textSecondary} strokeWidth={1.8} />
-						<SS.navLabel>{item.label}</SS.navLabel>
-					</SS.navItem>
-				))}
+			<ScrollView style={styles.flex} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+				{query.isLoading ? (
+					<TouchableOpacity activeOpacity={1} style={styles.loadingCard}>
+						<ActivityIndicator color={lightColors.accent} />
+						<SS.navLabel>Carregando menu real...</SS.navLabel>
+					</TouchableOpacity>
+				) : null}
+
+				{navItems.map((item) => {
+					const Icon = ICON_BY_KEY[item.iconKey];
+
+					return (
+						<SS.navItem key={item.key} onPress={() => handleNavPress(item)}>
+							<Icon size={20} color={lightColors.textSecondary} strokeWidth={1.8} />
+							<SS.navLabel>{item.label}</SS.navLabel>
+						</SS.navItem>
+					);
+				})}
 
 				<SS.divider />
 
-				<SS.navItem onPress={() => { onClose(); navigate('Settings' as any); }}>
+				<SS.navItem
+					onPress={() => {
+						onClose();
+						navigation.navigate('Support');
+					}}
+				>
+					<HelpCircle size={20} color={lightColors.textMuted} strokeWidth={1.8} />
+					<SS.navLabel>Suporte</SS.navLabel>
+				</SS.navItem>
+
+				<SS.navItem
+					onPress={() => {
+						onClose();
+						navigation.navigate('Settings', {});
+					}}
+				>
 					<Settings size={20} color={lightColors.textMuted} strokeWidth={1.8} />
-					<SS.navLabel>Configurações</SS.navLabel>
+					<SS.navLabel>Configuracoes</SS.navLabel>
 				</SS.navItem>
 			</ScrollView>
 
 			<SS.footer style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
 				<SS.divider />
-				<TouchableOpacity
-					style={styles.logoutBtn}
-					activeOpacity={0.7}
-					onPress={handleSignOut}
-				>
+				<TouchableOpacity style={styles.logoutBtn} activeOpacity={0.7} onPress={handleSignOut}>
 					<LogOut size={20} color={lightColors.error} strokeWidth={1.8} />
 					<SS.navLabel style={styles.logoutLabel}>Sair</SS.navLabel>
 				</TouchableOpacity>
@@ -249,6 +281,13 @@ const styles = StyleSheet.create({
 	scrollContent: {
 		paddingVertical: 8,
 		paddingHorizontal: 8,
+	},
+	loadingCard: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 12,
+		paddingHorizontal: 20,
+		paddingVertical: 14,
 	},
 	logoutBtn: {
 		flexDirection: 'row',

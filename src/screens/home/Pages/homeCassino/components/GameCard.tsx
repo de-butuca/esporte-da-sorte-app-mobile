@@ -6,7 +6,7 @@ import { GCS } from '../homeCassino.styled';
 type BadgeType = 'live' | 'new' | 'none';
 
 interface GameCardProps {
-	image: ImageSourcePropType;
+	image: ImageSourcePropType | string;
 	name: string;
 	provider: string;
 	badge?: BadgeType;

@@ -43,3 +43,54 @@ export interface AuditHeader {
   description?: string;
   addOperationLog?: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// Media contracts – derived from openapi.json visual/media fields
+// ---------------------------------------------------------------------------
+
+/** Discriminator for media field classification */
+export type BackendMediaKind =
+  | 'image-url'
+  | 'icon-name'
+  | 'icon-id'
+  | 'html-content'
+  | 'boolean-flag'
+  | 'unknown-visual';
+
+/** Where the media value came from */
+export interface BackendMediaSource {
+  schema: string;
+  field: string;
+}
+
+/** Resolved media asset – the normalised representation the UI consumes */
+export interface BackendMediaAsset {
+  kind: BackendMediaKind;
+  value: string | number | boolean;
+  alt?: string;
+  width?: number;
+  height?: number;
+  sourceSchema: string;
+  sourceField: string;
+  fallback?: string;
+  /** Fully-qualified URL after resolution (set by the resolver) */
+  resolvedUrl?: string;
+  /** Key for a local asset bundle (set by the resolver for icon-id / icon-name) */
+  resolvedAssetKey?: string;
+}
+
+/** Convenience alias for image-url assets */
+export type BackendImageAsset = BackendMediaAsset & { kind: 'image-url' };
+
+/** Convenience alias for icon assets (name or id) */
+export type BackendIconAsset = BackendMediaAsset & { kind: 'icon-name' | 'icon-id' };
+
+/** Descriptor used in the generated media catalogue */
+export interface OpenApiMediaFieldDescriptor {
+  schema: string;
+  field: string;
+  type: 'string' | 'integer' | 'boolean';
+  kind: BackendMediaKind;
+  domain: string;
+  description?: string;
+}

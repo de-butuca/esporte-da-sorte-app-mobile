@@ -50,11 +50,19 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 				setIsReady(true);
 			}
 
-			InteractionManager.runAfterInteractions(async () => {
-				if (Platform.OS === 'android') {
-					await requestNotificationPermissions();
-					setupAppLifecycleNotifications();
-				}
+			InteractionManager.runAfterInteractions(() => {
+				void (async () => {
+					if (Platform.OS !== 'android') return;
+
+					try {
+						await requestNotificationPermissions();
+						setupAppLifecycleNotifications();
+					} catch (error) {
+						if (__DEV__) {
+							console.warn('Falha ao inicializar notificacoes no runtime atual.', error);
+						}
+					}
+				})();
 			});
 		}
 

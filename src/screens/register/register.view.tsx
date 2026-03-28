@@ -30,7 +30,7 @@ function RegisterHeader() {
 						<ArrowLeft size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 				) : (
-					<View style={{ width: RFValue(20) }} />
+					<View style={styles.placeholderIcon} />
 				)}
 				<TouchableOpacity activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
 					<MessageSquare size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
@@ -40,7 +40,6 @@ function RegisterHeader() {
 	);
 }
 
-/** Componente externo: fornece o contexto de campos */
 export default function RegisterScreen() {
 	return (
 		<FormFieldsProvider fieldCount={5}>
@@ -49,25 +48,33 @@ export default function RegisterScreen() {
 	);
 }
 
-/** Componente interno: usa useFormField (já dentro do Provider) */
 function RegisterForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-	const togglePassword = useCallback(() => setShowPassword((s) => !s), []);
-	const toggleConfirmPassword = useCallback(() => setShowConfirmPassword((s) => !s), []);
+	const togglePassword = useCallback(() => setShowPassword((value) => !value), []);
+	const toggleConfirmPassword = useCallback(() => setShowConfirmPassword((value) => !value), []);
 	const { theme } = useStampdUI();
 
 	const {
 		control,
-		errors,
 		isLoading,
-		isValid,
+		isConfigLoading,
+		canSubmit,
 		hasFormErrors,
 		passwordStrength,
 		passwordStrengthLabel,
+		passwordHint,
+		passwordPlaceholder,
+		configWarning,
+		cpfLookupLabel,
+		isCheckingCpf,
+		isCheckingEmail,
+		unsupportedContractFields,
 		handleRegister,
 		handleCpfChange,
 		handlePhoneChange,
+		handleCpfBlur,
+		handleEmailBlur,
 		navigateToLogin,
 	} = useRegisterViewModel();
 
@@ -77,17 +84,15 @@ function RegisterForm() {
 	const passwordField = useFormField(3);
 	const confirmPasswordField = useFormField(4, handleRegister);
 
-	// Memoize strength colors
 	const strengthColors = useMemo(
 		() => ({
 			weak: theme.colors.error,
-			medium: '#FFA500', // Orange for medium strength
+			medium: '#FFA500',
 			strong: theme.colors.accent,
 		}),
-		[theme.colors.error, theme.colors.accent]
+		[theme.colors.error, theme.colors.accent],
 	);
 
-	// Memoize dynamic colors
 	const colors = useMemo(
 		() => ({
 			inputBg: theme.colors.bgCard,
@@ -100,7 +105,7 @@ function RegisterForm() {
 			primaryBtn: theme.colors.primary,
 			primaryBtnText: theme.colors.textPrimary,
 		}),
-		[theme]
+		[theme],
 	);
 
 	const currentStrengthColor = passwordStrength ? strengthColors[passwordStrength] : undefined;
@@ -108,22 +113,22 @@ function RegisterForm() {
 	return (
 		<FormScreen header={<RegisterHeader />}>
 			<View style={styles.content}>
-				{/* Logo */}
 				<View style={styles.logoContainer}>
 					<Logo width={RFValue(100)} height={RFValue(34)} />
 				</View>
 
-				{/* Title */}
 				<View style={styles.titleBlock}>
 					<Text style={[styles.title, { color: theme.colors.textPrimary }]}>Criar conta</Text>
 					<Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-						Preencha os dados abaixo para começar.
+						Preencha os dados abaixo para comecar.
 					</Text>
 				</View>
 
-				{/* Form */}
 				<View style={styles.formBlock}>
-					{/* CPF */}
+					{configWarning ? (
+						<InfoCard title="Contrato em fallback" description={configWarning} theme={theme} />
+					) : null}
+
 					<Controller
 						control={control}
 						name="cpf"
@@ -150,16 +155,20 @@ function RegisterForm() {
 										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={(text) => handleCpfChange(text, onChange)}
+										onBlur={() => {
+											void handleCpfBlur(value);
+										}}
 										keyboardType="numeric"
 										cursorColor={theme.colors.accent}
 									/>
 								</View>
-								{fieldState.error && <ErrorMessage message={fieldState.error.message!} theme={theme} />}
+								{isCheckingCpf ? <HelperMessage message="Validando CPF no mock..." theme={theme} /> : null}
+								{!fieldState.error && cpfLookupLabel ? <HelperMessage message={cpfLookupLabel} theme={theme} /> : null}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
 							</View>
 						)}
 					/>
 
-					{/* Email */}
 					<Controller
 						control={control}
 						name="email"
@@ -186,17 +195,20 @@ function RegisterForm() {
 										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
+										onBlur={() => {
+											void handleEmailBlur(value);
+										}}
 										autoCapitalize="none"
 										keyboardType="email-address"
 										cursorColor={theme.colors.accent}
 									/>
 								</View>
-								{fieldState.error && <ErrorMessage message={fieldState.error.message!} theme={theme} />}
+								{isCheckingEmail ? <HelperMessage message="Validando e-mail no mock..." theme={theme} /> : null}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
 							</View>
 						)}
 					/>
 
-					{/* Phone */}
 					<Controller
 						control={control}
 						name="phone"
@@ -227,15 +239,13 @@ function RegisterForm() {
 										cursorColor={theme.colors.accent}
 									/>
 								</View>
-								{fieldState.error && <ErrorMessage message={fieldState.error.message!} theme={theme} />}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
 							</View>
 						)}
 					/>
 
-					{/* Divider */}
 					<View style={[styles.divider, { backgroundColor: colors.divider }]} />
 
-					{/* Password */}
 					<Controller
 						control={control}
 						name="password"
@@ -258,7 +268,7 @@ function RegisterForm() {
 										onSubmitEditing={passwordField.onSubmitEditing}
 										blurOnSubmit={passwordField.blurOnSubmit}
 										style={[styles.inputWithIcon, { color: theme.colors.textPrimary }]}
-										placeholder="Mínimo 6 caracteres"
+										placeholder={passwordPlaceholder}
 										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
@@ -274,7 +284,7 @@ function RegisterForm() {
 										)}
 									</TouchableOpacity>
 								</View>
-								{passwordStrength && (
+								{passwordStrength ? (
 									<View style={styles.strengthRow}>
 										<View style={[styles.strengthBarBg, { backgroundColor: colors.strengthBarBg }]}>
 											<View
@@ -289,13 +299,13 @@ function RegisterForm() {
 										</View>
 										<Text style={[styles.strengthText, { color: currentStrengthColor }]}>{passwordStrengthLabel}</Text>
 									</View>
-								)}
-								{fieldState.error && <ErrorMessage message={fieldState.error.message!} theme={theme} />}
+								) : null}
+								<HelperMessage message={passwordHint} theme={theme} />
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
 							</View>
 						)}
 					/>
 
-					{/* Confirm Password */}
 					<Controller
 						control={control}
 						name="confirmPassword"
@@ -334,67 +344,74 @@ function RegisterForm() {
 										)}
 									</TouchableOpacity>
 								</View>
-								{fieldState.error && <ErrorMessage message={fieldState.error.message!} theme={theme} />}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
 							</View>
 						)}
 					/>
 
-					{/* Divider */}
 					<View style={[styles.divider, { backgroundColor: colors.divider }]} />
 
-					{/* Terms checkbox */}
 					<Controller
 						control={control}
 						name="acceptTerms"
-						render={({ field: { onChange, value } }) => (
-							<TouchableOpacity style={styles.checkboxRow} onPress={() => onChange(!value)} activeOpacity={0.7}>
-								<View
-									style={[
-										styles.checkbox,
-										value && { backgroundColor: colors.checkboxCheckedBg },
-										!value && { backgroundColor: colors.checkboxBg },
-									]}
-								/>
-								<Text style={[styles.termsText, { color: theme.colors.textSecondary }]}>
-									Li e aceito os <Text style={[styles.termsLink, { color: theme.colors.primary }]}>Termos de Uso</Text>{' '}
-									e a <Text style={[styles.termsLink, { color: theme.colors.primary }]}>Política de Privacidade</Text>
-								</Text>
-							</TouchableOpacity>
+						render={({ field: { onChange, value }, fieldState }) => (
+							<View style={styles.inputGroup}>
+								<TouchableOpacity style={styles.checkboxRow} onPress={() => onChange(!value)} activeOpacity={0.7}>
+									<View
+										style={[
+											styles.checkbox,
+											value ? { backgroundColor: colors.checkboxCheckedBg } : { backgroundColor: colors.checkboxBg },
+										]}
+									/>
+									<Text style={[styles.termsText, { color: theme.colors.textSecondary }]}>
+										Li e aceito os <Text style={[styles.termsLink, { color: theme.colors.primary }]}>Termos de Uso</Text>{' '}
+										e a <Text style={[styles.termsLink, { color: theme.colors.primary }]}>Politica de Privacidade</Text>
+									</Text>
+								</TouchableOpacity>
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
+							</View>
 						)}
 					/>
 
-					{/* Error card */}
-					{hasFormErrors && (
+					{hasFormErrors ? (
 						<View style={[styles.errorCard, { backgroundColor: colors.errorCardBg, borderColor: theme.colors.error }]}>
 							<AlertCircle size={RFValue(16)} color={theme.colors.error} strokeWidth={2} />
 							<View style={styles.errorCardContent}>
 								<Text style={[styles.errorCardTitle, { color: theme.colors.error }]}>Corrija os erros acima</Text>
 								<Text style={[styles.errorCardDesc, { color: theme.colors.textSecondary }]}>
-									Alguns campos precisam de atenção.
+									Alguns campos precisam de atencao.
 								</Text>
 							</View>
 						</View>
-					)}
+					) : null}
+
+					{unsupportedContractFields.length ? (
+						<InfoCard
+							title="Campos fora da UI atual"
+							description={unsupportedContractFields.join(', ')}
+							theme={theme}
+						/>
+					) : null}
 				</View>
 
-				{/* Register button */}
 				<TouchableOpacity
-					style={[styles.primaryBtn, { backgroundColor: colors.primaryBtn }, !isValid && styles.btnDisabled]}
+					style={[styles.primaryBtn, { backgroundColor: colors.primaryBtn }, !canSubmit && styles.btnDisabled]}
 					onPress={handleRegister}
 					activeOpacity={0.8}
-					disabled={isLoading || !isValid}
+					disabled={isLoading || !canSubmit}
 				>
 					{isLoading ? (
 						<ActivityIndicator color={colors.primaryBtnText} size="small" />
 					) : (
-						<Text style={[styles.primaryBtnText, { color: colors.primaryBtnText }]}>Criar conta</Text>
+						<Text style={[styles.primaryBtnText, { color: colors.primaryBtnText }]}>
+							{isConfigLoading ? 'Carregando regras...' : 'Criar conta'}
+						</Text>
 					)}
 				</TouchableOpacity>
 
-				{/* Login link */}
 				<TouchableOpacity onPress={navigateToLogin} activeOpacity={0.7} style={styles.loginLinkWrap}>
 					<Text style={[styles.loginLinkText, { color: theme.colors.textSecondary }]}>
-						Já tem uma conta? <Text style={[styles.loginLinkBold, { color: theme.colors.primary }]}>Entrar</Text>
+						Ja tem uma conta? <Text style={[styles.loginLinkBold, { color: theme.colors.primary }]}>Entrar</Text>
 					</Text>
 				</TouchableOpacity>
 			</View>
@@ -407,6 +424,34 @@ function ErrorMessage({ message, theme }: { message: string; theme: any }) {
 		<View style={styles.errorRow}>
 			<AlertCircle size={RFValue(12)} color={theme.colors.error} strokeWidth={2} />
 			<Text style={[styles.errorText, { color: theme.colors.error }]}>{message}</Text>
+		</View>
+	);
+}
+
+function HelperMessage({ message, theme }: { message: string; theme: any }) {
+	return (
+		<View style={styles.helperRow}>
+			<Text style={[styles.helperText, { color: theme.colors.textMuted }]}>{message}</Text>
+		</View>
+	);
+}
+
+function InfoCard({
+	title,
+	description,
+	theme,
+}: {
+	title: string;
+	description: string;
+	theme: any;
+}) {
+	return (
+		<View style={[styles.infoCard, { backgroundColor: theme.colors.bgCard }]}>
+			<AlertCircle size={RFValue(16)} color={theme.colors.textSecondary} strokeWidth={2} />
+			<View style={styles.infoCardContent}>
+				<Text style={[styles.infoCardTitle, { color: theme.colors.textPrimary }]}>{title}</Text>
+				<Text style={[styles.infoCardDesc, { color: theme.colors.textSecondary }]}>{description}</Text>
+			</View>
 		</View>
 	);
 }
@@ -426,6 +471,9 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		paddingTop: RFValue(14),
+	},
+	placeholderIcon: {
+		width: RFValue(20),
 	},
 	content: {
 		gap: RFValue(20),
@@ -512,6 +560,14 @@ const styles = StyleSheet.create({
 		fontWeight: '400',
 		lineHeight: RFValue(16),
 	},
+	helperRow: {
+		paddingTop: RFValue(2),
+	},
+	helperText: {
+		fontSize: RFValue(11),
+		fontWeight: '400',
+		lineHeight: RFValue(16),
+	},
 	checkboxRow: {
 		flexDirection: 'row',
 		alignItems: 'flex-start',
@@ -550,6 +606,27 @@ const styles = StyleSheet.create({
 		lineHeight: RFValue(17),
 	},
 	errorCardDesc: {
+		fontSize: RFValue(11),
+		fontWeight: '400',
+		lineHeight: RFValue(16),
+	},
+	infoCard: {
+		flexDirection: 'row',
+		borderRadius: RFValue(10),
+		padding: RFValue(16),
+		gap: RFValue(10),
+		alignItems: 'flex-start',
+	},
+	infoCardContent: {
+		flex: 1,
+		gap: RFValue(2),
+	},
+	infoCardTitle: {
+		fontSize: RFValue(12),
+		fontWeight: '600',
+		lineHeight: RFValue(17),
+	},
+	infoCardDesc: {
 		fontSize: RFValue(11),
 		fontWeight: '400',
 		lineHeight: RFValue(16),

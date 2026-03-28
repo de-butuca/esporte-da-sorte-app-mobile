@@ -4,15 +4,9 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { GameCard } from './GameCard';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { GAME_ROW_CONTENT_STYLE } from '../homeCassino.styled';
+import { CasinoHomeGameViewModel } from '../homeCassino.types';
 
-interface Game {
-	id: string;
-	name: string;
-	provider: string;
-	image: any;
-	badge?: 'live' | 'new' | 'none';
-	players?: string;
-}
+type Game = CasinoHomeGameViewModel;
 
 interface GameRowProps {
 	games: Game[];
