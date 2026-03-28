@@ -9,14 +9,18 @@ import Animated, {
 	Easing,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { fontFamily } from '@/stampd.config';
+import { Dices, Radio } from 'lucide-react-native';
+import { fontFamily, cassinoColors } from '@/stampd.config';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import { useSessionContext } from '@/contexts/SessionContext';
 import HomeIcon from '@assets/icons/homeIcon.svg';
 import BallIcon from '@assets/icons/ballIcon.svg';
 import CupIcon from '@assets/icons/cupIcon.svg';
 import ProfileIcon from '@assets/icons/profileIcon.svg';
 import PointIcon from '@assets/icons/pointIcon.svg';
 import { useStampdUI } from 'stampd/context';
+
+// ── Esportes ──────────────────────────────────────────────────────────────────
 
 export type NavTab = 'home' | 'partidas' | 'ranking' | 'perfil';
 
@@ -26,11 +30,11 @@ interface BottomNavBarProps {
 }
 
 const ICON_SIZE = 22;
-const ACTIVE_COLOR = '#22C55E';
+const ESPORTES_ACTIVE = '#22C55E';
 const INACTIVE_COLOR = '#6B7280';
 const TIMING = { duration: 250, easing: Easing.bezier(0.4, 0, 0.2, 1) };
 
-const TABS: { key: NavTab; label: string; Icon: typeof HomeIcon }[] = [
+const ESPORTES_TABS: { key: NavTab; label: string; Icon: typeof HomeIcon }[] = [
 	{ key: 'home', label: 'Inicio', Icon: HomeIcon },
 	{ key: 'partidas', label: 'Partidas', Icon: BallIcon },
 	{ key: 'ranking', label: 'Ranking', Icon: CupIcon },
@@ -39,28 +43,36 @@ const TABS: { key: NavTab; label: string; Icon: typeof HomeIcon }[] = [
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
+// ── Shared TabItem ─────────────────────────────────────────────────────────────
+
 interface TabItemProps {
-	tab: typeof TABS[number];
+	label: string;
 	isActive: boolean;
-	onPress: (key: NavTab) => void;
+	activeColor: string;
+	activeBgColor: string;
+	onPress: () => void;
+	renderIcon: (color: string) => React.ReactNode;
 }
 
-const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemProps) {
+const TabItem = React.memo(function TabItem({
+	label,
+	isActive,
+	activeColor,
+	activeBgColor,
+	onPress,
+	renderIcon,
+}: TabItemProps) {
 	const progress = useSharedValue(isActive ? 1 : 0);
 
 	useEffect(() => {
 		progress.value = withTiming(isActive ? 1 : 0, TIMING);
 	}, [isActive]);
 
-	const { theme } = useStampdUI();
-	const color = isActive ? theme.colors.accent : theme.colors.textMuted;
-	const handlePress = useCallback(() => onPress(tab.key), [onPress, tab.key]);
-
 	const bgStyle = useAnimatedStyle(() => ({
 		backgroundColor: interpolateColor(
 			progress.value,
 			[0, 1],
-			['transparent', 'rgba(16,185,129,0.1)'],
+			['transparent', activeBgColor],
 		),
 		height: interpolate(progress.value, [0, 1], [56, 82]),
 		paddingTop: interpolate(progress.value, [0, 1], [8, 15]),
@@ -72,7 +84,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 	}));
 
 	const colorStyle = useAnimatedStyle(() => ({
-		color: interpolateColor(progress.value, [0, 1], [INACTIVE_COLOR, ACTIVE_COLOR]),
+		color: interpolateColor(progress.value, [0, 1], [INACTIVE_COLOR, activeColor]),
 	}));
 
 	const activeIconStyle = useAnimatedStyle(() => ({
@@ -87,7 +99,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 		<View style={styles.tabSlot}>
 			<AnimatedTouchable
 				style={[styles.tab, bgStyle]}
-				onPress={handlePress}
+				onPress={onPress}
 				activeOpacity={0.7}
 			>
 				<Animated.View style={[styles.dotContainer, dotStyle]}>
@@ -95,21 +107,23 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 				</Animated.View>
 				<View style={styles.iconContainer}>
 					<Animated.View style={[styles.iconWrap, activeIconStyle]}>
-						<tab.Icon width={ICON_SIZE} height={ICON_SIZE} color={ACTIVE_COLOR} />
+						{renderIcon(activeColor)}
 					</Animated.View>
 					<Animated.View style={[styles.iconWrap, inactiveIconStyle]}>
-						<tab.Icon width={ICON_SIZE} height={ICON_SIZE} color={INACTIVE_COLOR} />
+						{renderIcon(INACTIVE_COLOR)}
 					</Animated.View>
 				</View>
 				<Animated.Text style={[styles.label, colorStyle]} numberOfLines={1}>
-					{tab.label}
+					{label}
 				</Animated.Text>
 			</AnimatedTouchable>
 		</View>
 	);
 });
 
-export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
+// ── Esportes Bottom Nav ────────────────────────────────────────────────────────
+
+function EsportesBottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	const insets = useSafeAreaInsets();
 	const { open: openSidebar } = useSidebar();
 	const { theme } = useStampdUI();
@@ -130,12 +144,15 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	return (
 		<View style={containerStyle}>
 			<View style={styles.tabRow}>
-				{TABS.map((tab) => (
+				{ESPORTES_TABS.map((tab) => (
 					<TabItem
 						key={tab.key}
-						tab={tab}
+						label={tab.label}
 						isActive={activeTab === tab.key}
-						onPress={handleTabPress}
+						activeColor={ESPORTES_ACTIVE}
+						activeBgColor="rgba(16,185,129,0.1)"
+						onPress={() => handleTabPress(tab.key)}
+						renderIcon={(color) => <tab.Icon width={ICON_SIZE} height={ICON_SIZE} color={color} />}
 					/>
 				))}
 			</View>
@@ -143,9 +160,102 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	);
 }
 
+// ── Cassino Bottom Nav ─────────────────────────────────────────────────────────
+
+export type CassinoNavTab = 'home' | 'slots' | 'ao-vivo' | 'perfil';
+
+interface CassinoBottomNavBarProps {
+	activeTab: CassinoNavTab;
+	onTabPress: (tab: CassinoNavTab) => void;
+}
+
+const CASSINO_ACTIVE = cassinoColors.accent;
+const CASSINO_BG_ACTIVE = 'rgba(0, 232, 120, 0.12)';
+
+type CassinoTabDef = {
+	key: CassinoNavTab;
+	label: string;
+	renderIcon: (color: string) => React.ReactNode;
+};
+
+const CASSINO_TABS: CassinoTabDef[] = [
+	{
+		key: 'home',
+		label: 'Início',
+		renderIcon: (color) => <HomeIcon width={ICON_SIZE} height={ICON_SIZE} color={color} />,
+	},
+	{
+		key: 'slots',
+		label: 'Slots',
+		renderIcon: (color) => <Dices width={ICON_SIZE} height={ICON_SIZE} color={color} />,
+	},
+	{
+		key: 'ao-vivo',
+		label: 'Ao Vivo',
+		renderIcon: (color) => <Radio width={ICON_SIZE} height={ICON_SIZE} color={color} />,
+	},
+	{
+		key: 'perfil',
+		label: 'Perfil',
+		renderIcon: (color) => <ProfileIcon width={ICON_SIZE} height={ICON_SIZE} color={color} />,
+	},
+];
+
+function CassinoBottomNavBarInner({ activeTab, onTabPress }: CassinoBottomNavBarProps) {
+	const insets = useSafeAreaInsets();
+	const { open: openSidebar } = useSidebar();
+
+	const handleTabPress = useCallback((key: CassinoNavTab) => {
+		if (key === 'perfil') {
+			openSidebar();
+			return;
+		}
+		onTabPress(key);
+	}, [onTabPress, openSidebar]);
+
+	const containerStyle = useMemo(
+		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8), backgroundColor: cassinoColors.bgNav }],
+		[insets.bottom],
+	);
+
+	return (
+		<View style={containerStyle}>
+			<View style={styles.tabRow}>
+				{CASSINO_TABS.map((tab) => (
+					<TabItem
+						key={tab.key}
+						label={tab.label}
+						isActive={activeTab === tab.key}
+						activeColor={CASSINO_ACTIVE}
+						activeBgColor={CASSINO_BG_ACTIVE}
+						onPress={() => handleTabPress(tab.key)}
+						renderIcon={tab.renderIcon}
+					/>
+				))}
+			</View>
+		</View>
+	);
+}
+
+// ── Smart wrapper ──────────────────────────────────────────────────────────────
+
+export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
+	const { activeCategory } = useSessionContext();
+
+	// Cassino has its own internal tab state — keep it isolated
+	const [cassinoTab, setCassinoTab] = React.useState<CassinoNavTab>('home');
+
+	if (activeCategory === 'cassino') {
+		return <CassinoBottomNavBarInner activeTab={cassinoTab} onTabPress={setCassinoTab} />;
+	}
+
+	return <EsportesBottomNavBar activeTab={activeTab} onTabPress={onTabPress} />;
+}
+
+// ── Styles ─────────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#101828',
 		paddingTop: 8,
 		paddingHorizontal: 24,
 		...Platform.select({
