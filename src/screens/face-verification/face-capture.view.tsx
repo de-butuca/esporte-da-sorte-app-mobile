@@ -11,7 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ArrowLeft, Check, X as XIcon, RotateCcw } from 'lucide-react-native';
-import { useStampdUI } from 'stampd/context';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import { useAppNavigation } from '@/navigation/hooks';
 
 type CaptureState = 'positioning' | 'capturing' | 'processing' | 'success' | 'error';
@@ -41,7 +41,7 @@ const STATUS_CONFIG: Record<CaptureState, { label: string; hint: string }> = {
 
 export default function FaceCaptureScreen() {
 	const insets = useSafeAreaInsets();
-	const { theme } = useStampdUI();
+	const colors = useAuthThemeStore((s) => s.colors);
 	const { goBack } = useAppNavigation();
 
 	const [state, setState] = useState<CaptureState>('positioning');
@@ -49,11 +49,11 @@ export default function FaceCaptureScreen() {
 	const scanLineAnim = useRef(new Animated.Value(0)).current;
 
 	const c = {
-		bg: theme.colors.background,
-		text: theme.colors.textPrimary,
-		muted: theme.colors.textSecondary,
-		accent: theme.colors.accent,
-		error: theme.colors.error,
+		bg: colors.background,
+		text: colors.textPrimary,
+		muted: colors.textSecondary,
+		accent: colors.accent,
+		error: colors.error,
 	};
 
 	// Pulse animation for the oval frame

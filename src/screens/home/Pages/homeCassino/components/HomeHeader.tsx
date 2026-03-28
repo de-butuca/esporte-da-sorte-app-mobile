@@ -18,7 +18,6 @@ import Animated, {
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useStampdUI } from 'stampd/context';
 import { useSessionContext } from '@/contexts/SessionContext';
-import { useAppNavigation } from '@/navigation/hooks';
 import { HHS } from '../homeHeader.styled';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
@@ -44,7 +43,10 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => setActiveCategory(category), [setActiveCategory]);
 
-	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
+	const handleLogin = useCallback(
+		() => requireAuth(() => {}, activeCategory === 'cassino' ? 'cassino' : 'esportes'),
+		[requireAuth, activeCategory],
+	);
 
 	const handleTabLayout = useCallback(
 		(e: LayoutChangeEvent) => {
