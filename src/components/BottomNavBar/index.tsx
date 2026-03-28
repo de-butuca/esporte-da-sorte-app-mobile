@@ -176,9 +176,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		gap: 4,
 		paddingTop: 8,
-		paddingHorizontal: 21,
+		paddingHorizontal: 8,
 		borderRadius: 16,
 		height: 56,
+		width: '100%',
 	},
 	dotContainer: {
 		height: 4,
