@@ -87,9 +87,7 @@ export function useRegisterViewModel() {
 
 			toastfy.success('Conta criada com sucesso!');
 
-			if (canGoBack()) {
-				goBack();
-			}
+			navigate('FaceVerification');
 		} catch (e: any) {
 			toastfy.error(e.message);
 		} finally {

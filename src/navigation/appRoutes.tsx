@@ -10,10 +10,13 @@ import LoginScreen from '@/screens/login/login.view';
 import RegisterScreen from '@/screens/register/register.view';
 import PromotionsScreen from '@/screens/promotions/view';
 import SearchScreen from '@/screens/search/view';
+import SearchGamesScreen from '@/screens/search-games/view';
 import SupportScreen from '@/screens/support/view';
 import SettingsScreen from '@/screens/settings/view';
 import BolaoScreen from '@/screens/bolao/view';
 import ReelsEsportesScreen from '@/screens/reelsEsportes/view';
+import FaceVerificationScreen from '@/screens/face-verification/view';
+import FaceCaptureScreen from '@/screens/face-verification/face-capture.view';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +78,27 @@ export function AppStack() {
 					headerShown: false,
 					animation: 'slide_from_right',
 				}}
+			/>
+			<Stack.Screen
+				name="FaceVerification"
+				component={FaceVerificationScreen}
+				options={{
+					headerShown: false,
+					animation: 'slide_from_right',
+				}}
+			/>
+			<Stack.Screen
+				name="FaceCapture"
+				component={FaceCaptureScreen}
+				options={{
+					headerShown: false,
+					animation: 'slide_from_right',
+				}}
+			/>
+			<Stack.Screen
+				name="SearchGames"
+				component={SearchGamesScreen}
+				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
 				name="Bolao"

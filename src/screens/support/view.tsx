@@ -6,6 +6,7 @@ import { ArrowLeft, Search } from 'lucide-react-native';
 import { SectionHeader } from '@/components/SectionHeader';
 import { PromotionsSupportCard } from '@/screens/promotions/components/PromotionsSupportCard';
 import { fontFamily, lightColors } from '@/stampd.config';
+import Logo from '@assets/esporteDaSorteCompleto.svg';
 import { SupportFaqItem } from './components/SupportFaqItem';
 import { useSupportViewModel } from './viewmodel';
 
@@ -26,13 +27,15 @@ export default function SupportScreen() {
 	} = useSupportViewModel();
 
 	return (
-		<View style={[styles.root, { paddingTop: insets.top + RFValue(10) }]}>
-			<View style={styles.header}>
-				<TouchableOpacity style={styles.backButton} onPress={handleBack} activeOpacity={0.8}>
-					<ArrowLeft size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2.2} />
-				</TouchableOpacity>
-				<Text style={styles.headerTitle}>{title}</Text>
-				<View style={styles.headerSpacer} />
+		<View style={styles.root}>
+			<View style={[styles.header, { paddingTop: insets.top }]}>
+				<View style={styles.headerRow}>
+					<TouchableOpacity onPress={handleBack} activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+						<ArrowLeft size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+					</TouchableOpacity>
+					<Logo width={149} height={16} />
+					<View style={{ width: RFValue(20) }} />
+				</View>
 			</View>
 
 			<ScrollView
@@ -78,9 +81,7 @@ export default function SupportScreen() {
 				</View>
 
 				<View style={styles.sectionBlock}>
-					<View style={styles.sectionHeaderWrap}>
-						<SectionHeader title="Perguntas frequentes" />
-					</View>
+					<Text style={styles.faqTitle}>Perguntas frequentes</Text>
 					<View style={styles.faqCard}>
 						{visibleFaqs.length ? (
 							visibleFaqs.map((item, index) => (
@@ -122,51 +123,57 @@ export default function SupportScreen() {
 const styles = StyleSheet.create({
 	root: {
 		flex: 1,
-		backgroundColor: lightColors.background,
+		backgroundColor: '#0B1120',
 	},
 	header: {
-		paddingHorizontal: RFValue(20),
+		backgroundColor: '#101828',
+		paddingHorizontal: 16,
 		paddingBottom: RFValue(14),
+		shadowColor: '#000000',
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.15,
+		shadowRadius: 12,
+		elevation: 8,
+	},
+	headerRow: {
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
+		paddingTop: RFValue(14),
 	},
 	backButton: {
-		width: RFValue(36),
-		height: RFValue(36),
+		width: RFValue(40),
+		height: RFValue(40),
 		borderRadius: RFValue(12),
-		backgroundColor: 'rgba(255,255,255,0.08)',
+		borderWidth: 1,
+		borderColor: '#1A2340',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	headerTitle: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(20),
-		color: lightColors.textPrimary,
-	},
 	headerSpacer: {
-		width: RFValue(36),
+		width: RFValue(40),
 	},
 	content: {
-		paddingHorizontal: RFValue(20),
+		paddingHorizontal: 16,
 		paddingBottom: RFValue(28),
+		paddingTop: 32,
 		gap: RFValue(22),
 	},
 	searchCard: {
-		backgroundColor: '#1A2336',
-		borderRadius: RFValue(18),
-		padding: RFValue(22),
-		gap: RFValue(18),
+		backgroundColor: '#1A2332',
+		borderRadius: 12,
+		padding: RFValue(18),
+		gap: RFValue(14),
 	},
 	searchTitle: {
 		fontFamily: fontFamily.bold,
-		fontSize: RFValue(22),
-		lineHeight: RFValue(30),
+		fontSize: 20,
+		lineHeight: 30,
 		color: lightColors.textPrimary,
 	},
 	searchField: {
-		height: RFValue(56),
-		borderRadius: RFValue(12),
+		height: RFValue(44),
+		borderRadius: 12,
 		borderWidth: 1.5,
 		borderColor: 'rgba(56,230,125,0.28)',
 		backgroundColor: '#1C2538',
@@ -185,25 +192,20 @@ const styles = StyleSheet.create({
 		gap: RFValue(14),
 	},
 	sectionHeaderWrap: {
-		marginHorizontal: RFValue(-20),
+		marginHorizontal: -16,
 	},
 	shortcuts: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		gap: RFValue(10),
-		justifyContent: 'space-between',
+		gap: 8,
 	},
 	shortcutChip: {
-		width: '48%',
-		paddingHorizontal: RFValue(16),
-		paddingVertical: RFValue(12),
-		borderRadius: RFValue(999),
-		backgroundColor: '#1A2336',
-		borderWidth: 1,
-		borderColor: 'rgba(255,255,255,0.04)',
+		paddingHorizontal: 12,
+		paddingVertical: 6,
+		borderRadius: 9999,
+		backgroundColor: '#1A2332',
 		alignItems: 'center',
 		justifyContent: 'center',
-		minHeight: RFValue(48),
 	},
 	shortcutChipActive: {
 		backgroundColor: 'rgba(56,230,125,0.16)',
@@ -211,22 +213,27 @@ const styles = StyleSheet.create({
 	},
 	shortcutLabel: {
 		fontFamily: fontFamily.medium,
-		fontSize: RFValue(12),
-		color: lightColors.textSecondary,
-		textAlign: 'center',
+		fontSize: 14,
+		lineHeight: 21,
+		color: lightColors.textPrimary,
 	},
 	shortcutLabelActive: {
 		fontFamily: fontFamily.bold,
 		color: lightColors.textPrimary,
 	},
+	faqTitle: {
+		fontFamily: fontFamily.bold,
+		fontSize: 16,
+		lineHeight: 24,
+		color: lightColors.textPrimary,
+		paddingLeft: 4,
+	},
 	faqCard: {
-		backgroundColor: '#1A2336',
-		borderRadius: RFValue(18),
+		backgroundColor: '#1A2332',
+		borderRadius: 12,
 		overflow: 'hidden',
 	},
-	supportCardWrap: {
-		marginHorizontal: RFValue(-20),
-	},
+	supportCardWrap: {},
 	emptyState: {
 		padding: RFValue(20),
 		alignItems: 'center',

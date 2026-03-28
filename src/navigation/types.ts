@@ -7,7 +7,10 @@ export type RootStackParamList = {
 	Promotions: undefined;
 	Support: undefined;
 	GameHome: undefined;
+	SearchGames: undefined;
 	Bolao: undefined;
+	FaceVerification: undefined;
+	FaceCapture: undefined;
 	Login: undefined;
 	Register: undefined;
 	Propaganda: undefined;
@@ -23,7 +26,7 @@ export type AppParamList = RootStackParamList & GamePages;
 
 declare global {
 	namespace ReactNavigation {
-		interface RootParamList extends AppParamList {}
+		interface RootParamList extends AppParamList { }
 	}
 }
 

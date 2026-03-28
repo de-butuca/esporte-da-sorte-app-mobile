@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
 	},
 	question: {
 		flex: 1,
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(16),
-		lineHeight: RFValue(22),
+		fontFamily: fontFamily.semibold,
+		fontSize: 14,
+		lineHeight: 21,
 		color: lightColors.textPrimary,
 	},
 	answer: {
