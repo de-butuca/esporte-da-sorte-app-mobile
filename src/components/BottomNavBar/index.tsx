@@ -108,6 +108,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	const insets = useSafeAreaInsets();
 	const { open: openSidebar } = useSidebar();
+	const colors = useAuthThemeStore((s) => s.colors);
 
 	const handleTabPress = useCallback((key: NavTab) => {
 		if (key === 'perfil') {
@@ -118,8 +119,8 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	}, [onTabPress, openSidebar]);
 
 	const containerStyle = useMemo(
-		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8) }],
-		[insets.bottom],
+		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8), backgroundColor: colors.bgNav }],
+		[insets.bottom, colors.bgNav],
 	);
 
 	return (

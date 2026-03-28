@@ -84,6 +84,7 @@ export function AppStack() {
 				}}
 			/>
 			<Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+			<Stack.Screen name="ReelsEsportesScreen" component={ReelsEsportesScreen} options={{ headerShown: false }} />
 		</Stack.Navigator>
 	);
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { ImageSourcePropType } from 'react-native';
 import { Image } from 'expo-image';
 import { Styled } from 'stampd/styled';
+import { useNavigation } from '@react-navigation/native';
 
 export interface Match {
 	id: string;
@@ -67,8 +68,13 @@ const MCS = {
 };
 
 export const MatchCard = React.memo(function MatchCard({ match, onPress }: MatchCardProps) {
+	const { navigate } = useNavigation();
+
+	function SendToStores() {
+		navigate('ReelsEsportesScreen');
+	}
 	return (
-		<MCS.container onPress={() => onPress?.(match)}>
+		<MCS.container onPress={SendToStores}>
 			<MCS.avatarRing>
 				{match.thumbnail ? (
 					<Image source={match.thumbnail} style={{ width: '100%', height: '100%' }} contentFit="cover" />
