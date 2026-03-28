@@ -88,6 +88,14 @@ export function AppStack() {
 				}}
 			/>
 			<Stack.Screen
+				name="FaceCapture"
+				component={FaceCaptureScreen}
+				options={{
+					headerShown: false,
+					animation: 'slide_from_right',
+				}}
+			/>
+			<Stack.Screen
 				name="SearchGames"
 				component={SearchGamesScreen}
 				options={{ headerShown: false }}
