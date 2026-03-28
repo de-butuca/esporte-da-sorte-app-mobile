@@ -5,6 +5,7 @@ import {
 	ClipboardList,
 	Dices,
 	Gift,
+	HelpCircle,
 	House,
 	LogOut,
 	Settings,
@@ -171,7 +172,13 @@ export function Sidebar({ onClose }: SidebarProps) {
 			key: 'promocoes',
 			label: 'Promoções',
 			Icon: Gift,
-			onPress: () => { requireAuth(() => { onClose(); }); },
+			onPress: () => { requireAuth(() => { onClose(); navigate('Promotions'); }); },
+		},
+		{
+			key: 'support',
+			label: 'Suporte',
+			Icon: HelpCircle,
+			onPress: () => { onClose(); navigate('Support'); },
 		},
 	];
 

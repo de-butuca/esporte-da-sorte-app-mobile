@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Menu, Search, Settings } from 'lucide-react-native';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, {
 	useAnimatedStyle,
@@ -39,10 +40,7 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	const [tabWidth, setTabWidth] = useState(0);
 	const pillX = useSharedValue(0);
 
-	const handleCategoryPress = useCallback(
-		(category: CategoryTab) => onCategoryChange(category),
-		[onCategoryChange]
-	);
+	const handleCategoryPress = useCallback((category: CategoryTab) => onCategoryChange(category), [onCategoryChange]);
 
 	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
 
@@ -104,14 +102,9 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 
 			<Animated.View style={[styles.tabsWrapper, wrapperStyle]}>
 				<HHS.categoryTabs>
-					<Animated.View
-						style={[styles.pill, { backgroundColor: theme.colors.bgNav }, pillStyle]}
-					/>
+					<Animated.View style={[styles.pill, { backgroundColor: theme.colors.bgNav }, pillStyle]} />
 
-					<HHS.categoryTab
-						onPress={() => handleCategoryPress('cassino')}
-						onLayout={handleTabLayout}
-					>
+					<HHS.categoryTab onPress={() => handleCategoryPress('cassino')} onLayout={handleTabLayout}>
 						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
 						{activeCategory === 'cassino' ? (
 							<HHS.categoryLabelActive>Cassino</HHS.categoryLabelActive>

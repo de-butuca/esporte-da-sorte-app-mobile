@@ -3,7 +3,7 @@
 // for trader config, registration, CMS, country, currency
 // ============================================================
 
-import { OdinResponse } from '../models/common.models';
+import { OdinRequest, OdinResponse } from '../models/common.models';
 import {
   ApplicationSetting,
   TraderDefaults,
@@ -48,6 +48,7 @@ import {
   mockMultilanguages,
   mockGeolocationLicense,
   mockDynamicContent,
+  mockDynamicContentCatalog,
   mockCustomEventsModules,
   mockNews,
   mockWebModuleCodes,
@@ -59,6 +60,34 @@ import {
   mockMultiBetRates,
   mockValidationSuccess,
 } from '../mocks/config.mocks';
+
+function matchesDevice(availableDevices: string | undefined, requestedDevice: string) {
+  if (!availableDevices) return true;
+
+  return availableDevices
+    .split(',')
+    .map((device) => device.trim())
+    .includes(requestedDevice);
+}
+
+function extractRequestedCode(body: unknown) {
+  if (!body || typeof body !== 'object') return undefined;
+
+  const request = body as OdinRequest<{ code?: string }> & {
+    code?: string;
+    requestBody?: { code?: string };
+  };
+
+  return request.requestBody?.code ?? request.code;
+}
+
+function successResponse<T>(data: T): OdinResponse<T> {
+  return {
+    success: true,
+    responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
+    data,
+  };
+}
 
 // ---- Interface ----
 
@@ -173,12 +202,23 @@ export class MockConfigService implements IConfigService {
     return mockApplicationSettings;
   }
 
-  async getTraderDefaults(): Promise<OdinResponse<TraderDefaults>> {
+  async getTraderDefaults(_domain: string): Promise<OdinResponse<TraderDefaults>> {
     return mockTraderDefaults;
   }
 
-  async getTraderModules(): Promise<OdinResponse<Module[]>> {
-    return mockTraderModules;
+  async getTraderModules(_domain: string, device: string): Promise<OdinResponse<Module[]>> {
+    const modules =
+      mockTraderModules.data?.filter((module) => {
+        if (!module.isActive) return false;
+
+        if (!module.traderModules?.length) return true;
+
+        return module.traderModules.some((traderModule) =>
+          device === 'm' ? traderModule.isMobileActive : traderModule.isWebActive,
+        );
+      }) ?? [];
+
+    return successResponse(modules);
   }
 
   async getTraderNavbar(): Promise<OdinResponse<TraderNavbarMenu[]>> {
@@ -237,24 +277,68 @@ export class MockConfigService implements IConfigService {
     return mockGeolocationLicense;
   }
 
-  async getContentByCode(): Promise<OdinResponse<TraderDynamicContent>> {
-    return mockDynamicContent;
+  async getContentByCode(body: unknown): Promise<OdinResponse<TraderDynamicContent>> {
+    const requestedCode = extractRequestedCode(body);
+    const request = body as OdinRequest | undefined;
+
+    const content =
+      mockDynamicContentCatalog.find((item) => {
+        const matchesCode = requestedCode ? item.code === requestedCode : true;
+        const matchesLanguage = request?.languageId ? item.languageId === request.languageId : true;
+        const matchesTrader = request?.traderId ? item.traderId === request.traderId : true;
+        const matchesRequestedDevice = request?.device ? matchesDevice('m,d', request.device) : true;
+
+        return matchesCode && matchesLanguage && matchesTrader && matchesRequestedDevice;
+      }) ?? mockDynamicContent.data;
+
+    return successResponse(content ?? {});
   }
 
   async getCustomEventsModules(): Promise<OdinResponse<CustomEventsModule[]>> {
     return mockCustomEventsModules;
   }
 
-  async getNews(): Promise<OdinResponse<News[]>> {
-    return mockNews;
+  async getNews(_domain: string, languageId: number, device: string, traderId: number): Promise<OdinResponse<News[]>> {
+    const news =
+      mockNews.data?.filter((item) => {
+        const matchesLanguage = item.languageId ? item.languageId === languageId : true;
+        const matchesTrader = item.traderId ? item.traderId === traderId : true;
+
+        return matchesLanguage && matchesTrader && matchesDevice(item.device, device);
+      }) ?? [];
+
+    return successResponse(news);
   }
 
-  async getUsedWebModuleCodes(): Promise<OdinResponse<string[]>> {
-    return mockWebModuleCodes as OdinResponse<string[]>;
+  async getUsedWebModuleCodes(_domain: string, device: string, language: string): Promise<OdinResponse<string[]>> {
+    const moduleCodes = Array.from(
+      new Set(
+        (mockWebModuleContent.data ?? [])
+          .filter((item) => matchesDevice(item.device, device))
+          .filter((item) => !item.languageId || item.languageId === Number(language) || language === 'pt-BR')
+          .map((item) => item.moduleCode)
+          .filter((code): code is string => Boolean(code)),
+      ),
+    );
+
+    return successResponse(moduleCodes.length ? moduleCodes : (mockWebModuleCodes.data ?? []));
   }
 
-  async getWebModuleContentByCode(): Promise<OdinResponse<WebModuleContent[]>> {
-    return mockWebModuleContent as OdinResponse<WebModuleContent[]>;
+  async getWebModuleContentByCode(
+    _domain: string,
+    moduleCode: string,
+    device: string,
+    language: string,
+  ): Promise<OdinResponse<WebModuleContent[]>> {
+    const content =
+      mockWebModuleContent.data?.filter((item) => {
+        const matchesCode = item.moduleCode === moduleCode;
+        const matchesLanguage = !item.languageId || item.languageId === Number(language) || language === 'pt-BR';
+
+        return matchesCode && matchesLanguage && matchesDevice(item.device, device);
+      }) ?? [];
+
+    return successResponse(content);
   }
 
   async getCustomerByCpfNumber(): Promise<OdinResponse<CustomerResponse>> {

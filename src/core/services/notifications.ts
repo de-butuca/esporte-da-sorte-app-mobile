@@ -8,10 +8,10 @@ function getNotifications() {
     Notifications = require("expo-notifications");
     Notifications!.setNotificationHandler({
       handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldShowBanner: true,
-        shouldShowList: true,
-        shouldPlaySound: true,
+        shouldShowAlert: false,
+        shouldShowBanner: false,
+        shouldShowList: false,
+        shouldPlaySound: false,
         shouldSetBadge: false,
       }),
     });
@@ -19,14 +19,8 @@ function getNotifications() {
   return Notifications;
 }
 
-const IN_APP_NOTIFICATION_ID = "promo-in-app";
 const EXIT_NOTIFICATION_ID = "promo-exit";
 const RECURRING_NOTIFICATION_PREFIX = "promo-recurring-";
-
-const IN_APP_MESSAGE = {
-  title: "Voltou na hora certa! ⚽",
-  body: "Aposte nos melhores jogos de hoje com odds especiais!",
-};
 
 const EXIT_MESSAGES = [
   {
@@ -52,20 +46,6 @@ let appStateSubscription: ReturnType<typeof AppState.addEventListener> | null =
 
 function getRandomExitMessage() {
   return EXIT_MESSAGES[Math.floor(Math.random() * EXIT_MESSAGES.length)];
-}
-
-async function fireInAppNotification() {
-  const N = getNotifications();
-  if (!N) return;
-  await N.scheduleNotificationAsync({
-    identifier: IN_APP_NOTIFICATION_ID,
-    content: {
-      title: IN_APP_MESSAGE.title,
-      body: IN_APP_MESSAGE.body,
-      sound: "default",
-    },
-    trigger: null,
-  });
 }
 
 async function scheduleExitNotifications() {
@@ -108,7 +88,6 @@ async function cancelAllPromoNotifications() {
   const N = getNotifications();
   if (!N) return;
   const ids = [
-    IN_APP_NOTIFICATION_ID,
     EXIT_NOTIFICATION_ID,
     ...Array.from({ length: 4 }, (_, i) => `${RECURRING_NOTIFICATION_PREFIX}${i + 1}`),
   ];
@@ -136,8 +115,6 @@ export function setupAppLifecycleNotifications() {
   appStateSubscription?.remove();
   let previousState: AppStateStatus = AppState.currentState;
 
-  fireInAppNotification();
-
   appStateSubscription = AppState.addEventListener(
     "change",
     async (nextState) => {
@@ -148,7 +125,6 @@ export function setupAppLifecycleNotifications() {
         await scheduleExitNotifications();
       } else if (nextState === "active") {
         await cancelAllPromoNotifications();
-        await fireInAppNotification();
       }
       previousState = nextState;
     }

@@ -11,7 +11,7 @@ export function PromoBanner() {
 	return (
 		<PBS.wrapper>
 			<LinearGradient
-				colors={[lightColors.primary, lightColors.accent]}
+				colors={[lightColors.secondary, lightColors.primary]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.gradient}
@@ -23,11 +23,7 @@ export function PromoBanner() {
 						<PBS.buttonText>Depositar agora</PBS.buttonText>
 					</PBS.button>
 				</PBS.content>
-				<ImageBackground
-					source={PROMO_IMAGE}
-					style={styles.image}
-					resizeMode="cover"
-				/>
+				<ImageBackground source={PROMO_IMAGE} style={styles.image} resizeMode="cover" />
 			</LinearGradient>
 		</PBS.wrapper>
 	);
@@ -41,9 +37,9 @@ const styles = StyleSheet.create({
 		overflow: 'hidden',
 	},
 	image: {
-		width: RFValue(180),
-		height: RFValue(190),
-		marginTop: RFValue(-14),
-		marginRight: RFValue(-10),
+		width: RFValue(130),
+		height: RFValue(140),
+		marginTop: RFValue(-10),
+		marginRight: RFValue(-8),
 	},
 });

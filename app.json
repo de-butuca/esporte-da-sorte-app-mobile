@@ -35,6 +35,10 @@
       "expo-font",
       "expo-secure-store",
       "expo-image",
+      ["expo-notifications", {
+        "icon": "./assets/icone-padded.png",
+        "color": "#023697"
+      }],
       "./plugins/native-splash-plugin",
       "./plugins/android-only-notifications"
     ]

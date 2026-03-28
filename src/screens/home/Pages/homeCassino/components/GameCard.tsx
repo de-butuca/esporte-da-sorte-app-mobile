@@ -25,8 +25,8 @@ export const GameCard = React.memo(function GameCard({
 	onPress,
 }: GameCardProps) {
 	return (
-		<GCS.container {...{ width } as any} onPress={onPress}>
-			<GCS.thumbnail {...{ width } as any}>
+		<GCS.container {...({ width } as any)} onPress={onPress}>
+			<GCS.thumbnail {...({ width } as any)}>
 				<Image source={image} style={styles.thumbnailImage} contentFit="cover" />
 				{badge === 'live' && (
 					<GCS.badge type="live">

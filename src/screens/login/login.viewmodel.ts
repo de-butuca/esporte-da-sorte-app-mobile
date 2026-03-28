@@ -2,7 +2,7 @@ import { useSessionStore } from '@/core/session/useSessionStore';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from './login.schema';
-import { LoginFormData, LoginMethod } from './login.types';
+import { LoginFormData } from './login.types';
 import { useState } from 'react';
 import { useToast } from '@/contexts/Toast/useToast';
 import { useAppNavigation } from '@/navigation/hooks';
@@ -10,30 +10,34 @@ import { useAppNavigation } from '@/navigation/hooks';
 export function useLoginViewModel() {
 	const signIn = useSessionStore((s) => s.signIn);
 	const toastfy = useToast();
-	const { goBack, canGoBack } = useAppNavigation();
+	const { goBack, canGoBack, navigate } = useAppNavigation();
 
-	const [loginMethod, setLoginMethod] = useState<LoginMethod>('usuario');
 	const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		control,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isValid },
+		watch,
 	} = useForm<LoginFormData>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
-			identifier: '',
+			email: '',
 			password: '',
-			keepSession: false,
 		},
+		mode: 'onChange',
 	});
+
+	const emailValue = watch('email');
+	const passwordValue = watch('password');
+	const canSubmit = emailValue.length > 0 && passwordValue.length > 0;
 
 	const onSubmit = async (data: LoginFormData) => {
 		try {
 			setIsLoading(true);
 
 			// Fake login - sera substituido por API real
-			const result = await fakeLogin(data.identifier, data.password);
+			const result = await fakeLogin(data.email, data.password);
 
 			await signIn({
 				user: result.user,
@@ -50,48 +54,29 @@ export function useLoginViewModel() {
 		}
 	};
 
-	const getPlaceholder = () => {
-		switch (loginMethod) {
-			case 'usuario':
-				return 'Usuario';
-			case 'email':
-				return 'E-mail';
-			case 'cpf':
-				return 'CPF';
-		}
-	};
-
-	const getKeyboardType = () => {
-		switch (loginMethod) {
-			case 'email':
-				return 'email-address' as const;
-			case 'cpf':
-				return 'numeric' as const;
-			default:
-				return 'default' as const;
-		}
+	const navigateToRegister = () => {
+		navigate('Register');
 	};
 
 	return {
 		control,
 		errors,
 		isLoading,
-		loginMethod,
-		setLoginMethod,
-		getPlaceholder,
-		getKeyboardType,
+		isValid,
+		canSubmit,
 		handleLogin: handleSubmit(onSubmit),
+		navigateToRegister,
 	};
 }
 
-async function fakeLogin(identifier: string, password: string) {
+async function fakeLogin(email: string, password: string) {
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 
 	return {
 		token: 'fake-jwt-token',
 		user: {
 			id: '1',
-			name: identifier,
+			name: email,
 		},
 	};
 }

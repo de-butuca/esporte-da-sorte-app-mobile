@@ -37,7 +37,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 			onPress={handlePress}
 			activeOpacity={0.7}
 		>
-			<tab.Icon size={RFValue(20)} color={color} strokeWidth={isActive ? 2.2 : 1.5} />
+			<tab.Icon size={RFValue(18)} color={color} strokeWidth={isActive ? 2.2 : 1.5} />
 			<Text
 				style={[
 					styles.label,
@@ -96,18 +96,18 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingHorizontal: RFValue(16),
-		paddingTop: RFValue(8),
-		height: RFValue(52),
+		paddingHorizontal: RFValue(12),
+		paddingTop: RFValue(6),
+		height: RFValue(46),
 	},
 	tab: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		gap: RFValue(3),
+		gap: RFValue(2),
 	},
 	label: {
-		fontSize: RFValue(10),
+		fontSize: RFValue(9),
 		textAlign: 'center',
 	},
 	activeDot: {

@@ -20,27 +20,33 @@ interface GameRowProps {
 	onGamePress?: (gameId: string) => void;
 }
 
-export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRowProps) {
+export function GameRow({ games, cardWidth = RFValue(110), onGamePress }: GameRowProps) {
 	const { guardNavigation } = useRequireAuth();
 
-	const handleGamePress = useCallback((game: Game) => {
-		const category = game.badge === 'live' ? 'live' : 'casino';
-		guardNavigation(category, () => {
-			if (onGamePress) onGamePress(game.id);
-		});
-	}, [guardNavigation, onGamePress]);
+	const handleGamePress = useCallback(
+		(game: Game) => {
+			const category = game.badge === 'live' ? 'live' : 'casino';
+			guardNavigation(category, () => {
+				if (onGamePress) onGamePress(game.id);
+			});
+		},
+		[guardNavigation, onGamePress]
+	);
 
-	const renderItem = useCallback(({ item }: { item: Game }) => (
-		<GameCard
-			image={item.image}
-			name={item.name}
-			provider={item.provider}
-			badge={item.badge}
-			players={item.players}
-			width={cardWidth}
-			onPress={() => handleGamePress(item)}
-		/>
-	), [cardWidth, handleGamePress]);
+	const renderItem = useCallback(
+		({ item }: { item: Game }) => (
+			<GameCard
+				image={item.image}
+				name={item.name}
+				provider={item.provider}
+				badge={item.badge}
+				players={item.players}
+				width={cardWidth}
+				onPress={() => handleGamePress(item)}
+			/>
+		),
+		[cardWidth, handleGamePress]
+	);
 
 	const keyExtractor = useCallback((item: Game) => item.id, []);
 

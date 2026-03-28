@@ -14,9 +14,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { BCS } from '../homeCassino.styled';
 
 const { width: SCREEN_W } = Dimensions.get('window');
-const BANNER_W = SCREEN_W - RFValue(40);
-const BANNER_H = RFValue(150);
-const BANNER_GAP = RFValue(12);
+const BANNER_W = SCREEN_W - RFValue(32);
+const BANNER_H = RFValue(120);
+const BANNER_GAP = RFValue(10);
 
 interface Banner {
 	id: string;
@@ -26,10 +26,30 @@ interface Banner {
 }
 
 const BANNERS: Banner[] = [
-	{ id: '1', subtitle: 'Participe agora', title: 'PREMIO\nDIARIO', image: require('@assets/images/banners/banner-1.png') },
-	{ id: '2', subtitle: 'Participe agora', title: 'TORNEIOS\n2026', image: require('@assets/images/banners/banner-2.png') },
-	{ id: '3', subtitle: 'Participe agora', title: 'PREMIO\nDIARIO', image: require('@assets/images/banners/banner-3.png') },
-	{ id: '4', subtitle: 'Participe agora', title: 'PREMIOS\nDIARIO', image: require('@assets/images/banners/banner-4.png') },
+	{
+		id: '1',
+		subtitle: 'Participe agora',
+		title: 'PREMIO\nDIARIO',
+		image: require('@assets/images/banners/banner-1.png'),
+	},
+	{
+		id: '2',
+		subtitle: 'Participe agora',
+		title: 'TORNEIOS\n2026',
+		image: require('@assets/images/banners/banner-2.png'),
+	},
+	{
+		id: '3',
+		subtitle: 'Participe agora',
+		title: 'PREMIO\nDIARIO',
+		image: require('@assets/images/banners/banner-3.png'),
+	},
+	{
+		id: '4',
+		subtitle: 'Participe agora',
+		title: 'PREMIOS\nDIARIO',
+		image: require('@assets/images/banners/banner-4.png'),
+	},
 ];
 
 export function BannerCarousel() {
@@ -41,26 +61,25 @@ export function BannerCarousel() {
 		setActiveIndex(index);
 	}, []);
 
-	const renderBanner = useCallback(({ item }: { item: Banner }) => (
-		<View style={styles.bannerContainer}>
-			<LinearGradient
-				colors={[lightColors.primary, lightColors.accent]}
-				start={{ x: 0, y: 0.5 }}
-				end={{ x: 1, y: 0.5 }}
-				style={styles.banner}
-			>
-				<BCS.bannerContent>
-					<BCS.bannerSubtitle>{item.subtitle}</BCS.bannerSubtitle>
-					<BCS.bannerTitle>{item.title}</BCS.bannerTitle>
-				</BCS.bannerContent>
-				<ImageBackground
-					source={item.image}
-					style={styles.bannerImage}
-					resizeMode="cover"
-				/>
-			</LinearGradient>
-		</View>
-	), []);
+	const renderBanner = useCallback(
+		({ item }: { item: Banner }) => (
+			<View style={styles.bannerContainer}>
+				<LinearGradient
+					colors={[lightColors.secondary, lightColors.primary]}
+					start={{ x: 0, y: 0.5 }}
+					end={{ x: 1, y: 0.5 }}
+					style={styles.banner}
+				>
+					<BCS.bannerContent>
+						<BCS.bannerSubtitle>{item.subtitle}</BCS.bannerSubtitle>
+						<BCS.bannerTitle>{item.title}</BCS.bannerTitle>
+					</BCS.bannerContent>
+					<ImageBackground source={item.image} style={styles.bannerImage} resizeMode="cover" />
+				</LinearGradient>
+			</View>
+		),
+		[]
+	);
 
 	const keyExtractor = useCallback((item: Banner) => item.id, []);
 
@@ -91,25 +110,25 @@ export function BannerCarousel() {
 
 const styles = StyleSheet.create({
 	listContent: {
-		paddingHorizontal: RFValue(20),
+		paddingHorizontal: RFValue(14),
 		gap: BANNER_GAP,
 	},
 	bannerContainer: {
 		width: BANNER_W,
 		height: BANNER_H,
-		borderRadius: RFValue(16),
+		borderRadius: RFValue(12),
 		overflow: 'hidden',
 	},
 	banner: {
 		flex: 1,
-		borderRadius: RFValue(16),
+		borderRadius: RFValue(12),
 		flexDirection: 'row',
 		overflow: 'hidden',
 	},
 	bannerImage: {
-		width: RFValue(200),
-		height: BANNER_H + RFValue(30),
-		marginTop: RFValue(-20),
-		marginRight: RFValue(-10),
+		width: RFValue(140),
+		height: BANNER_H + RFValue(16),
+		marginTop: RFValue(-10),
+		marginRight: RFValue(-8),
 	},
 });
