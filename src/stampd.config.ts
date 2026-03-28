@@ -7,12 +7,12 @@ export const lightColors = {
 	secondary: '#625B71',
 	onSecondary: '#FFFFFF',
 
-	background: '#dddddd',
+	background: '#0D0A1A',
 	onBackground: '#FFFFFF',
 
-	bgNav: '#02003D',
-	bgCard: '#0A0F2E',
-	bgSecondary: '#101828',
+	bgNav: '#120E22',
+	bgCard: '#1A1229',
+	bgSecondary: '#120E22',
 
 	accent: '#38E67D',
 	accentText: '#37E67D',
@@ -40,45 +40,162 @@ export const lightColors = {
 	onError: '#FFFFFF',
 };
 
+/** Dark = Esportes (Dark Arena — navy/green) */
 export const darkColors = {
-	primary: '#023697',
-	onPrimary: 'black',
+	primary: '#00E878',
+	onPrimary: '#0B1120',
 
-	secondary: '#625B71',
+	secondary: '#1B1464',
 	onSecondary: '#FFFFFF',
 
-	background: '#01003A',
+	background: '#0B1120',
 	onBackground: '#FFFFFF',
 
-	bgNav: '#02003D',
-	bgCard: '#0A0F2E',
+	bgNav: '#101828',
+	bgCard: '#1A2332',
 	bgSecondary: '#101828',
 
-	accent: '#38E67D',
-	accentText: '#37E67D',
+	accent: '#00E878',
+	accentText: '#00E878',
 
 	textPrimary: '#FFFFFF',
-	textSecondary: '#F0F0F0',
-	textMuted: '#A0A0B0',
-	textInactive: '#6B6B8A',
+	textSecondary: '#94A3B8',
+	textMuted: '#94A3B8',
+	textInactive: '#475569',
 
-	live: '#FF3B3B',
+	live: '#FF3B30',
 	success: '#22C55E',
 
-	label: '#fff',
-	inputText: '#000000',
-	inputPlaceholder: '#a0a0a0',
-	inputIcon: '#7D5260',
-	inputBackground: '#f5c542',
-	inputPrimary: '#4245d0',
-	inputSercundary: '#ae3c91',
+	label: '#FFFFFF',
+	inputText: '#FFFFFF',
+	inputPlaceholder: '#475569',
+	inputIcon: '#94A3B8',
+	inputBackground: '#1A2332',
+	inputPrimary: '#00E878',
+	inputSercundary: '#00B4D8',
 
-	surface: '#FFFBFE',
-	onSurface: '#1C1B1F',
+	surface: '#1A2332',
+	onSurface: '#E2E8F0',
 
-	error: '#B3261E',
+	error: '#EF4444',
 	onError: '#FFFFFF',
 };
+// ── Theme variants (Cassino / Esportes) ──────────────────────────────────────
+
+export type ThemeVariant = 'cassino' | 'esportes';
+
+/** @deprecated use ThemeVariant */
+export type LoginVariant = ThemeVariant;
+
+/** Casino Royale — purple palette, green accents */
+export const cassinoColors = {
+	// ── Brand ──────────────────────────────────────────────────
+	primary: '#00E878',
+	primaryDark: '#00C466',
+	primaryLight: '#33ED94',
+	onPrimary: '#0D0A1A',
+	secondary: '#1B1464',
+	accent: '#00E878',
+	accentCyan: '#7C3AED',
+
+	// ── Backgrounds ───────────────────────────────────────────
+	background: '#0D0A1A',
+	bgSecondary: '#120E22',
+	bgNav: '#120E22',
+	bgCard: '#1A1229',
+
+	// ── Surfaces ──────────────────────────────────────────────
+	surface1: '#1A1229',
+	surface2: '#251A38',
+	surface3: '#33244A',
+
+	// ── Text ──────────────────────────────────────────────────
+	textPrimary: '#E8E0F5',
+	textSecondary: '#9E91BA',
+	textMuted: '#9E91BA',
+	textDisabled: '#584C71',
+
+	// ── Semantic ──────────────────────────────────────────────
+	success: '#22C55E',
+	error: '#EF4444',
+	warning: '#F59E0B',
+	info: '#818CF8',
+	live: '#E11D48',
+
+	// ── Border / Input ────────────────────────────────────────
+	border: 'rgba(152,129,186,0.2)',
+	inputBackground: '#1A1229',
+	inputPlaceholder: '#584C71',
+	inputFocusBorder: '#00E878',
+	inputErrorBorder: '#E11D48',
+
+	// ── Gradients ─────────────────────────────────────────────
+	gradientStart: '#1B1464',
+	gradientEnd: '#7C3AED',
+} as const;
+
+/** Dark Arena — green/navy palette */
+export const esportesColors = {
+	// ── Brand ──────────────────────────────────────────────────
+	primary: '#00E878',
+	primaryDark: '#00C466',
+	primaryLight: '#33ED94',
+	onPrimary: '#0B1120',
+	secondary: '#1B1464',
+	accent: '#00E878',
+	accentCyan: '#00B4D8',
+
+	// ── Backgrounds ───────────────────────────────────────────
+	background: '#0B1120',
+	bgSecondary: '#101828',
+	bgNav: '#101828',
+	bgCard: '#1A2332',
+
+	// ── Surfaces ──────────────────────────────────────────────
+	surface1: '#1A2332',
+	surface2: '#243447',
+	surface3: '#2D3F54',
+
+	// ── Text ──────────────────────────────────────────────────
+	textPrimary: '#FFFFFF',
+	textSecondary: '#94A3B8',
+	textMuted: '#94A3B8',
+	textDisabled: '#475569',
+
+	// ── Semantic ──────────────────────────────────────────────
+	success: '#22C55E',
+	error: '#EF4444',
+	warning: '#F59E0B',
+	info: '#3B82F6',
+	live: '#FF3B30',
+
+	// ── Border / Input ────────────────────────────────────────
+	border: 'rgba(148,163,184,0.2)',
+	inputBackground: '#1A2332',
+	inputPlaceholder: '#475569',
+	inputFocusBorder: '#00E878',
+	inputErrorBorder: '#EF4444',
+
+	// ── Gradients ─────────────────────────────────────────────
+	gradientStart: '#1B1464',
+	gradientEnd: '#00E878',
+} as const;
+
+export type AppThemeColors = {
+	[K in keyof typeof cassinoColors]: string;
+};
+
+/** @deprecated use AppThemeColors */
+export type LoginThemeColors = AppThemeColors;
+
+export function getThemeColors(variant: ThemeVariant): AppThemeColors {
+	return variant === 'cassino' ? cassinoColors : esportesColors;
+}
+
+/** @deprecated use getThemeColors */
+export const getLoginThemeColors = getThemeColors;
+
+// ── Font family ───────────────────────────────────────────────────────────────
 
 export const fontFamily = {
 	regular: 'Inter_400Regular',

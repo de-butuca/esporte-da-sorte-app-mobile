@@ -6,7 +6,8 @@ import { Controller } from 'react-hook-form';
 import { useRegisterViewModel } from './register.viewmodel';
 import { useAppNavigation } from '@/navigation/hooks';
 import { FormFieldsProvider, FormScreen, useFormField } from '@/components/FormScreen';
-import { useStampdUI } from 'stampd/context';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
+import type { AppThemeColors } from '@/stampd.config';
 import Logo from '@assets/images/logo-square.svg';
 import { ArrowLeft, MessageSquare, User, Mail, Phone, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react-native';
 import type { PasswordStrength } from './register.types';
@@ -20,20 +21,20 @@ const STRENGTH_PROGRESS: Record<PasswordStrength, number> = {
 function RegisterHeader() {
 	const insets = useSafeAreaInsets();
 	const { canGoBack, goBack } = useAppNavigation();
-	const { theme } = useStampdUI();
+	const colors = useAuthThemeStore((s) => s.colors);
 
 	return (
-		<View style={[styles.header, { paddingTop: insets.top, backgroundColor: theme.colors.bgNav }]}>
+		<View style={[styles.header, { paddingTop: insets.top, backgroundColor: colors.bgNav }]}>
 			<View style={styles.headerRow}>
 				{canGoBack() ? (
 					<TouchableOpacity onPress={goBack} activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-						<ArrowLeft size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
+						<ArrowLeft size={RFValue(20)} color={colors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 				) : (
 					<View style={styles.placeholderIcon} />
 				)}
 				<TouchableOpacity activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-					<MessageSquare size={RFValue(20)} color={theme.colors.textPrimary} strokeWidth={2} />
+					<MessageSquare size={RFValue(20)} color={colors.textPrimary} strokeWidth={2} />
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -49,11 +50,12 @@ export default function RegisterScreen() {
 }
 
 function RegisterForm() {
+	const colors = useAuthThemeStore((s) => s.colors);
+
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-	const togglePassword = useCallback(() => setShowPassword((value) => !value), []);
-	const toggleConfirmPassword = useCallback(() => setShowConfirmPassword((value) => !value), []);
-	const { theme } = useStampdUI();
+	const togglePassword = useCallback(() => setShowPassword((s) => !s), []);
+	const toggleConfirmPassword = useCallback(() => setShowConfirmPassword((s) => !s), []);
 
 	const {
 		control,
@@ -86,85 +88,83 @@ function RegisterForm() {
 
 	const strengthColors = useMemo(
 		() => ({
-			weak: theme.colors.error,
+			weak: colors.error,
 			medium: '#FFA500',
-			strong: theme.colors.accent,
+			strong: colors.accent,
 		}),
-		[theme.colors.error, theme.colors.accent],
+		[colors.error, colors.accent],
 	);
 
-	const colors = useMemo(
+	const dynamicColors = useMemo(
 		() => ({
-			inputBg: theme.colors.bgCard,
-			inputPlaceholder: theme.colors.textMuted,
+			inputBg: colors.bgCard,
+			inputPlaceholder: colors.textMuted,
 			divider: 'rgba(160,160,200,0.1)',
-			strengthBarBg: theme.colors.bgCard,
-			checkboxBg: theme.colors.bgCard,
-			checkboxCheckedBg: theme.colors.primary,
-			errorCardBg: theme.colors.bgCard,
-			primaryBtn: theme.colors.primary,
-			primaryBtnText: theme.colors.textPrimary,
+			strengthBarBg: colors.bgCard,
+			checkboxBg: colors.bgCard,
+			checkboxCheckedBg: colors.primary,
+			primaryBtn: colors.primary,
+			primaryBtnText: colors.onPrimary,
 		}),
-		[theme],
+		[colors],
 	);
 
 	const currentStrengthColor = passwordStrength ? strengthColors[passwordStrength] : undefined;
 
 	return (
-		<FormScreen header={<RegisterHeader />}>
+		<FormScreen header={<RegisterHeader />} backgroundColor={colors.background}>
 			<View style={styles.content}>
 				<View style={styles.logoContainer}>
 					<Logo width={RFValue(100)} height={RFValue(34)} />
 				</View>
 
 				<View style={styles.titleBlock}>
-					<Text style={[styles.title, { color: theme.colors.textPrimary }]}>Criar conta</Text>
-					<Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+					<Text style={[styles.title, { color: colors.textPrimary }]}>Criar conta</Text>
+					<Text style={[styles.subtitle, { color: colors.textSecondary }]}>
 						Preencha os dados abaixo para comecar.
 					</Text>
 				</View>
 
 				<View style={styles.formBlock}>
-					{configWarning ? (
-						<InfoCard title="Contrato em fallback" description={configWarning} theme={theme} />
-					) : null}
+					{configWarning ? <InfoCard title="Contrato em fallback" description={configWarning} colors={colors} /> : null}
 
 					<Controller
 						control={control}
 						name="cpf"
-						render={({ field: { onChange, value }, fieldState }) => (
+						render={({ field: { onChange, onBlur, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={[styles.label, { color: theme.colors.textPrimary }]}>CPF</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>CPF</Text>
 								<View
 									style={[
 										styles.inputWrapperWithIcon,
-										{ backgroundColor: colors.inputBg },
-										fieldState.error && { borderColor: theme.colors.error },
+										{ backgroundColor: dynamicColors.inputBg },
+										fieldState.error && { borderColor: colors.error },
 									]}
 								>
 									<View style={styles.inputIconWrap}>
-										<User size={RFValue(16)} color={colors.inputPlaceholder} strokeWidth={2} />
+										<User size={RFValue(16)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 									</View>
 									<TextInput
 										ref={cpfField.ref}
 										returnKeyType={cpfField.returnKeyType}
 										onSubmitEditing={cpfField.onSubmitEditing}
 										blurOnSubmit={cpfField.blurOnSubmit}
-										style={[styles.inputWithIcon, { color: theme.colors.textPrimary }]}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="000.000.000-00"
-										placeholderTextColor={colors.inputPlaceholder}
+										placeholderTextColor={dynamicColors.inputPlaceholder}
 										value={value}
 										onChangeText={(text) => handleCpfChange(text, onChange)}
 										onBlur={() => {
+											onBlur();
 											void handleCpfBlur(value);
 										}}
 										keyboardType="numeric"
-										cursorColor={theme.colors.accent}
+										cursorColor={colors.accent}
 									/>
 								</View>
-								{isCheckingCpf ? <HelperMessage message="Validando CPF no mock..." theme={theme} /> : null}
-								{!fieldState.error && cpfLookupLabel ? <HelperMessage message={cpfLookupLabel} theme={theme} /> : null}
-								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
+								{isCheckingCpf ? <HelperMessage message="Validando CPF no mock..." colors={colors} /> : null}
+								{!fieldState.error && cpfLookupLabel ? <HelperMessage message={cpfLookupLabel} colors={colors} /> : null}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} color={colors.error} /> : null}
 							</View>
 						)}
 					/>
@@ -172,39 +172,40 @@ function RegisterForm() {
 					<Controller
 						control={control}
 						name="email"
-						render={({ field: { onChange, value }, fieldState }) => (
+						render={({ field: { onChange, onBlur, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={[styles.label, { color: theme.colors.textPrimary }]}>E-mail</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>E-mail</Text>
 								<View
 									style={[
 										styles.inputWrapperWithIcon,
-										{ backgroundColor: colors.inputBg },
-										fieldState.error && { borderColor: theme.colors.error },
+										{ backgroundColor: dynamicColors.inputBg },
+										fieldState.error && { borderColor: colors.error },
 									]}
 								>
 									<View style={styles.inputIconWrap}>
-										<Mail size={RFValue(16)} color={colors.inputPlaceholder} strokeWidth={2} />
+										<Mail size={RFValue(16)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 									</View>
 									<TextInput
 										ref={emailField.ref}
 										returnKeyType={emailField.returnKeyType}
 										onSubmitEditing={emailField.onSubmitEditing}
 										blurOnSubmit={emailField.blurOnSubmit}
-										style={[styles.inputWithIcon, { color: theme.colors.textPrimary }]}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="seu@email.com"
-										placeholderTextColor={colors.inputPlaceholder}
+										placeholderTextColor={dynamicColors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
 										onBlur={() => {
+											onBlur();
 											void handleEmailBlur(value);
 										}}
 										autoCapitalize="none"
 										keyboardType="email-address"
-										cursorColor={theme.colors.accent}
+										cursorColor={colors.accent}
 									/>
 								</View>
-								{isCheckingEmail ? <HelperMessage message="Validando e-mail no mock..." theme={theme} /> : null}
-								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
+								{isCheckingEmail ? <HelperMessage message="Validando e-mail no mock..." colors={colors} /> : null}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} color={colors.error} /> : null}
 							</View>
 						)}
 					/>
@@ -212,81 +213,83 @@ function RegisterForm() {
 					<Controller
 						control={control}
 						name="phone"
-						render={({ field: { onChange, value }, fieldState }) => (
+						render={({ field: { onChange, onBlur, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={[styles.label, { color: theme.colors.textPrimary }]}>Celular</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>Celular</Text>
 								<View
 									style={[
 										styles.inputWrapperWithIcon,
-										{ backgroundColor: colors.inputBg },
-										fieldState.error && { borderColor: theme.colors.error },
+										{ backgroundColor: dynamicColors.inputBg },
+										fieldState.error && { borderColor: colors.error },
 									]}
 								>
 									<View style={styles.inputIconWrap}>
-										<Phone size={RFValue(16)} color={colors.inputPlaceholder} strokeWidth={2} />
+										<Phone size={RFValue(16)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 									</View>
 									<TextInput
 										ref={phoneField.ref}
 										returnKeyType={phoneField.returnKeyType}
 										onSubmitEditing={phoneField.onSubmitEditing}
 										blurOnSubmit={phoneField.blurOnSubmit}
-										style={[styles.inputWithIcon, { color: theme.colors.textPrimary }]}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="(00) 00000-0000"
-										placeholderTextColor={colors.inputPlaceholder}
+										placeholderTextColor={dynamicColors.inputPlaceholder}
 										value={value}
 										onChangeText={(text) => handlePhoneChange(text, onChange)}
+										onBlur={onBlur}
 										keyboardType="phone-pad"
-										cursorColor={theme.colors.accent}
+										cursorColor={colors.accent}
 									/>
 								</View>
-								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} color={colors.error} /> : null}
 							</View>
 						)}
 					/>
 
-					<View style={[styles.divider, { backgroundColor: colors.divider }]} />
+					<View style={[styles.divider, { backgroundColor: dynamicColors.divider }]} />
 
 					<Controller
 						control={control}
 						name="password"
-						render={({ field: { onChange, value }, fieldState }) => (
+						render={({ field: { onChange, onBlur, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={[styles.label, { color: theme.colors.textPrimary }]}>Senha</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>Senha</Text>
 								<View
 									style={[
 										styles.inputWrapperWithIcon,
-										{ backgroundColor: colors.inputBg },
-										fieldState.error && { borderColor: theme.colors.error },
+										{ backgroundColor: dynamicColors.inputBg },
+										fieldState.error && { borderColor: colors.error },
 									]}
 								>
 									<View style={styles.inputIconWrap}>
-										<Lock size={RFValue(16)} color={colors.inputPlaceholder} strokeWidth={2} />
+										<Lock size={RFValue(16)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 									</View>
 									<TextInput
 										ref={passwordField.ref}
 										returnKeyType={passwordField.returnKeyType}
 										onSubmitEditing={passwordField.onSubmitEditing}
 										blurOnSubmit={passwordField.blurOnSubmit}
-										style={[styles.inputWithIcon, { color: theme.colors.textPrimary }]}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder={passwordPlaceholder}
-										placeholderTextColor={colors.inputPlaceholder}
+										placeholderTextColor={dynamicColors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
+										onBlur={onBlur}
 										secureTextEntry={!showPassword}
 										autoCapitalize="none"
-										cursorColor={theme.colors.accent}
+										cursorColor={colors.accent}
 									/>
 									<TouchableOpacity onPress={togglePassword} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
 										{showPassword ? (
-											<EyeOff size={RFValue(18)} color={colors.inputPlaceholder} strokeWidth={2} />
+											<EyeOff size={RFValue(18)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 										) : (
-											<Eye size={RFValue(18)} color={colors.inputPlaceholder} strokeWidth={2} />
+											<Eye size={RFValue(18)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 										)}
 									</TouchableOpacity>
 								</View>
 								{passwordStrength ? (
 									<View style={styles.strengthRow}>
-										<View style={[styles.strengthBarBg, { backgroundColor: colors.strengthBarBg }]}>
+										<View style={[styles.strengthBarBg, { backgroundColor: dynamicColors.strengthBarBg }]}>
 											<View
 												style={[
 													styles.strengthBarFill,
@@ -300,8 +303,8 @@ function RegisterForm() {
 										<Text style={[styles.strengthText, { color: currentStrengthColor }]}>{passwordStrengthLabel}</Text>
 									</View>
 								) : null}
-								<HelperMessage message={passwordHint} theme={theme} />
-								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
+								<HelperMessage message={passwordHint} colors={colors} />
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} color={colors.error} /> : null}
 							</View>
 						)}
 					/>
@@ -309,47 +312,48 @@ function RegisterForm() {
 					<Controller
 						control={control}
 						name="confirmPassword"
-						render={({ field: { onChange, value }, fieldState }) => (
+						render={({ field: { onChange, onBlur, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={[styles.label, { color: theme.colors.textPrimary }]}>Confirmar senha</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>Confirmar senha</Text>
 								<View
 									style={[
 										styles.inputWrapperWithIcon,
-										{ backgroundColor: colors.inputBg },
-										fieldState.error && { borderColor: theme.colors.error },
+										{ backgroundColor: dynamicColors.inputBg },
+										fieldState.error && { borderColor: colors.error },
 									]}
 								>
 									<View style={styles.inputIconWrap}>
-										<Lock size={RFValue(16)} color={colors.inputPlaceholder} strokeWidth={2} />
+										<Lock size={RFValue(16)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 									</View>
 									<TextInput
 										ref={confirmPasswordField.ref}
 										returnKeyType={confirmPasswordField.returnKeyType}
 										onSubmitEditing={confirmPasswordField.onSubmitEditing}
 										blurOnSubmit={confirmPasswordField.blurOnSubmit}
-										style={[styles.inputWithIcon, { color: theme.colors.textPrimary }]}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="Digite a senha novamente"
-										placeholderTextColor={colors.inputPlaceholder}
+										placeholderTextColor={dynamicColors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
+										onBlur={onBlur}
 										secureTextEntry={!showConfirmPassword}
 										autoCapitalize="none"
-										cursorColor={theme.colors.accent}
+										cursorColor={colors.accent}
 									/>
 									<TouchableOpacity onPress={toggleConfirmPassword} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
 										{showConfirmPassword ? (
-											<EyeOff size={RFValue(18)} color={colors.inputPlaceholder} strokeWidth={2} />
+											<EyeOff size={RFValue(18)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 										) : (
-											<Eye size={RFValue(18)} color={colors.inputPlaceholder} strokeWidth={2} />
+											<Eye size={RFValue(18)} color={dynamicColors.inputPlaceholder} strokeWidth={2} />
 										)}
 									</TouchableOpacity>
 								</View>
-								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} color={colors.error} /> : null}
 							</View>
 						)}
 					/>
 
-					<View style={[styles.divider, { backgroundColor: colors.divider }]} />
+					<View style={[styles.divider, { backgroundColor: dynamicColors.divider }]} />
 
 					<Controller
 						control={control}
@@ -360,25 +364,25 @@ function RegisterForm() {
 									<View
 										style={[
 											styles.checkbox,
-											value ? { backgroundColor: colors.checkboxCheckedBg } : { backgroundColor: colors.checkboxBg },
+											value ? { backgroundColor: dynamicColors.checkboxCheckedBg } : { backgroundColor: dynamicColors.checkboxBg },
 										]}
 									/>
-									<Text style={[styles.termsText, { color: theme.colors.textSecondary }]}>
-										Li e aceito os <Text style={[styles.termsLink, { color: theme.colors.primary }]}>Termos de Uso</Text>{' '}
-										e a <Text style={[styles.termsLink, { color: theme.colors.primary }]}>Politica de Privacidade</Text>
+									<Text style={[styles.termsText, { color: colors.textSecondary }]}>
+										Li e aceito os <Text style={[styles.termsLink, { color: colors.primary }]}>Termos de Uso</Text>{' '}
+										e a <Text style={[styles.termsLink, { color: colors.primary }]}>Politica de Privacidade</Text>
 									</Text>
 								</TouchableOpacity>
-								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} theme={theme} /> : null}
+								{fieldState.error ? <ErrorMessage message={fieldState.error.message ?? ''} color={colors.error} /> : null}
 							</View>
 						)}
 					/>
 
 					{hasFormErrors ? (
-						<View style={[styles.errorCard, { backgroundColor: colors.errorCardBg, borderColor: theme.colors.error }]}>
-							<AlertCircle size={RFValue(16)} color={theme.colors.error} strokeWidth={2} />
+						<View style={[styles.errorCard, { backgroundColor: dynamicColors.inputBg, borderColor: colors.error }]}>
+							<AlertCircle size={RFValue(16)} color={colors.error} strokeWidth={2} />
 							<View style={styles.errorCardContent}>
-								<Text style={[styles.errorCardTitle, { color: theme.colors.error }]}>Corrija os erros acima</Text>
-								<Text style={[styles.errorCardDesc, { color: theme.colors.textSecondary }]}>
+								<Text style={[styles.errorCardTitle, { color: colors.error }]}>Corrija os erros acima</Text>
+								<Text style={[styles.errorCardDesc, { color: colors.textSecondary }]}>
 									Alguns campos precisam de atencao.
 								</Text>
 							</View>
@@ -386,32 +390,28 @@ function RegisterForm() {
 					) : null}
 
 					{unsupportedContractFields.length ? (
-						<InfoCard
-							title="Campos fora da UI atual"
-							description={unsupportedContractFields.join(', ')}
-							theme={theme}
-						/>
+						<InfoCard title="Campos fora da UI atual" description={unsupportedContractFields.join(', ')} colors={colors} />
 					) : null}
 				</View>
 
 				<TouchableOpacity
-					style={[styles.primaryBtn, { backgroundColor: colors.primaryBtn }, !canSubmit && styles.btnDisabled]}
+					style={[styles.primaryBtn, { backgroundColor: dynamicColors.primaryBtn }, !canSubmit && styles.btnDisabled]}
 					onPress={handleRegister}
 					activeOpacity={0.8}
 					disabled={isLoading || !canSubmit}
 				>
 					{isLoading ? (
-						<ActivityIndicator color={colors.primaryBtnText} size="small" />
+						<ActivityIndicator color={dynamicColors.primaryBtnText} size="small" />
 					) : (
-						<Text style={[styles.primaryBtnText, { color: colors.primaryBtnText }]}>
+						<Text style={[styles.primaryBtnText, { color: dynamicColors.primaryBtnText }]}>
 							{isConfigLoading ? 'Carregando regras...' : 'Criar conta'}
 						</Text>
 					)}
 				</TouchableOpacity>
 
 				<TouchableOpacity onPress={navigateToLogin} activeOpacity={0.7} style={styles.loginLinkWrap}>
-					<Text style={[styles.loginLinkText, { color: theme.colors.textSecondary }]}>
-						Ja tem uma conta? <Text style={[styles.loginLinkBold, { color: theme.colors.primary }]}>Entrar</Text>
+					<Text style={[styles.loginLinkText, { color: colors.textSecondary }]}>
+						Ja tem uma conta? <Text style={[styles.loginLinkBold, { color: colors.primary }]}>Entrar</Text>
 					</Text>
 				</TouchableOpacity>
 			</View>
@@ -419,19 +419,19 @@ function RegisterForm() {
 	);
 }
 
-function ErrorMessage({ message, theme }: { message: string; theme: any }) {
+function ErrorMessage({ message, color }: { message: string; color: string }) {
 	return (
 		<View style={styles.errorRow}>
-			<AlertCircle size={RFValue(12)} color={theme.colors.error} strokeWidth={2} />
-			<Text style={[styles.errorText, { color: theme.colors.error }]}>{message}</Text>
+			<AlertCircle size={RFValue(12)} color={color} strokeWidth={2} />
+			<Text style={[styles.errorText, { color }]}>{message}</Text>
 		</View>
 	);
 }
 
-function HelperMessage({ message, theme }: { message: string; theme: any }) {
+function HelperMessage({ message, colors }: { message: string; colors: AppThemeColors }) {
 	return (
 		<View style={styles.helperRow}>
-			<Text style={[styles.helperText, { color: theme.colors.textMuted }]}>{message}</Text>
+			<Text style={[styles.helperText, { color: colors.textMuted }]}>{message}</Text>
 		</View>
 	);
 }
@@ -439,18 +439,18 @@ function HelperMessage({ message, theme }: { message: string; theme: any }) {
 function InfoCard({
 	title,
 	description,
-	theme,
+	colors,
 }: {
 	title: string;
 	description: string;
-	theme: any;
+	colors: AppThemeColors;
 }) {
 	return (
-		<View style={[styles.infoCard, { backgroundColor: theme.colors.bgCard }]}>
-			<AlertCircle size={RFValue(16)} color={theme.colors.textSecondary} strokeWidth={2} />
+		<View style={[styles.infoCard, { backgroundColor: colors.bgCard }]}>
+			<AlertCircle size={RFValue(16)} color={colors.textSecondary} strokeWidth={2} />
 			<View style={styles.infoCardContent}>
-				<Text style={[styles.infoCardTitle, { color: theme.colors.textPrimary }]}>{title}</Text>
-				<Text style={[styles.infoCardDesc, { color: theme.colors.textSecondary }]}>{description}</Text>
+				<Text style={[styles.infoCardTitle, { color: colors.textPrimary }]}>{title}</Text>
+				<Text style={[styles.infoCardDesc, { color: colors.textSecondary }]}>{description}</Text>
 			</View>
 		</View>
 	);

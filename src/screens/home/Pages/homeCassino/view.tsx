@@ -12,7 +12,7 @@ import { lightColors } from '@/stampd.config';
 import { ButtonBase } from '@/components/Button';
 
 export function HomeCassino() {
-	const { requireAuth } = useAuthGuard();
+	const { requireAuth } = useAuthGuard('cassino');
 	const { sections, isLoading, isError, refetch } = useHomeCassinoViewModel();
 
 	const handleGamePress = useCallback(

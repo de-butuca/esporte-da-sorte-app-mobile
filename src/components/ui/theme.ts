@@ -2,7 +2,7 @@
  * EDS Design System — UI Theme tokens (React Native)
  * Centralized tokens for all UI components.
  */
-import { lightColors, fontFamily } from '@/theme/design-tokens';
+import { lightColors, fontFamily } from '@/stampd.config';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 export const ui = {

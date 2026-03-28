@@ -2,10 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Image, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { Menu, Search, Settings } from 'lucide-react-native';
-import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
-import { useAppNavigation } from '@/navigation/hooks';
-import Logo from '@assets/images/logo-square.svg';
+import { Search, Settings } from 'lucide-react-native';
+import LogoVerde from '@assets/esportesDaSorteExtensoVerde.svg';
+import LogoBranco from '@assets/esportesDaSorteExtensoBranco.svg';
 import Animated, {
 	useAnimatedStyle,
 	SharedValue,
@@ -16,6 +15,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useStampdUI } from 'stampd/context';
+import { useSessionContext } from '@/contexts/SessionContext';
 import { HHS } from '../homeHeader.styled';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
@@ -28,20 +28,18 @@ export type CategoryTab = 'cassino' | 'esportes';
 
 interface HomeHeaderProps {
 	scrollY: SharedValue<number>;
-	activeCategory: CategoryTab;
-	onCategoryChange: (category: CategoryTab) => void;
 }
 
-export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHeaderProps) {
+export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	const insets = useSafeAreaInsets();
 	const navigation = useAppNavigation();
 	const { theme } = useStampdUI();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
-	const { open: openSidebar } = useSidebar();
+	const { activeCategory, setActiveCategory } = useSessionContext();
 	const [tabWidth, setTabWidth] = useState(0);
 	const pillX = useSharedValue(0);
 
-	const handleCategoryPress = useCallback((category: CategoryTab) => onCategoryChange(category), [onCategoryChange]);
+	const handleCategoryPress = useCallback((category: CategoryTab) => setActiveCategory(category), [setActiveCategory]);
 
 	const handleLogin = useCallback(() => requireAuth(() => {}), [requireAuth]);
 	const handleOpenSearch = useCallback(() => navigation.navigate('Search'), [navigation]);
@@ -83,10 +81,11 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	return (
 		<View style={containerStyle}>
 			<HHS.topRow>
-				<HHS.iconBtn onPress={openSidebar}>
-					<Menu size={RFValue(22)} color={theme.colors.textPrimary} strokeWidth={2} />
-				</HHS.iconBtn>
-				<Logo width={RFValue(80)} height={RFValue(28)} />
+				{activeCategory === 'esportes' ? (
+					<LogoVerde width={92} height={32} />
+				) : (
+					<LogoBranco width={101} height={35} />
+				)}
 
 				<HHS.actions>
 					<HHS.iconBtn onPress={handleOpenSearch}>

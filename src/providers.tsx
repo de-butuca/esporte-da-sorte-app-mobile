@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ToastProvider } from './contexts/Toast/ToastProvider';
 import { ApiRepositoryProvider } from './contexts/ApiRepositoryContext';
 import { SidebarProvider } from './contexts/Sidebar/SidebarProvider';
+import { SessionProvider } from './contexts/SessionContext';
 import { config } from './stampd.config';
 
 const queryClient = new QueryClient();
@@ -28,8 +29,10 @@ export function AppProviders({ children }: IAppProvidersProps) {
 							<ApiRepositoryProvider>
 								<ToastProvider>
 									<SidebarProvider>
-									<AppContent>{children}</AppContent>
-								</SidebarProvider>
+										<SessionProvider>
+											<AppContent>{children}</AppContent>
+										</SessionProvider>
+									</SidebarProvider>
 								</ToastProvider>
 							</ApiRepositoryProvider>
 						</NavigationContainer>

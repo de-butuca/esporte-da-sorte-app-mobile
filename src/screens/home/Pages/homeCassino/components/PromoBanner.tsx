@@ -2,16 +2,18 @@ import React from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { LinearGradient } from 'expo-linear-gradient';
-import { lightColors } from '@/stampd.config';
+import { useStampdUI } from 'stampd/context';
 import { PBS } from '../homeCassino.styled';
 
 const PROMO_IMAGE = require('@assets/images/banners/banner-3.png');
 
 export function PromoBanner() {
+	const { theme } = useStampdUI();
+
 	return (
 		<PBS.wrapper>
 			<LinearGradient
-				colors={[lightColors.secondary, lightColors.primary]}
+				colors={[theme.colors.secondary, theme.colors.primary]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.gradient}

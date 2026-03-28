@@ -44,3 +44,4 @@ yarn-error.*
 .claude/settings.local.json
 package-lock.json
 yarn.lockpackage-lock.json
+package-lock.json

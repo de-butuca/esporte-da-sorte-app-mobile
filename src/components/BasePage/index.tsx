@@ -1,82 +1,98 @@
+import React from 'react';
 import {
+	View,
+	ScrollView,
+	KeyboardAvoidingView,
+	TouchableWithoutFeedback,
 	Keyboard,
-	KeyboardAvoidingViewProps,
 	Platform,
 	RefreshControl,
-	ScrollViewProps,
 	StyleSheet,
-	TouchableWithoutFeedback,
+	ScrollViewProps,
+	KeyboardAvoidingViewProps,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BPS } from './styles';
 import { useStampdUI } from 'stampd/context';
-import { useMemo } from 'react';
-
-type BasePageType = 'view' | 'scroll' | 'form';
 
 interface BasePageProps {
-	children?: React.ReactNode;
-	type?: BasePageType;
+	children: React.ReactNode;
+
+	// comportamento
+	scroll?: boolean;
+	form?: boolean;
+
+	// scroll
 	refreshing?: boolean;
 	onRefresh?: () => void;
 	scrollProps?: ScrollViewProps;
+
+	// keyboard
 	keyboardProps?: KeyboardAvoidingViewProps;
+
+	// layout
 	padding?: number;
+	fullscreen?: boolean;
 }
 
 export function BasePage({
 	children,
-	type = 'view',
+	scroll,
+	form,
 	refreshing = false,
 	onRefresh,
 	scrollProps,
 	keyboardProps,
-	padding = 12,
+	padding = 16,
+	fullscreen = false,
 }: BasePageProps) {
 	const { theme } = useStampdUI();
 
-	const paddingStyle = useMemo(() => ({ padding }), [padding]);
-	const formStyle = useMemo(() => ({ flex: 1, padding }), [padding]);
-	const scrollContentStyle = useMemo(() => ({ padding }), [padding]);
-	const safeAreaStyle = useMemo(
-		() => [baseStyles.fill, { backgroundColor: theme.colors.background }],
-		[theme.colors.background],
+	const Container = (
+		<SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>{renderContent()}</SafeAreaView>
 	);
 
-	const content = (() => {
-		if (type === 'scroll') {
+	function renderContent() {
+		// 🔥 FULLSCREEN (sem padding)
+		if (fullscreen) {
+			return <View style={styles.flex}>{children}</View>;
+		}
+
+		// 🔥 SCROLL
+		if (scroll) {
 			return (
-				<BPS.ScrollView
-					contentContainerStyle={scrollContentStyle}
-					refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : undefined}
+				<ScrollView
+					contentContainerStyle={{ padding }}
 					keyboardShouldPersistTaps="handled"
+					refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> : undefined}
 					{...scrollProps}
 				>
 					{children}
-				</BPS.ScrollView>
+				</ScrollView>
 			);
 		}
 
-		if (type === 'form') {
+		// 🔥 FORM (keyboard + dismiss)
+		if (form) {
 			return (
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-					<BPS.KeyboardAvoidingView
+					<KeyboardAvoidingView
+						style={[styles.flex, { padding }]}
 						behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-						style={formStyle}
 						{...keyboardProps}
 					>
 						{children}
-					</BPS.KeyboardAvoidingView>
+					</KeyboardAvoidingView>
 				</TouchableWithoutFeedback>
 			);
 		}
 
-		return <BPS.View style={paddingStyle}>{children}</BPS.View>;
-	})();
+		// 🔥 DEFAULT
+		return <View style={{ padding }}>{children}</View>;
+	}
 
-	return <SafeAreaView style={safeAreaStyle}>{content}</SafeAreaView>;
+	return Container;
 }
 
-const baseStyles = StyleSheet.create({
-	fill: { flex: 1 },
+const styles = StyleSheet.create({
+	flex: { flex: 1 },
 });
