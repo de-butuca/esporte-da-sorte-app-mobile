@@ -93,12 +93,10 @@ function GameDetailsContent({
 	game,
 	similarGames,
 	theme,
-	onPlay,
 }: {
 	game: SearchGame;
 	similarGames: SearchGame[];
 	theme: any;
-	onPlay: () => void;
 }) {
 	return (
 		<View style={styles.detailsContainer}>
@@ -106,7 +104,7 @@ function GameDetailsContent({
 			<View style={[styles.detailsHero, { backgroundColor: theme.colors.bgCard }]}>
 				<Image source={game.image} style={styles.detailsHeroImage} contentFit="cover" />
 				<TouchableOpacity style={styles.favoriteBtn} activeOpacity={0.7}>
-					<Star size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+					<Star size={RFValue(16)} color="#FFFFFF" strokeWidth={2} />
 				</TouchableOpacity>
 			</View>
 
@@ -135,7 +133,7 @@ function GameDetailsContent({
 								<Text style={[styles.statLabel, { color: theme.colors.textMuted }]}>VOLATILIDADE</Text>
 								<View style={styles.volatilityRow}>
 									{Array.from({ length: VOLATILITY_ICONS[game.volatility] }).map((_, i) => (
-										<Zap key={i} size={RFValue(14)} color={theme.colors.accent} fill={theme.colors.accent} strokeWidth={0} />
+										<Zap key={i} size={RFValue(12)} color={theme.colors.accent} fill={theme.colors.accent} strokeWidth={0} />
 									))}
 								</View>
 							</View>
@@ -182,16 +180,19 @@ function GameDetailsContent({
 					</ScrollView>
 				</View>
 			)}
-
-			{/* Play Button */}
-			<TouchableOpacity
-				style={[styles.playBtn, { backgroundColor: theme.colors.accent }]}
-				activeOpacity={0.8}
-				onPress={onPlay}
-			>
-				<Text style={[styles.playBtnText, { color: theme.colors.bgNav }]}>JOGAR</Text>
-			</TouchableOpacity>
 		</View>
+	);
+}
+
+function PlayButton({ theme, onPress }: { theme: any; onPress: () => void }) {
+	return (
+		<TouchableOpacity
+			style={[styles.playBtn, { backgroundColor: theme.colors.accent }]}
+			activeOpacity={0.8}
+			onPress={onPress}
+		>
+			<Text style={[styles.playBtnText, { color: theme.colors.bgNav }]}>JOGAR</Text>
+		</TouchableOpacity>
 	);
 }
 
@@ -281,16 +282,16 @@ export default function SearchGamesScreen() {
 			{/* Game Details Bottom Sheet */}
 			<AppBottomSheet
 				ref={sheetRef}
-				snapPoints={['85%']}
+				snapPoints={['80%']}
 				onDismiss={handleCloseGameDetails}
-				scrollable
+				scrollable={false}
+				footer={selectedGame ? <PlayButton theme={theme} onPress={handlePlayGame} /> : undefined}
 			>
 				{selectedGame && (
 					<GameDetailsContent
 						game={selectedGame}
 						similarGames={similarGames}
 						theme={theme}
-						onPlay={handlePlayGame}
 					/>
 				)}
 			</AppBottomSheet>
@@ -337,42 +338,42 @@ const styles = StyleSheet.create({
 	emptyText: { fontSize: RFValue(14), fontWeight: '400' },
 
 	// ── Details Bottom Sheet ──
-	detailsContainer: { gap: RFValue(12), paddingBottom: RFValue(16) },
+	detailsContainer: { gap: RFValue(8) },
 	detailsHero: {
-		width: '100%', aspectRatio: 16 / 10, borderRadius: RFValue(12), overflow: 'hidden',
+		width: '100%', aspectRatio: 2.2, borderRadius: RFValue(10), overflow: 'hidden',
 	},
 	detailsHeroImage: { width: '100%', height: '100%' },
 	favoriteBtn: {
-		position: 'absolute', top: RFValue(12), right: RFValue(12),
-		width: RFValue(40), height: RFValue(40), borderRadius: RFValue(20),
+		position: 'absolute', top: RFValue(8), right: RFValue(8),
+		width: RFValue(32), height: RFValue(32), borderRadius: RFValue(16),
 		backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center',
 	},
-	detailsName: { fontSize: RFValue(22), fontWeight: '700' },
-	detailsProvider: { fontSize: RFValue(14), fontWeight: '500', marginTop: RFValue(-6) },
-	tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: RFValue(8) },
-	tag: { fontSize: RFValue(12), fontWeight: '400' },
-	statsSection: { gap: RFValue(10), marginTop: RFValue(4) },
-	statsTitle: { fontSize: RFValue(11), fontWeight: '700', letterSpacing: 0.8 },
+	detailsName: { fontSize: RFValue(20), fontWeight: '700' },
+	detailsProvider: { fontSize: RFValue(12), fontWeight: '500', marginTop: RFValue(-4) },
+	tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: RFValue(6) },
+	tag: { fontSize: RFValue(11), fontWeight: '400' },
+	statsSection: { gap: RFValue(6) },
+	statsTitle: { fontSize: RFValue(10), fontWeight: '700', letterSpacing: 0.8 },
 	statsGrid: {
-		flexDirection: 'row', borderWidth: 1, borderRadius: RFValue(10), overflow: 'hidden',
+		flexDirection: 'row', borderWidth: 1, borderRadius: RFValue(8), overflow: 'hidden',
 	},
 	statCell: {
-		flex: 1, alignItems: 'center', paddingVertical: RFValue(12), gap: RFValue(6), borderRightWidth: 1,
+		flex: 1, alignItems: 'center', paddingVertical: RFValue(8), gap: RFValue(4), borderRightWidth: 1,
 	},
-	statLabel: { fontSize: RFValue(9), fontWeight: '600', letterSpacing: 0.5 },
-	statValue: { fontSize: RFValue(16), fontWeight: '700' },
+	statLabel: { fontSize: RFValue(8), fontWeight: '600', letterSpacing: 0.5 },
+	statValue: { fontSize: RFValue(14), fontWeight: '700' },
 	volatilityRow: { flexDirection: 'row', gap: RFValue(2) },
-	similarSection: { gap: RFValue(10), marginTop: RFValue(4) },
-	similarScroll: { gap: RFValue(12) },
-	similarCard: { width: RFValue(120), gap: RFValue(6) },
+	similarSection: { gap: RFValue(6) },
+	similarScroll: { gap: RFValue(10) },
+	similarCard: { width: RFValue(100), gap: RFValue(4) },
 	similarThumb: {
-		width: RFValue(120), height: RFValue(80), borderRadius: RFValue(10), overflow: 'hidden',
+		width: RFValue(100), height: RFValue(65), borderRadius: RFValue(8), overflow: 'hidden',
 	},
 	similarImage: { width: '100%', height: '100%' },
-	similarName: { fontSize: RFValue(11), fontWeight: '600' },
+	similarName: { fontSize: RFValue(10), fontWeight: '600' },
 	playBtn: {
-		height: RFValue(48), borderRadius: RFValue(12),
-		alignItems: 'center', justifyContent: 'center', marginTop: RFValue(8),
+		height: RFValue(46), borderRadius: RFValue(12),
+		alignItems: 'center', justifyContent: 'center',
 	},
-	playBtnText: { fontSize: RFValue(16), fontWeight: '700', letterSpacing: 1 },
+	playBtnText: { fontSize: RFValue(15), fontWeight: '700', letterSpacing: 1 },
 });

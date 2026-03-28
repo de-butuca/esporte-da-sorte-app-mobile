@@ -6,6 +6,7 @@ import { mapPromotionsScreenData } from './promotions.mapper';
 import { PromotionCardViewModel, PromotionCategory, PromotionHeroViewModel } from './promotions.types';
 import { useAppNavigation } from '@/navigation/hooks';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { useSessionContext } from '@/contexts/SessionContext';
 
 const configService = new MockConfigService();
 
@@ -89,6 +90,8 @@ async function getPromotionsScreenData() {
 export function usePromotionsViewModel() {
 	const navigation = useAppNavigation();
 	const { requireAuth } = useRequireAuth();
+	const { activeCategory: sessionCategory } = useSessionContext();
+	const authVariant = sessionCategory === 'cassino' ? 'cassino' : 'esportes';
 	const [selectedCategory, setSelectedCategory] = useState<PromotionCategory>('Todas');
 
 	const query = useQuery({
@@ -119,7 +122,7 @@ export function usePromotionsViewModel() {
 					? `Destino preparado para integrar a rota ${promotion.detailsUrl}.`
 					: 'Detalhes da promoção prontos para receber um destino real na próxima integração.',
 			);
-		});
+		}, authVariant);
 	}
 
 	function openTerms() {

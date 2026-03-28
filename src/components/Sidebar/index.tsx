@@ -7,7 +7,8 @@ import { lightColors } from '@/stampd.config';
 import { navigate } from '@/navigation/rootNavigation';
 import { useSessionStore } from '@/core/session/useSessionStore';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import LogoImage from '@assets/images/logo-text.svg';
+import LogoImage from '@assets/images/logo-text.svg'
+import { useSessionContext } from '@/contexts/SessionContext';
 
 interface SidebarProps {
 	onClose: () => void;
@@ -146,7 +147,9 @@ const SS = {
 export function Sidebar({ onClose }: SidebarProps) {
 	const insets = useSafeAreaInsets();
 	const signOut = useSessionStore((s) => s.signOut);
+	const { activeCategory } = useSessionContext();
 	const { requireAuth } = useRequireAuth();
+	const authVariant = activeCategory === 'cassino' ? 'cassino' : 'esportes';
 
 	const handleSignOut = useCallback(() => {
 		onClose();
@@ -188,7 +191,7 @@ export function Sidebar({ onClose }: SidebarProps) {
 			onPress: () => {
 				requireAuth(() => {
 					onClose();
-				});
+				}, authVariant);
 			},
 		},
 		{
@@ -199,7 +202,7 @@ export function Sidebar({ onClose }: SidebarProps) {
 				requireAuth(() => {
 					onClose();
 					navigate('Promotions');
-				});
+				}, authVariant);
 			},
 		},
 		{

@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ArrowLeft, MessageSquare, Camera, ScanFace, ShieldCheck } from 'lucide-react-native';
-import { useStampdUI } from 'stampd/context';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
 
@@ -17,7 +17,7 @@ interface InstructionCardProps {
 function InstructionCard({ icon, title, description, colors }: InstructionCardProps) {
 	return (
 		<View style={[styles.card, { backgroundColor: colors.card }]}>
-			<View style={styles.cardIconWrap}>
+			<View style={[styles.cardIconWrap, { backgroundColor: `${colors.muted}1A` }]}>
 				{icon}
 			</View>
 			<View style={styles.cardContent}>
@@ -30,16 +30,16 @@ function InstructionCard({ icon, title, description, colors }: InstructionCardPr
 
 export default function FaceVerificationScreen() {
 	const insets = useSafeAreaInsets();
-	const { theme } = useStampdUI();
+	const colors = useAuthThemeStore((s) => s.colors);
 	const { goBack, canGoBack, navigate } = useAppNavigation();
 
 	const c = {
-		bg: theme.colors.background,
-		nav: theme.colors.bgNav,
-		card: theme.colors.bgCard,
-		text: theme.colors.textPrimary,
-		muted: theme.colors.textSecondary,
-		accent: theme.colors.accent,
+		bg: colors.background,
+		nav: colors.bgNav,
+		card: colors.bgCard,
+		text: colors.textPrimary,
+		muted: colors.textSecondary,
+		accent: colors.accent,
 	};
 
 	return (
@@ -70,10 +70,15 @@ export default function FaceVerificationScreen() {
 			</View>
 
 			{/* Content */}
-			<View style={styles.content}>
+			<ScrollView
+				style={styles.scrollArea}
+				contentContainerStyle={styles.content}
+				showsVerticalScrollIndicator={false}
+				bounces={false}
+			>
 				{/* Icon */}
 				<View style={[styles.iconCircle, { backgroundColor: c.accent }]}>
-					<ScanFace size={RFValue(40)} color={c.bg} strokeWidth={1.5} />
+					<ScanFace size={RFValue(36)} color={c.bg} strokeWidth={1.5} />
 				</View>
 
 				{/* Title */}
@@ -87,25 +92,25 @@ export default function FaceVerificationScreen() {
 				{/* Instruction Cards */}
 				<View style={styles.cardsBlock}>
 					<InstructionCard
-						icon={<Camera size={RFValue(20)} color={c.accent} strokeWidth={2} />}
+						icon={<Camera size={RFValue(18)} color={c.accent} strokeWidth={2} />}
 						title="Prepare-se para a foto"
 						description="Remova óculos, bonés e certifique-se de estar em um ambiente bem iluminado"
 						colors={{ card: c.card, text: c.text, muted: c.muted }}
 					/>
 					<InstructionCard
-						icon={<ScanFace size={RFValue(20)} color={c.accent} strokeWidth={2} />}
+						icon={<ScanFace size={RFValue(18)} color={c.accent} strokeWidth={2} />}
 						title="Posicione seu rosto"
 						description="Centralize seu rosto na moldura oval e mantenha-se imóvel"
 						colors={{ card: c.card, text: c.text, muted: c.muted }}
 					/>
 					<InstructionCard
-						icon={<ShieldCheck size={RFValue(20)} color={c.accent} strokeWidth={2} />}
+						icon={<ShieldCheck size={RFValue(18)} color={c.accent} strokeWidth={2} />}
 						title="Seus dados estão seguros"
 						description="A imagem será criptografada e usada apenas para verificação"
 						colors={{ card: c.card, text: c.text, muted: c.muted }}
 					/>
 				</View>
-			</View>
+			</ScrollView>
 
 			{/* Button */}
 			<View style={[styles.footer, { paddingBottom: insets.bottom + RFValue(16) }]}>
@@ -148,72 +153,74 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	content: {
+	scrollArea: {
 		flex: 1,
+	},
+	content: {
 		alignItems: 'center',
 		paddingHorizontal: RFValue(24),
-		paddingTop: RFValue(32),
-		gap: RFValue(32),
+		paddingTop: RFValue(24),
+		paddingBottom: RFValue(16),
+		gap: RFValue(20),
 	},
 	iconCircle: {
-		width: RFValue(80),
-		height: RFValue(80),
-		borderRadius: RFValue(40),
+		width: RFValue(68),
+		height: RFValue(68),
+		borderRadius: RFValue(34),
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	titleBlock: {
 		alignItems: 'center',
-		gap: RFValue(8),
+		gap: RFValue(6),
 	},
 	title: {
-		fontSize: RFValue(24),
+		fontSize: RFValue(22),
 		fontWeight: '800',
 		letterSpacing: 0.07,
-		lineHeight: RFValue(36),
+		lineHeight: RFValue(30),
 		textAlign: 'center',
 	},
 	subtitle: {
-		fontSize: RFValue(14),
+		fontSize: RFValue(13),
 		fontWeight: '400',
-		lineHeight: RFValue(21),
+		lineHeight: RFValue(19),
 		letterSpacing: -0.15,
 		textAlign: 'center',
 	},
 	cardsBlock: {
 		width: '100%',
-		gap: RFValue(16),
+		gap: RFValue(12),
 	},
 	card: {
 		flexDirection: 'row',
 		borderRadius: RFValue(12),
-		padding: RFValue(20),
+		padding: RFValue(16),
 		gap: RFValue(12),
 		alignItems: 'flex-start',
 	},
 	cardIconWrap: {
-		width: RFValue(40),
-		height: RFValue(40),
-		borderRadius: RFValue(12),
-		backgroundColor: 'rgba(0,232,120,0.1)',
+		width: RFValue(36),
+		height: RFValue(36),
+		borderRadius: RFValue(10),
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	cardContent: {
 		flex: 1,
-		gap: RFValue(4),
+		gap: RFValue(2),
 	},
 	cardTitle: {
-		fontSize: RFValue(15),
+		fontSize: RFValue(14),
 		fontWeight: '700',
 		letterSpacing: -0.23,
-		lineHeight: RFValue(22),
+		lineHeight: RFValue(20),
 	},
 	cardDescription: {
-		fontSize: RFValue(13),
+		fontSize: RFValue(12),
 		fontWeight: '400',
 		letterSpacing: -0.08,
-		lineHeight: RFValue(19),
+		lineHeight: RFValue(17),
 	},
 	footer: {
 		paddingHorizontal: RFValue(24),
