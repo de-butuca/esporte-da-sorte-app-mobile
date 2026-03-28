@@ -126,7 +126,7 @@ export default function SettingsScreen() {
 				<SetS.sectionTitle>Aparência</SetS.sectionTitle>
 
 				<View style={styles.rows}>
-					<SetS.row>
+					{/* <SetS.row>
 						<SetS.rowText>
 							<SetS.rowLabel>Modo escuro</SetS.rowLabel>
 							<SetS.rowSubtitle>Alterna entre tema claro e escuro</SetS.rowSubtitle>
@@ -137,7 +137,7 @@ export default function SettingsScreen() {
 							trackColor={{ false: 'rgba(160,160,200,0.2)', true: lightColors.accent }}
 							thumbColor="#fff"
 						/>
-					</SetS.row>
+					</SetS.row> */}
 
 					<SetS.row>
 						<SetS.rowText>
