@@ -81,7 +81,7 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 		<View style={containerStyle}>
 			<HHS.topRow>
 				{activeCategory === 'esportes' ? (
-					<LogoVerde width={92} height={32} />
+					<LogoVerde width={101} height={35} />
 				) : (
 					<LogoBranco width={101} height={35} />
 				)}

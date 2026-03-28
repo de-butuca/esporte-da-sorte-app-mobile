@@ -32,6 +32,7 @@ function RegisterHeader() {
 				) : (
 					<View style={{ width: RFValue(20) }} />
 				)}
+				<Logo width={101} height={35} />
 				<TouchableOpacity activeOpacity={0.7} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
 					<MessageSquare size={RFValue(20)} color={colors.textPrimary} strokeWidth={2} />
 				</TouchableOpacity>
@@ -106,11 +107,6 @@ function RegisterForm() {
 	return (
 		<FormScreen header={<RegisterHeader />} backgroundColor={colors.background}>
 			<View style={styles.content}>
-				{/* Logo */}
-				<View style={styles.logoContainer}>
-					<Logo width={RFValue(100)} height={RFValue(34)} />
-				</View>
-
 				{/* Title */}
 				<View style={styles.titleBlock}>
 					<Text style={[styles.title, { color: colors.textPrimary }]}>Criar conta</Text>
@@ -427,6 +423,7 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		gap: RFValue(20),
+		paddingTop: 32,
 	},
 	logoContainer: {
 		alignItems: 'center',

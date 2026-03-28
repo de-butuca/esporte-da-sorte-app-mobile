@@ -36,6 +36,7 @@ function LoginHeader({ colors }: { colors: LoginThemeColors }) {
 				) : (
 					<View style={{ width: RFValue(20) }} />
 				)}
+				<Logo width={101} height={35} />
 				<TouchableOpacity
 					activeOpacity={0.7}
 					hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -77,10 +78,6 @@ function LoginForm() {
 	return (
 		<FormScreen header={<LoginHeader colors={colors} />} backgroundColor={colors.background}>
 			<View style={styles.content}>
-				<View style={styles.logoContainer}>
-					<Logo width={RFValue(100)} height={RFValue(34)} />
-				</View>
-
 				<View style={styles.titleBlock}>
 					<Text style={[styles.title, { color: colors.textPrimary }]}>Entrar</Text>
 					<Text style={[styles.subtitle, { color: colors.textSecondary }]}>
@@ -286,6 +283,7 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		gap: RFValue(22),
+		paddingTop: 32,
 	},
 	logoContainer: {
 		alignItems: 'center',
