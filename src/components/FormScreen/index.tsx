@@ -16,7 +16,7 @@ import {
 	View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { lightColors } from '@/theme/design-tokens';
+import { useStampdUI } from 'stampd/context';
 
 // ── Context para vincular inputs ──────────────────────────────────
 
@@ -143,6 +143,7 @@ export function FormScreen({
 	backgroundColor,
 }: FormScreenProps) {
 	const insets = useSafeAreaInsets();
+	const { theme } = useStampdUI();
 	const ctx = useContext(FormFieldsContext);
 
 	const scrollRefCallback = useCallback(
@@ -164,7 +165,7 @@ export function FormScreen({
 	);
 
 	return (
-		<View style={[styles.root, backgroundColor != null && { backgroundColor }]}>
+		<View style={[styles.root, { backgroundColor: backgroundColor ?? theme.colors.background }]}>
 			{header}
 
 			<KeyboardAvoidingView
@@ -195,7 +196,6 @@ export function FormScreen({
 const styles = StyleSheet.create({
 	root: {
 		flex: 1,
-		backgroundColor: lightColors.background,
 	},
 	flex: {
 		flex: 1,
