@@ -10,8 +10,9 @@ import {
 	ImageBackground,
 } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 const BANNER_W = SCREEN_W - RFValue(32);
@@ -55,6 +56,7 @@ const BANNERS: Banner[] = [
 export function BannerCarousel() {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const flatListRef = useRef<FlatList>(null);
+	const colors = useAuthThemeStore((s) => s.colors);
 
 	const onScroll = useCallback((e: NativeSyntheticEvent<NativeScrollEvent>) => {
 		const index = Math.round(e.nativeEvent.contentOffset.x / (BANNER_W + BANNER_GAP));
@@ -64,14 +66,14 @@ export function BannerCarousel() {
 	const renderBanner = useCallback(({ item }: { item: Banner }) => (
 		<View style={styles.bannerContainer}>
 			<LinearGradient
-				colors={[lightColors.secondary, lightColors.primary]}
+				colors={[colors.gradientStart, colors.gradientEnd]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.banner}
 			>
 				<View style={styles.bannerContent}>
 					<Text style={styles.bannerSubtitle}>{item.subtitle}</Text>
-					<Text style={styles.bannerTitle}>{item.title}</Text>
+					<Text style={[styles.bannerTitle, { color: colors.textPrimary }]}>{item.title}</Text>
 				</View>
 				<ImageBackground
 					source={item.image}
@@ -80,7 +82,7 @@ export function BannerCarousel() {
 				/>
 			</LinearGradient>
 		</View>
-	), []);
+	), [colors]);
 
 	const keyExtractor = useCallback((item: Banner) => item.id, []);
 
@@ -104,7 +106,12 @@ export function BannerCarousel() {
 				{BANNERS.map((_, i) => (
 					<View
 						key={i}
-						style={[styles.dot, i === activeIndex ? styles.dotActive : styles.dotInactive]}
+						style={[
+							styles.dot,
+							i === activeIndex
+								? [styles.dotActive, { backgroundColor: colors.accent }]
+								: styles.dotInactive,
+						]}
 					/>
 				))}
 			</View>
@@ -147,7 +154,6 @@ const styles = StyleSheet.create({
 	bannerTitle: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(20),
-		color: lightColors.textPrimary,
 		textTransform: 'uppercase',
 		lineHeight: RFValue(22),
 	},
@@ -168,7 +174,6 @@ const styles = StyleSheet.create({
 		height: RFValue(3),
 	},
 	dotActive: {
-		backgroundColor: lightColors.accent,
 		width: RFValue(16),
 	},
 	dotInactive: {

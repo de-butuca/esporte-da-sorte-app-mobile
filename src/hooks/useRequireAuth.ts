@@ -1,10 +1,18 @@
 import { useCallback } from 'react';
 import { useSessionStore } from '@/core/session/useSessionStore';
 import { useAppNavigation } from '@/navigation/hooks';
+import type { LoginVariant } from '@/stampd.config';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 type GameCategory = 'casino' | 'sports' | 'live';
 
 const AUTH_REQUIRED_CATEGORIES: GameCategory[] = ['casino', 'live'];
+
+const CATEGORY_TO_VARIANT: Record<GameCategory, LoginVariant> = {
+	casino: 'cassino',
+	live: 'cassino',
+	sports: 'esportes',
+};
 
 /**
  * Middleware de autenticação para fluxo convidado.
@@ -12,21 +20,12 @@ const AUTH_REQUIRED_CATEGORIES: GameCategory[] = ['casino', 'live'];
  * Retorna uma função `guardNavigation` que verifica se o usuário
  * está autenticado antes de executar a ação. Caso não esteja e a
  * categoria exija login (ex: casino, live), redireciona para a
- * tela de Login.
- *
- * Uso:
- * ```ts
- * const { guardNavigation } = useRequireAuth();
- *
- * // Ao clicar em um jogo de cassino:
- * guardNavigation('casino', () => {
- *   navigation.navigate('GameHome', { gameId: '123' });
- * });
- * ```
+ * tela de Login com o tema correspondente.
  */
 export function useRequireAuth() {
 	const isAuthenticated = useSessionStore((s) => s.isAuthenticated);
 	const navigation = useAppNavigation();
+	const setVariant = useAuthThemeStore((s) => s.setVariant);
 
 	const guardNavigation = useCallback(
 		(category: GameCategory, onAuthorized: () => void) => {
@@ -35,21 +34,23 @@ export function useRequireAuth() {
 				return;
 			}
 
+			setVariant(CATEGORY_TO_VARIANT[category]);
 			navigation.navigate('Login');
 		},
-		[isAuthenticated, navigation],
+		[isAuthenticated, navigation, setVariant],
 	);
 
 	const requireAuth = useCallback(
-		(onAuthorized: () => void) => {
+		(onAuthorized: () => void, variant: LoginVariant = 'esportes') => {
 			if (isAuthenticated) {
 				onAuthorized();
 				return;
 			}
 
+			setVariant(variant);
 			navigation.navigate('Login');
 		},
-		[isAuthenticated, navigation],
+		[isAuthenticated, navigation, setVariant],
 	);
 
 	return {

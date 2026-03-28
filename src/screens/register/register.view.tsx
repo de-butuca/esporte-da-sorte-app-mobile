@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
 	View,
 	Text,
@@ -9,11 +9,12 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/theme/design-tokens';
+import { fontFamily, type LoginThemeColors } from '@/stampd.config';
 import { Controller } from 'react-hook-form';
 import { useRegisterViewModel } from './register.viewmodel';
 import { useAppNavigation } from '@/navigation/hooks';
 import { FormFieldsProvider, FormScreen, useFormField } from '@/components/FormScreen';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 import Logo from '@assets/images/logo-square.svg';
 import {
 	ArrowLeft,
@@ -28,24 +29,12 @@ import {
 } from 'lucide-react-native';
 import type { PasswordStrength } from './register.types';
 
-const STRENGTH_COLORS: Record<PasswordStrength, string> = {
-	weak: lightColors.error,
-	medium: lightColors.warning,
-	strong: lightColors.success,
-};
-
-const STRENGTH_PROGRESS: Record<PasswordStrength, number> = {
-	weak: 0.33,
-	medium: 0.66,
-	strong: 1,
-};
-
-function RegisterHeader() {
+function RegisterHeader({ colors }: { colors: LoginThemeColors }) {
 	const insets = useSafeAreaInsets();
 	const { canGoBack, goBack } = useAppNavigation();
 
 	return (
-		<View style={[styles.header, { paddingTop: insets.top }]}>
+		<View style={[styles.header, { backgroundColor: colors.bgSecondary, paddingTop: insets.top }]}>
 			<View style={styles.headerRow}>
 				{canGoBack() ? (
 					<TouchableOpacity
@@ -53,7 +42,7 @@ function RegisterHeader() {
 						activeOpacity={0.7}
 						hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 					>
-						<ArrowLeft size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+						<ArrowLeft size={RFValue(20)} color={colors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 				) : (
 					<View style={{ width: RFValue(20) }} />
@@ -62,7 +51,7 @@ function RegisterHeader() {
 					activeOpacity={0.7}
 					hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
 				>
-					<MessageSquare size={RFValue(20)} color="#FFFFFF" strokeWidth={2} />
+					<MessageSquare size={RFValue(20)} color={colors.textPrimary} strokeWidth={2} />
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -80,6 +69,8 @@ export default function RegisterScreen() {
 
 /** Componente interno: usa useFormField (já dentro do Provider) */
 function RegisterForm() {
+	const colors = useAuthThemeStore((s) => s.colors);
+
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const togglePassword = useCallback(() => setShowPassword((s) => !s), []);
@@ -108,8 +99,16 @@ function RegisterForm() {
 	const passwordField = useFormField(3);
 	const confirmPasswordField = useFormField(4, handleRegister);
 
+	const themed = useMemo(() => createThemedStyles(colors), [colors]);
+
+	const strengthColors: Record<PasswordStrength, string> = useMemo(() => ({
+		weak: colors.error,
+		medium: colors.warning,
+		strong: colors.success,
+	}), [colors]);
+
 	return (
-		<FormScreen header={<RegisterHeader />}>
+		<FormScreen header={<RegisterHeader colors={colors} />} backgroundColor={colors.background}>
 			<View style={styles.content}>
 				{/* Logo */}
 				<View style={styles.logoContainer}>
@@ -118,8 +117,8 @@ function RegisterForm() {
 
 				{/* Title */}
 				<View style={styles.titleBlock}>
-					<Text style={styles.title}>Criar conta</Text>
-					<Text style={styles.subtitle}>
+					<Text style={[styles.title, { color: colors.textPrimary }]}>Criar conta</Text>
+					<Text style={[styles.subtitle, { color: colors.textSecondary }]}>
 						Preencha os dados abaixo para começar.
 					</Text>
 				</View>
@@ -132,17 +131,17 @@ function RegisterForm() {
 						name="cpf"
 						render={({ field: { onChange, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={styles.label}>CPF</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>CPF</Text>
 								<View
 									style={[
-										styles.inputWrapperWithIcon,
-										fieldState.error && styles.inputError,
+										themed.inputWrapperWithIcon,
+										fieldState.error && themed.inputError,
 									]}
 								>
 									<View style={styles.inputIconWrap}>
 										<User
 											size={RFValue(16)}
-											color="rgba(255,255,255,0.5)"
+											color={colors.textDisabled}
 											strokeWidth={2}
 										/>
 									</View>
@@ -151,17 +150,17 @@ function RegisterForm() {
 										returnKeyType={cpfField.returnKeyType}
 										onSubmitEditing={cpfField.onSubmitEditing}
 										blurOnSubmit={cpfField.blurOnSubmit}
-										style={styles.inputWithIcon}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="000.000.000-00"
-										placeholderTextColor="rgba(255,255,255,0.5)"
+										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={(text) => handleCpfChange(text, onChange)}
 										keyboardType="numeric"
-										cursorColor={lightColors.success}
+										cursorColor={colors.primary}
 									/>
 								</View>
 								{fieldState.error && (
-									<ErrorMessage message={fieldState.error.message!} />
+									<ErrorMessage message={fieldState.error.message!} color={colors.error} />
 								)}
 							</View>
 						)}
@@ -173,17 +172,17 @@ function RegisterForm() {
 						name="email"
 						render={({ field: { onChange, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={styles.label}>E-mail</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>E-mail</Text>
 								<View
 									style={[
-										styles.inputWrapperWithIcon,
-										fieldState.error && styles.inputError,
+										themed.inputWrapperWithIcon,
+										fieldState.error && themed.inputError,
 									]}
 								>
 									<View style={styles.inputIconWrap}>
 										<Mail
 											size={RFValue(16)}
-											color="rgba(255,255,255,0.5)"
+											color={colors.textDisabled}
 											strokeWidth={2}
 										/>
 									</View>
@@ -192,18 +191,18 @@ function RegisterForm() {
 										returnKeyType={emailField.returnKeyType}
 										onSubmitEditing={emailField.onSubmitEditing}
 										blurOnSubmit={emailField.blurOnSubmit}
-										style={styles.inputWithIcon}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="seu@email.com"
-										placeholderTextColor="rgba(255,255,255,0.5)"
+										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
 										autoCapitalize="none"
 										keyboardType="email-address"
-										cursorColor={lightColors.success}
+										cursorColor={colors.primary}
 									/>
 								</View>
 								{fieldState.error && (
-									<ErrorMessage message={fieldState.error.message!} />
+									<ErrorMessage message={fieldState.error.message!} color={colors.error} />
 								)}
 							</View>
 						)}
@@ -215,17 +214,17 @@ function RegisterForm() {
 						name="phone"
 						render={({ field: { onChange, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={styles.label}>Celular</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>Celular</Text>
 								<View
 									style={[
-										styles.inputWrapperWithIcon,
-										fieldState.error && styles.inputError,
+										themed.inputWrapperWithIcon,
+										fieldState.error && themed.inputError,
 									]}
 								>
 									<View style={styles.inputIconWrap}>
 										<Phone
 											size={RFValue(16)}
-											color="rgba(255,255,255,0.5)"
+											color={colors.textDisabled}
 											strokeWidth={2}
 										/>
 									</View>
@@ -234,24 +233,24 @@ function RegisterForm() {
 										returnKeyType={phoneField.returnKeyType}
 										onSubmitEditing={phoneField.onSubmitEditing}
 										blurOnSubmit={phoneField.blurOnSubmit}
-										style={styles.inputWithIcon}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="(00) 00000-0000"
-										placeholderTextColor="rgba(255,255,255,0.5)"
+										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={(text) => handlePhoneChange(text, onChange)}
 										keyboardType="phone-pad"
-										cursorColor={lightColors.success}
+										cursorColor={colors.primary}
 									/>
 								</View>
 								{fieldState.error && (
-									<ErrorMessage message={fieldState.error.message!} />
+									<ErrorMessage message={fieldState.error.message!} color={colors.error} />
 								)}
 							</View>
 						)}
 					/>
 
 					{/* Divider */}
-					<View style={styles.divider} />
+					<View style={[styles.divider, { backgroundColor: colors.border }]} />
 
 					{/* Password */}
 					<Controller
@@ -259,17 +258,17 @@ function RegisterForm() {
 						name="password"
 						render={({ field: { onChange, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={styles.label}>Senha</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>Senha</Text>
 								<View
 									style={[
-										styles.inputWrapperWithIcon,
-										fieldState.error && styles.inputError,
+										themed.inputWrapperWithIcon,
+										fieldState.error && themed.inputError,
 									]}
 								>
 									<View style={styles.inputIconWrap}>
 										<Lock
 											size={RFValue(16)}
-											color="rgba(255,255,255,0.5)"
+											color={colors.textDisabled}
 											strokeWidth={2}
 										/>
 									</View>
@@ -278,14 +277,14 @@ function RegisterForm() {
 										returnKeyType={passwordField.returnKeyType}
 										onSubmitEditing={passwordField.onSubmitEditing}
 										blurOnSubmit={passwordField.blurOnSubmit}
-										style={styles.inputWithIcon}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="Mínimo 6 caracteres"
-										placeholderTextColor="rgba(255,255,255,0.5)"
+										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
 										secureTextEntry={!showPassword}
 										autoCapitalize="none"
-										cursorColor={lightColors.success}
+										cursorColor={colors.primary}
 									/>
 									<TouchableOpacity
 										onPress={togglePassword}
@@ -294,13 +293,13 @@ function RegisterForm() {
 										{showPassword ? (
 											<EyeOff
 												size={RFValue(18)}
-												color="rgba(255,255,255,0.5)"
+												color={colors.textDisabled}
 												strokeWidth={2}
 											/>
 										) : (
 											<Eye
 												size={RFValue(18)}
-												color="rgba(255,255,255,0.5)"
+												color={colors.textDisabled}
 												strokeWidth={2}
 											/>
 										)}
@@ -308,13 +307,12 @@ function RegisterForm() {
 								</View>
 								{passwordStrength && (
 									<View style={styles.strengthRow}>
-										<View style={styles.strengthBarBg}>
+										<View style={[styles.strengthBarBg, { backgroundColor: colors.surface1 }]}>
 											<View
 												style={[
 													styles.strengthBarFill,
 													{
-														backgroundColor:
-															STRENGTH_COLORS[passwordStrength],
+														backgroundColor: strengthColors[passwordStrength],
 														width: `${STRENGTH_PROGRESS[passwordStrength] * 100}%`,
 													},
 												]}
@@ -323,7 +321,7 @@ function RegisterForm() {
 										<Text
 											style={[
 												styles.strengthText,
-												{ color: STRENGTH_COLORS[passwordStrength] },
+												{ color: strengthColors[passwordStrength] },
 											]}
 										>
 											{passwordStrengthLabel}
@@ -331,7 +329,7 @@ function RegisterForm() {
 									</View>
 								)}
 								{fieldState.error && (
-									<ErrorMessage message={fieldState.error.message!} />
+									<ErrorMessage message={fieldState.error.message!} color={colors.error} />
 								)}
 							</View>
 						)}
@@ -343,17 +341,17 @@ function RegisterForm() {
 						name="confirmPassword"
 						render={({ field: { onChange, value }, fieldState }) => (
 							<View style={styles.inputGroup}>
-								<Text style={styles.label}>Confirmar senha</Text>
+								<Text style={[styles.label, { color: colors.textPrimary }]}>Confirmar senha</Text>
 								<View
 									style={[
-										styles.inputWrapperWithIcon,
-										fieldState.error && styles.inputError,
+										themed.inputWrapperWithIcon,
+										fieldState.error && themed.inputError,
 									]}
 								>
 									<View style={styles.inputIconWrap}>
 										<Lock
 											size={RFValue(16)}
-											color="rgba(255,255,255,0.5)"
+											color={colors.textDisabled}
 											strokeWidth={2}
 										/>
 									</View>
@@ -362,14 +360,14 @@ function RegisterForm() {
 										returnKeyType={confirmPasswordField.returnKeyType}
 										onSubmitEditing={confirmPasswordField.onSubmitEditing}
 										blurOnSubmit={confirmPasswordField.blurOnSubmit}
-										style={styles.inputWithIcon}
+										style={[styles.inputWithIcon, { color: colors.textPrimary }]}
 										placeholder="Digite a senha novamente"
-										placeholderTextColor="rgba(255,255,255,0.5)"
+										placeholderTextColor={colors.inputPlaceholder}
 										value={value}
 										onChangeText={onChange}
 										secureTextEntry={!showConfirmPassword}
 										autoCapitalize="none"
-										cursorColor={lightColors.success}
+										cursorColor={colors.primary}
 									/>
 									<TouchableOpacity
 										onPress={toggleConfirmPassword}
@@ -378,27 +376,27 @@ function RegisterForm() {
 										{showConfirmPassword ? (
 											<EyeOff
 												size={RFValue(18)}
-												color="rgba(255,255,255,0.5)"
+												color={colors.textDisabled}
 												strokeWidth={2}
 											/>
 										) : (
 											<Eye
 												size={RFValue(18)}
-												color="rgba(255,255,255,0.5)"
+												color={colors.textDisabled}
 												strokeWidth={2}
 											/>
 										)}
 									</TouchableOpacity>
 								</View>
 								{fieldState.error && (
-									<ErrorMessage message={fieldState.error.message!} />
+									<ErrorMessage message={fieldState.error.message!} color={colors.error} />
 								)}
 							</View>
 						)}
 					/>
 
 					{/* Divider */}
-					<View style={styles.divider} />
+					<View style={[styles.divider, { backgroundColor: colors.border }]} />
 
 					{/* Terms checkbox */}
 					<Controller
@@ -412,14 +410,14 @@ function RegisterForm() {
 							>
 								<View
 									style={[
-										styles.checkbox,
-										value && styles.checkboxChecked,
+										themed.checkbox,
+										value && { backgroundColor: colors.primary },
 									]}
 								/>
-								<Text style={styles.termsText}>
+								<Text style={[styles.termsText, { color: colors.textSecondary }]}>
 									Li e aceito os{' '}
-									<Text style={styles.termsLink}>Termos de Uso</Text> e a{' '}
-									<Text style={styles.termsLink}>Política de Privacidade</Text>
+									<Text style={{ color: colors.primary }}>Termos de Uso</Text> e a{' '}
+									<Text style={{ color: colors.primary }}>Política de Privacidade</Text>
 								</Text>
 							</TouchableOpacity>
 						)}
@@ -427,17 +425,17 @@ function RegisterForm() {
 
 					{/* Error card */}
 					{hasFormErrors && (
-						<View style={styles.errorCard}>
+						<View style={[styles.errorCard, { backgroundColor: colors.surface1, borderColor: colors.error }]}>
 							<AlertCircle
 								size={RFValue(16)}
-								color={lightColors.error}
+								color={colors.error}
 								strokeWidth={2}
 							/>
 							<View style={styles.errorCardContent}>
-								<Text style={styles.errorCardTitle}>
+								<Text style={[styles.errorCardTitle, { color: colors.error }]}>
 									Corrija os erros acima
 								</Text>
-								<Text style={styles.errorCardDesc}>
+								<Text style={[styles.errorCardDesc, { color: colors.textSecondary }]}>
 									Alguns campos precisam de atenção.
 								</Text>
 							</View>
@@ -447,15 +445,15 @@ function RegisterForm() {
 
 				{/* Register button */}
 				<TouchableOpacity
-					style={[styles.primaryBtn, !isValid && styles.btnDisabled]}
+					style={[themed.primaryBtn, !isValid && styles.btnDisabled]}
 					onPress={handleRegister}
 					activeOpacity={0.8}
 					disabled={isLoading || !isValid}
 				>
 					{isLoading ? (
-						<ActivityIndicator color={lightColors.onPrimary} size="small" />
+						<ActivityIndicator color={colors.onPrimary} size="small" />
 					) : (
-						<Text style={styles.primaryBtnText}>Criar conta</Text>
+						<Text style={[styles.primaryBtnText, { color: colors.onPrimary }]}>Criar conta</Text>
 					)}
 				</TouchableOpacity>
 
@@ -465,9 +463,9 @@ function RegisterForm() {
 					activeOpacity={0.7}
 					style={styles.loginLinkWrap}
 				>
-					<Text style={styles.loginLinkText}>
+					<Text style={[styles.loginLinkText, { color: colors.textSecondary }]}>
 						Já tem uma conta?{' '}
-						<Text style={styles.loginLinkBold}>Entrar</Text>
+						<Text style={[styles.loginLinkBold, { color: colors.primary }]}>Entrar</Text>
 					</Text>
 				</TouchableOpacity>
 			</View>
@@ -475,22 +473,59 @@ function RegisterForm() {
 	);
 }
 
-function ErrorMessage({ message }: { message: string }) {
+const STRENGTH_PROGRESS: Record<PasswordStrength, number> = {
+	weak: 0.33,
+	medium: 0.66,
+	strong: 1,
+};
+
+function ErrorMessage({ message, color }: { message: string; color: string }) {
 	return (
 		<View style={styles.errorRow}>
 			<AlertCircle
 				size={RFValue(12)}
-				color={lightColors.error}
+				color={color}
 				strokeWidth={2}
 			/>
-			<Text style={styles.errorText}>{message}</Text>
+			<Text style={[styles.errorText, { color }]}>{message}</Text>
 		</View>
 	);
 }
 
+function createThemedStyles(colors: LoginThemeColors) {
+	return StyleSheet.create({
+		inputWrapperWithIcon: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			backgroundColor: colors.inputBackground,
+			borderRadius: RFValue(8),
+			borderWidth: 2,
+			borderColor: 'transparent',
+			height: RFValue(42),
+			paddingRight: RFValue(14),
+		},
+		inputError: {
+			borderColor: colors.inputErrorBorder,
+		},
+		checkbox: {
+			width: RFValue(18),
+			height: RFValue(18),
+			backgroundColor: colors.surface1,
+			borderRadius: RFValue(2),
+			marginTop: RFValue(1),
+		},
+		primaryBtn: {
+			backgroundColor: colors.primary,
+			height: RFValue(42),
+			borderRadius: RFValue(10),
+			alignItems: 'center',
+			justifyContent: 'center',
+		},
+	});
+}
+
 const styles = StyleSheet.create({
 	header: {
-		backgroundColor: lightColors.bgSecondary,
 		paddingHorizontal: RFValue(20),
 		paddingBottom: RFValue(14),
 		shadowColor: '#000000',
@@ -520,13 +555,11 @@ const styles = StyleSheet.create({
 		fontSize: RFValue(18),
 		lineHeight: RFValue(26),
 		letterSpacing: -0.24,
-		color: lightColors.textPrimary,
 	},
 	subtitle: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(12),
 		lineHeight: RFValue(18),
-		color: lightColors.textSecondary,
 	},
 	formBlock: {
 		gap: RFValue(12),
@@ -538,20 +571,6 @@ const styles = StyleSheet.create({
 		fontFamily: fontFamily.semibold,
 		fontSize: RFValue(12),
 		lineHeight: RFValue(18),
-		color: lightColors.textPrimary,
-	},
-	inputWrapperWithIcon: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		backgroundColor: '#1A2332',
-		borderRadius: RFValue(8),
-		borderWidth: 2,
-		borderColor: 'transparent',
-		height: RFValue(42),
-		paddingRight: RFValue(14),
-	},
-	inputError: {
-		borderColor: lightColors.error,
 	},
 	inputIconWrap: {
 		width: RFValue(40),
@@ -562,12 +581,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(14),
-		color: lightColors.textPrimary,
 		height: '100%',
 	},
 	divider: {
 		height: 1,
-		backgroundColor: 'rgba(148,163,184,0.1)',
 	},
 	strengthRow: {
 		flexDirection: 'row',
@@ -577,7 +594,6 @@ const styles = StyleSheet.create({
 	strengthBarBg: {
 		flex: 1,
 		height: RFValue(4),
-		backgroundColor: '#1A2332',
 		borderRadius: 9999,
 		overflow: 'hidden',
 	},
@@ -599,38 +615,21 @@ const styles = StyleSheet.create({
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(11),
 		lineHeight: RFValue(16),
-		color: lightColors.error,
 	},
 	checkboxRow: {
 		flexDirection: 'row',
 		alignItems: 'flex-start',
 		gap: RFValue(8),
 	},
-	checkbox: {
-		width: RFValue(18),
-		height: RFValue(18),
-		backgroundColor: '#1A2332',
-		borderRadius: RFValue(2),
-		marginTop: RFValue(1),
-	},
-	checkboxChecked: {
-		backgroundColor: lightColors.primary,
-	},
 	termsText: {
 		flex: 1,
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(11),
 		lineHeight: RFValue(17),
-		color: lightColors.textSecondary,
-	},
-	termsLink: {
-		color: lightColors.primary,
 	},
 	errorCard: {
 		flexDirection: 'row',
-		backgroundColor: '#1A2332',
 		borderWidth: 2,
-		borderColor: lightColors.error,
 		borderRadius: RFValue(10),
 		padding: RFValue(16),
 		gap: RFValue(10),
@@ -644,20 +643,11 @@ const styles = StyleSheet.create({
 		fontFamily: fontFamily.semibold,
 		fontSize: RFValue(12),
 		lineHeight: RFValue(17),
-		color: lightColors.error,
 	},
 	errorCardDesc: {
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(11),
 		lineHeight: RFValue(16),
-		color: lightColors.textSecondary,
-	},
-	primaryBtn: {
-		backgroundColor: lightColors.primary,
-		height: RFValue(42),
-		borderRadius: RFValue(10),
-		alignItems: 'center',
-		justifyContent: 'center',
 	},
 	btnDisabled: {
 		opacity: 0.5,
@@ -666,7 +656,6 @@ const styles = StyleSheet.create({
 		fontFamily: fontFamily.semibold,
 		fontSize: RFValue(14),
 		lineHeight: RFValue(20),
-		color: lightColors.onPrimary,
 	},
 	loginLinkWrap: {
 		alignItems: 'center',
@@ -675,10 +664,8 @@ const styles = StyleSheet.create({
 		fontFamily: fontFamily.regular,
 		fontSize: RFValue(12),
 		lineHeight: RFValue(18),
-		color: lightColors.textSecondary,
 	},
 	loginLinkBold: {
 		fontFamily: fontFamily.semibold,
-		color: lightColors.primary,
 	},
 });

@@ -1,25 +1,28 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 const PROMO_IMAGE = require('@assets/images/banners/banner-3.png');
 
 export function PromoBanner() {
+	const colors = useAuthThemeStore((s) => s.colors);
+
 	return (
 		<View style={styles.wrapper}>
 			<LinearGradient
-				colors={[lightColors.secondary, lightColors.primary]}
+				colors={[colors.gradientStart, colors.gradientEnd]}
 				start={{ x: 0, y: 0.5 }}
 				end={{ x: 1, y: 0.5 }}
 				style={styles.container}
 			>
 				<View style={styles.content}>
 					<Text style={styles.subtitle}>Ganhe bônus de até 100%</Text>
-					<Text style={styles.title}>Faça seu primeiro depósito</Text>
-					<TouchableOpacity style={styles.button} activeOpacity={0.8}>
-						<Text style={styles.buttonText}>Depositar agora</Text>
+					<Text style={[styles.title, { color: colors.textPrimary }]}>Faça seu primeiro depósito</Text>
+					<TouchableOpacity style={[styles.button, { backgroundColor: colors.accent }]} activeOpacity={0.8}>
+						<Text style={[styles.buttonText, { color: colors.bgNav }]}>Depositar agora</Text>
 					</TouchableOpacity>
 				</View>
 				<ImageBackground
@@ -57,11 +60,9 @@ const styles = StyleSheet.create({
 	title: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(16),
-		color: lightColors.textPrimary,
 		lineHeight: RFValue(20),
 	},
 	button: {
-		backgroundColor: lightColors.accent,
 		paddingHorizontal: RFValue(16),
 		paddingVertical: RFValue(8),
 		borderRadius: RFValue(8),
@@ -70,7 +71,6 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(11),
-		color: lightColors.bgNav,
 	},
 	image: {
 		width: RFValue(130),

@@ -2,9 +2,10 @@ import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
 import { House, Zap, Dice5, ClipboardList, Menu } from 'lucide-react-native';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 export type NavTab = 'home' | 'live' | 'cassino' | 'apostas' | 'menu';
 
@@ -28,7 +29,8 @@ interface TabItemProps {
 }
 
 const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemProps) {
-	const color = isActive ? lightColors.accent : lightColors.textMuted;
+	const colors = useAuthThemeStore((s) => s.colors);
+	const color = isActive ? colors.accent : colors.textMuted;
 	const handlePress = useCallback(() => onPress(tab.key), [onPress, tab.key]);
 
 	return (
@@ -46,7 +48,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 			>
 				{tab.label}
 			</Text>
-			{isActive && <View style={styles.activeDot} />}
+			{isActive && <View style={[styles.activeDot, { backgroundColor: colors.accent }]} />}
 		</TouchableOpacity>
 	);
 });
@@ -54,6 +56,7 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 	const insets = useSafeAreaInsets();
 	const { open: openSidebar } = useSidebar();
+	const colors = useAuthThemeStore((s) => s.colors);
 
 	const handleTabPress = useCallback((key: NavTab) => {
 		if (key === 'menu') {
@@ -62,9 +65,10 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 		}
 		onTabPress(key);
 	}, [onTabPress, openSidebar]);
+
 	const containerStyle = useMemo(
-		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8) }],
-		[insets.bottom],
+		() => [styles.container, { paddingBottom: Math.max(insets.bottom, 8), backgroundColor: colors.bgNav }],
+		[insets.bottom, colors.bgNav],
 	);
 
 	return (
@@ -85,9 +89,7 @@ export function BottomNavBar({ activeTab, onTabPress }: BottomNavBarProps) {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		backgroundColor: lightColors.bgNav,
-	},
+	container: {},
 	divider: {
 		height: 1,
 		backgroundColor: 'rgba(160,160,200,0.15)',
@@ -114,7 +116,6 @@ const styles = StyleSheet.create({
 		width: 4,
 		height: 4,
 		borderRadius: 2,
-		backgroundColor: lightColors.accent,
 		marginTop: 2,
 	},
 });

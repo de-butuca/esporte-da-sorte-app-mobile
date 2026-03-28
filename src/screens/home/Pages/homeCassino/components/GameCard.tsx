@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 type BadgeType = 'live' | 'new' | 'none';
 
@@ -25,8 +26,9 @@ export const GameCard = React.memo(function GameCard({
 	width = RFValue(110),
 	onPress,
 }: GameCardProps) {
+	const colors = useAuthThemeStore((s) => s.colors);
 	const containerStyle = useMemo(() => [styles.container, { width }], [width]);
-	const thumbnailStyle = useMemo(() => [styles.thumbnail, { width }], [width]);
+	const thumbnailStyle = useMemo(() => [styles.thumbnail, { width, backgroundColor: colors.bgCard }], [width, colors.bgCard]);
 
 	return (
 		<TouchableOpacity
@@ -37,24 +39,24 @@ export const GameCard = React.memo(function GameCard({
 			<View style={thumbnailStyle}>
 				<Image source={image} style={styles.thumbnailImage} contentFit="cover" />
 				{badge === 'live' && (
-					<View style={[styles.badge, styles.badgeLive]}>
-						<View style={styles.liveIndicator} />
-						<Text style={styles.badgeLiveText}>Ao vivo</Text>
+					<View style={[styles.badge, { backgroundColor: colors.live }]}>
+						<View style={[styles.liveIndicator, { backgroundColor: colors.textPrimary }]} />
+						<Text style={[styles.badgeLiveText, { color: colors.textPrimary }]}>Ao vivo</Text>
 					</View>
 				)}
 				{badge === 'new' && (
-					<View style={[styles.badge, styles.badgeNew]}>
-						<Text style={styles.badgeNewText}>Novo</Text>
+					<View style={[styles.badge, { backgroundColor: colors.accent }]}>
+						<Text style={[styles.badgeNewText, { color: colors.bgNav }]}>Novo</Text>
 					</View>
 				)}
 				{players && (
 					<View style={styles.players}>
-						<Text style={styles.playersText}>{players}</Text>
+						<Text style={[styles.playersText, { color: colors.textPrimary }]}>{players}</Text>
 					</View>
 				)}
 			</View>
-			<Text style={styles.name} numberOfLines={1}>{name}</Text>
-			<Text style={styles.provider} numberOfLines={1}>{provider}</Text>
+			<Text style={[styles.name, { color: colors.textPrimary }]} numberOfLines={1}>{name}</Text>
+			<Text style={[styles.provider, { color: colors.textMuted }]} numberOfLines={1}>{provider}</Text>
 		</TouchableOpacity>
 	);
 });
@@ -67,7 +69,6 @@ const styles = StyleSheet.create({
 		height: RFValue(95),
 		borderRadius: RFValue(10),
 		overflow: 'hidden',
-		backgroundColor: lightColors.bgCard,
 	},
 	thumbnailImage: {
 		width: '100%',
@@ -84,27 +85,18 @@ const styles = StyleSheet.create({
 		borderRadius: RFValue(6),
 		gap: RFValue(3),
 	},
-	badgeLive: {
-		backgroundColor: lightColors.live,
-	},
 	liveIndicator: {
 		width: 4,
 		height: 4,
 		borderRadius: 2,
-		backgroundColor: lightColors.textPrimary,
 	},
 	badgeLiveText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(8),
-		color: lightColors.textPrimary,
-	},
-	badgeNew: {
-		backgroundColor: lightColors.accent,
 	},
 	badgeNewText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(8),
-		color: lightColors.bgNav,
 	},
 	players: {
 		position: 'absolute',
@@ -118,16 +110,13 @@ const styles = StyleSheet.create({
 	playersText: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(7),
-		color: lightColors.textPrimary,
 	},
 	name: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(10),
-		color: lightColors.textPrimary,
 	},
 	provider: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(8),
-		color: lightColors.textMuted,
 	},
 });

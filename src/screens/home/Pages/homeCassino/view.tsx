@@ -4,7 +4,6 @@ import { BannerCarousel } from './components/BannerCarousel';
 import { GameRow } from './components/GameRow';
 import { PromoBanner } from './components/PromoBanner';
 import { SectionHeader } from './components/SectionHeader';
-import { lightColors } from '@/stampd.config';
 import { useAuthGuard } from '@/core/auth/useAuthGuard';
 import { useCallback } from 'react';
 
@@ -63,7 +62,7 @@ const NEW_GAMES = [
 ];
 
 export function HomeCassino() {
-	const { requireAuth } = useAuthGuard();
+	const { requireAuth } = useAuthGuard('cassino');
 
 	const handleGamePress = useCallback(
 		(gameId: string) => {
@@ -94,17 +93,6 @@ export function HomeCassino() {
 	);
 }
 const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-		backgroundColor: lightColors.background,
-	},
-	scroll: {
-		flex: 1,
-	},
-	scrollContent: {
-		gap: RFValue(20),
-		paddingTop: RFValue(20),
-	},
 	section: {
 		gap: RFValue(12),
 	},

@@ -2,13 +2,14 @@ import React, { useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { fontFamily } from '@/stampd.config';
 import { Menu, Search, Settings } from 'lucide-react-native';
 import { useSidebar } from '@/contexts/Sidebar/SidebarContext';
 import { useAppNavigation } from '@/navigation/hooks';
 import Logo from '@assets/images/logo-square.svg';
 import Animated, { useAnimatedStyle, SharedValue, interpolate, Extrapolation } from 'react-native-reanimated';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { useAuthThemeStore } from '@/core/auth/useAuthThemeStore';
 
 import SOCCER_ICON from '@assets/images/icons/soccer-ball-icon.png';
 import CASSINO_ICON from '@assets/images/icons/cassino-coin-icon.png';
@@ -28,14 +29,15 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	const navigation = useAppNavigation();
 	const { requireAuth, isAuthenticated } = useRequireAuth();
 	const { open: openSidebar } = useSidebar();
+	const colors = useAuthThemeStore((s) => s.colors);
 
 	const handleCategoryPress = useCallback((category: CategoryTab) => {
 		onCategoryChange(category);
 	}, [onCategoryChange]);
 
 	const handleLogin = useCallback(() => {
-		requireAuth(() => { });
-	}, [requireAuth]);
+		requireAuth(() => { }, activeCategory === 'cassino' ? 'cassino' : 'esportes');
+	}, [requireAuth, activeCategory]);
 
 	const handleSearchPress = useCallback(() => {
 		navigation.navigate('Search', {
@@ -52,8 +54,8 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 	});
 
 	const containerStyle = useMemo(
-		() => [styles.container, { paddingTop: insets.top }],
-		[insets.top],
+		() => [styles.container, { paddingTop: insets.top, backgroundColor: colors.background }],
+		[insets.top, colors.background],
 	);
 
 	return (
@@ -63,14 +65,18 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 
 				<View style={styles.actions}>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Search size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2} />
+						<Search size={RFValue(18)} color={colors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.iconBtn} activeOpacity={0.7}>
-						<Settings size={RFValue(18)} color={lightColors.textPrimary} strokeWidth={2} />
+						<Settings size={RFValue(18)} color={colors.textPrimary} strokeWidth={2} />
 					</TouchableOpacity>
 					{!isAuthenticated && (
-						<TouchableOpacity style={styles.entrarBtn} activeOpacity={0.8} onPress={handleLogin}>
-							<Text style={styles.entrarText}>Entrar</Text>
+						<TouchableOpacity
+							style={[styles.entrarBtn, { backgroundColor: colors.accent }]}
+							activeOpacity={0.8}
+							onPress={handleLogin}
+						>
+							<Text style={[styles.entrarText, { color: colors.bgNav }]}>Entrar</Text>
 						</TouchableOpacity>
 					)}
 				</View>
@@ -79,23 +85,31 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 			<Animated.View style={[styles.tabsWrapper, wrapperStyle]}>
 				<View style={styles.categoryTabs}>
 					<TouchableOpacity
-						style={[styles.categoryTab, activeCategory === 'cassino' && styles.categoryTabActive]}
+						style={[styles.categoryTab, activeCategory === 'cassino' && { backgroundColor: colors.bgNav }]}
 						onPress={() => handleCategoryPress('cassino')}
 						activeOpacity={0.7}
 					>
 						<Image source={CASSINO_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text style={[styles.categoryLabel, activeCategory === 'cassino' && styles.categoryLabelActive]}>
+						<Text style={[
+							styles.categoryLabel,
+							{ color: colors.textMuted },
+							activeCategory === 'cassino' && { color: colors.textPrimary, fontFamily: fontFamily.bold },
+						]}>
 							Cassino
 						</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						style={[styles.categoryTab, activeCategory === 'esportes' && styles.categoryTabActive]}
+						style={[styles.categoryTab, activeCategory === 'esportes' && { backgroundColor: colors.bgNav }]}
 						onPress={() => handleCategoryPress('esportes')}
 						activeOpacity={0.7}
 					>
 						<Image source={SOCCER_ICON} style={styles.categoryIcon} resizeMode="contain" />
-						<Text style={[styles.categoryLabel, activeCategory === 'esportes' && styles.categoryLabelActive]}>
+						<Text style={[
+							styles.categoryLabel,
+							{ color: colors.textMuted },
+							activeCategory === 'esportes' && { color: colors.textPrimary, fontFamily: fontFamily.bold },
+						]}>
 							Esportes
 						</Text>
 					</TouchableOpacity>
@@ -107,7 +121,6 @@ export function HomeHeader({ scrollY, activeCategory, onCategoryChange }: HomeHe
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: lightColors.background,
 		paddingHorizontal: RFValue(14),
 		paddingBottom: RFValue(8),
 		shadowColor: '#000',
@@ -131,7 +144,6 @@ const styles = StyleSheet.create({
 		padding: RFValue(4),
 	},
 	entrarBtn: {
-		backgroundColor: lightColors.accent,
 		paddingHorizontal: RFValue(16),
 		paddingVertical: RFValue(8),
 		borderRadius: RFValue(8),
@@ -139,7 +151,6 @@ const styles = StyleSheet.create({
 	entrarText: {
 		fontFamily: fontFamily.bold,
 		fontSize: RFValue(11),
-		color: lightColors.bgNav,
 		letterSpacing: 0.1,
 	},
 	tabsWrapper: {
@@ -161,9 +172,6 @@ const styles = StyleSheet.create({
 		borderRadius: RFValue(8),
 		gap: RFValue(6),
 	},
-	categoryTabActive: {
-		backgroundColor: lightColors.bgNav,
-	},
 	categoryIcon: {
 		width: RFValue(14),
 		height: RFValue(14),
@@ -171,11 +179,6 @@ const styles = StyleSheet.create({
 	categoryLabel: {
 		fontFamily: fontFamily.medium,
 		fontSize: RFValue(11),
-		color: lightColors.textMuted,
 		letterSpacing: 0.08,
-	},
-	categoryLabelActive: {
-		color: lightColors.textPrimary,
-		fontFamily: fontFamily.bold,
 	},
 });
