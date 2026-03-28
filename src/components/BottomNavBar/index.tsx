@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import Animated, {
 	useSharedValue,
 	useAnimatedStyle,
@@ -60,8 +60,8 @@ const TabItem = React.memo(function TabItem({ tab, isActive, onPress }: TabItemP
 			[0, 1],
 			['transparent', 'rgba(16,185,129,0.1)'],
 		),
-		height: interpolate(progress.value, [0, 1], [56, 72]),
-		paddingTop: interpolate(progress.value, [0, 1], [8, 14]),
+		height: interpolate(progress.value, [0, 1], [56, 82]),
+		paddingTop: interpolate(progress.value, [0, 1], [8, 15]),
 	}));
 
 	const dotStyle = useAnimatedStyle(() => ({
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		gap: 4,
 		paddingTop: 8,
-		paddingHorizontal: 20,
+		paddingHorizontal: 21,
 		borderRadius: 16,
 		height: 56,
 	},
