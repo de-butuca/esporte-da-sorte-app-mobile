@@ -25,7 +25,7 @@ class ToastServiceImpl implements IToastService {
 		Toast.show({
 			type,
 			text1: message,
-			duration: options?.duration || 3000,
+			visibilityTime: options?.duration || 3000,
 			position: options?.position === 'top' ? 'top' : 'bottom',
 		});
 	}

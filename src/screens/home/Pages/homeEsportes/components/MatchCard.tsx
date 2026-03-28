@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { fontFamily, lightColors } from '@/stampd.config';
-import { useNavigation } from '@react-navigation/native';
+import { useAppNavigation } from '@/navigation/hooks';
 
 export interface Match {
 	id: string;
@@ -18,13 +18,19 @@ interface MatchCardProps {
 }
 
 export const MatchCard = React.memo(function MatchCard({ match, onPress }: MatchCardProps) {
-	const { navigate } = useNavigation();
+	const navigation = useAppNavigation();
 
-	function SendToStores() {
-		navigate('ReelsEsportesScreen');
+	function handlePress() {
+		if (onPress) {
+			onPress(match);
+			return;
+		}
+
+		navigation.navigate('ReelsEsportesScreen');
 	}
+
 	return (
-		<TouchableOpacity style={styles.container} onPress={SendToStores} activeOpacity={0.8}>
+		<TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.8}>
 			<View style={styles.avatarRing}>
 				{match.thumbnail ? (
 					<Image source={match.thumbnail} style={styles.thumbnailImage} resizeMode="cover" />

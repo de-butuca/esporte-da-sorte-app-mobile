@@ -8,6 +8,7 @@ export type RootStackParamList = {
 	Support: undefined;
 	GameHome: undefined;
 	Bolao: undefined;
+	ReelsEsportesScreen: undefined;
 	Login: undefined;
 	Register: undefined;
 	Propaganda: undefined;
