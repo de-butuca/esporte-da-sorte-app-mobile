@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 import { Styled } from 'stampd/styled';
-import { SectionHeader } from '@/screens/home/Pages/homeCassino/components/SectionHeader';
+import { SectionHeader } from '@/components/SectionHeader';
 import { Match, MatchCard } from './MatchCard';
 import { useNavigation } from '@react-navigation/native';
 

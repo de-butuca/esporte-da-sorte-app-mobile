@@ -1,16 +1,9 @@
 import React from 'react';
-import {
-	ScrollView,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ArrowLeft, Search } from 'lucide-react-native';
-import { SectionHeader } from '@/screens/home/Pages/homeCassino/components/SectionHeader';
+import { SectionHeader } from '@/components/SectionHeader';
 import { PromotionsSupportCard } from '@/screens/promotions/components/PromotionsSupportCard';
 import { fontFamily, lightColors } from '@/stampd.config';
 import { SupportFaqItem } from './components/SupportFaqItem';
@@ -73,21 +66,11 @@ export default function SupportScreen() {
 							return (
 								<TouchableOpacity
 									key={shortcut.id}
-									style={[
-										styles.shortcutChip,
-										isActive && styles.shortcutChipActive,
-									]}
+									style={[styles.shortcutChip, isActive && styles.shortcutChipActive]}
 									onPress={() => toggleShortcut(shortcut.tag)}
 									activeOpacity={0.8}
 								>
-									<Text
-										style={[
-											styles.shortcutLabel,
-											isActive && styles.shortcutLabelActive,
-										]}
-									>
-										{shortcut.label}
-									</Text>
+									<Text style={[styles.shortcutLabel, isActive && styles.shortcutLabelActive]}>{shortcut.label}</Text>
 								</TouchableOpacity>
 							);
 						})}

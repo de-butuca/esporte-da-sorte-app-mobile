@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import { SHS } from '../homeCassino.styled';
+import { SHS } from '../screens/home/Pages/homeCassino/homeCassino.styled';
 
 interface SectionHeaderProps {
 	title: string;

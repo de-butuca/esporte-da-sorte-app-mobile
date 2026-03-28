@@ -3,7 +3,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { BannerCarousel } from './components/BannerCarousel';
 import { GameRow } from './components/GameRow';
 import { PromoBanner } from './components/PromoBanner';
-import { SectionHeader } from './components/SectionHeader';
+import { SectionHeader } from '../../../../components/SectionHeader';
 import { useAuthGuard } from '@/core/auth/useAuthGuard';
 import { HCS } from './homeCassino.styled';
 
@@ -27,10 +27,38 @@ const TRENDING_GAMES = [
 ];
 
 const NEW_GAMES = [
-	{ id: '1', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
-	{ id: '2', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
-	{ id: '3', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
-	{ id: '4', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{
+		id: '1',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
+	{
+		id: '2',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
+	{
+		id: '3',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
+	{
+		id: '4',
+		name: 'Game Name',
+		provider: 'Provider',
+		image: GAME_THUMB_2,
+		badge: 'new' as const,
+		players: '1.2k online',
+	},
 ];
 
 export function HomeCassino() {
