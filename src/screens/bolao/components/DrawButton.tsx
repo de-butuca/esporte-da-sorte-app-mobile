@@ -21,7 +21,7 @@ export function DrawButton({ isSelected, onPress }: DrawButtonProps) {
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
-    borderColor: withTiming(isSelected ? '#2D2387' : 'transparent', {
+    borderColor: withTiming(isSelected ? '#00E878' : 'transparent', {
       duration: 150,
     }),
   }));
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1A2332',
   },
   containerSelected: {
-    borderColor: '#2D2387',
-    backgroundColor: 'rgba(45,35,135,0.15)',
+    borderColor: '#00E878',
+    backgroundColor: 'rgba(0,232,120,0.08)',
   },
   text: {
     fontFamily: fontFamily.bold,
@@ -79,6 +79,6 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
   textSelected: {
-    color: '#B0A8F0',
+    color: '#00E878',
   },
 });

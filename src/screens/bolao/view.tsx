@@ -1,4 +1,4 @@
-import React, { startTransition, useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   View,
   FlatList,
@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Animated, {
-  FadeIn,
-  FadeOut,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -58,9 +56,7 @@ export default function BolaoScreen() {
 
   const handlePhaseChange = useCallback(
     (phase: PhaseId) => {
-      startTransition(() => {
-        setActivePhase(phase);
-      });
+      setActivePhase(phase);
     },
     [setActivePhase],
   );
@@ -184,12 +180,7 @@ export default function BolaoScreen() {
         phaseCounts={phaseCounts}
       />
 
-      <Animated.View
-        key={activePhase}
-        entering={FadeIn.duration(200)}
-        exiting={FadeOut.duration(100)}
-        style={styles.listContainer}
-      >
+      <View style={styles.listContainer}>
         {isGroupPhase ? (
           <FlatList
             data={groupsWithMatches}
@@ -199,9 +190,9 @@ export default function BolaoScreen() {
             contentContainerStyle={[styles.listContent, { paddingBottom: RFValue(120) + insets.bottom }]}
             showsVerticalScrollIndicator={false}
             removeClippedSubviews
-            initialNumToRender={3}
-            maxToRenderPerBatch={2}
-            windowSize={3}
+            initialNumToRender={4}
+            maxToRenderPerBatch={4}
+            windowSize={5}
           />
         ) : (
           <FlatList
@@ -213,11 +204,11 @@ export default function BolaoScreen() {
             showsVerticalScrollIndicator={false}
             removeClippedSubviews
             initialNumToRender={4}
-            maxToRenderPerBatch={2}
-            windowSize={3}
+            maxToRenderPerBatch={4}
+            windowSize={5}
           />
         )}
-      </Animated.View>
+      </View>
 
       <ConfirmButton
         onPress={handleConfirm}
