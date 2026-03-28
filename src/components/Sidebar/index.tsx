@@ -1,17 +1,7 @@
 import React, { useCallback } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-	ClipboardList,
-	Dices,
-	Gift,
-	HelpCircle,
-	House,
-	LogOut,
-	Settings,
-	Trophy,
-	X,
-} from 'lucide-react-native';
+import { ClipboardList, Dices, Gift, HelpCircle, House, LogOut, Settings, Trophy, X } from 'lucide-react-native';
 import { Styled } from 'stampd/styled';
 import { lightColors } from '@/stampd.config';
 import { useAppNavigation } from '@/navigation/hooks';
@@ -34,55 +24,50 @@ const SS = {
 		style: ({ theme }) => ({
 			flex: 1,
 			backgroundColor: theme.colors.bgNav,
+			padding: theme.spacing.m4,
+			position: 'relative',
 		}),
 	}),
 
 	header: Styled.View({
 		style: ({ theme }) => ({
-			paddingHorizontal: theme.spacing.p5,
-			paddingBottom: theme.spacing.p4,
-			borderBottomWidth: 1,
-			borderBottomColor: 'rgba(160,160,200,0.12)',
-			gap: theme.spacing.gap3,
+			flexDirection: 'row',
+			width: '100%',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			paddingVertical: theme.spacing.p3,
+			minHeight: 56,
 		}),
 	}),
 
+	logo: Styled.Image({
+		style: {
+			width: 40,
+			height: 40,
+			resizeMode: 'contain',
+		},
+	}),
+
 	closeBtn: Styled.TouchableOpacity({
-		style: { alignSelf: 'flex-end' },
+		style: {
+			width: 44,
+			height: 44,
+			justifyContent: 'center',
+			alignItems: 'center',
+		},
 		attrs: { activeOpacity: 0.7 },
 	}),
 
 	userSection: Styled.View({
 		style: ({ theme }) => ({
-			flexDirection: 'row',
-			alignItems: 'center',
-			gap: theme.spacing.gap3,
-		}),
-	}),
-
-	avatar: Styled.View({
-		style: ({ theme }) => ({
-			width: theme.size.s12,
-			height: theme.size.s12,
-			borderRadius: theme.radius.roundedFull,
-			backgroundColor: theme.colors.primary,
-			alignItems: 'center',
-			justifyContent: 'center',
-		}),
-	}),
-
-	avatarInitial: Styled.Text({
-		style: ({ theme }) => ({
-			fontFamily: theme.fonts.family.bold,
-			fontSize: theme.fonts.sizes.xl,
-			color: theme.colors.textPrimary,
+			gap: theme.spacing.p1,
 		}),
 	}),
 
 	userName: Styled.Text({
 		style: ({ theme }) => ({
 			fontFamily: theme.fonts.family.bold,
-			fontSize: theme.fonts.sizes.base,
+			fontSize: theme.fonts.sizes.xl2,
 			color: theme.colors.textPrimary,
 		}),
 	}),
@@ -91,6 +76,7 @@ const SS = {
 		style: ({ theme }) => ({
 			fontSize: theme.fonts.sizes.xs,
 			color: theme.colors.textMuted,
+			fontFamily: theme.fonts.family.regular,
 		}),
 	}),
 
@@ -98,9 +84,9 @@ const SS = {
 		style: ({ theme }) => ({
 			flexDirection: 'row',
 			alignItems: 'center',
-			gap: theme.spacing.gap4,
-			paddingVertical: theme.spacing.p3,
-			paddingHorizontal: theme.spacing.p4,
+			gap: theme.spacing.p3,
+			// paddingVertical: theme.spacing.p3,
+			// paddingHorizontal: theme.spacing.p4,
 			borderRadius: theme.radius.roundedMd,
 		}),
 		attrs: { activeOpacity: 0.7 },
@@ -108,28 +94,55 @@ const SS = {
 
 	navLabel: Styled.Text({
 		style: ({ theme }) => ({
-			fontFamily: theme.fonts.family.medium,
-			fontSize: theme.fonts.sizes.sm,
+			fontFamily: theme.fonts.family.bold,
+			fontSize: theme.fonts.sizes.base,
 			color: theme.colors.textSecondary,
+			flex: 1,
 		}),
 	}),
 
 	divider: Styled.View({
 		style: ({ theme }) => ({
 			height: 1,
-			marginHorizontal: theme.spacing.p5,
-			marginVertical: theme.spacing.p2,
+			marginHorizontal: 0,
+			marginVertical: theme.spacing.p3,
 			backgroundColor: 'rgba(160,160,200,0.12)',
 		}),
 	}),
 
 	footer: Styled.View({
 		style: ({ theme }) => ({
-			paddingHorizontal: theme.spacing.p2,
-			paddingTop: theme.spacing.p2,
+			paddingHorizontal: theme.spacing.p4,
+			paddingTop: theme.spacing.p3,
+		}),
+	}),
+
+	logoutBtn: Styled.TouchableOpacity({
+		style: ({ theme }) => ({
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
+			gap: theme.spacing.p3,
+			paddingVertical: theme.spacing.p4,
+			paddingHorizontal: theme.spacing.p5,
+			borderRadius: theme.radius.roundedMd,
+			backgroundColor: 'rgba(179, 38, 30, 0.15)',
+			borderWidth: 1.5,
+			borderColor: theme.colors.error,
+		}),
+		attrs: { activeOpacity: 0.7 },
+	}),
+
+	logoutLabel: Styled.Text({
+		style: ({ theme }) => ({
+			fontFamily: theme.fonts.family.bold,
+			fontSize: theme.fonts.sizes.base,
+			color: theme.colors.error,
 		}),
 	}),
 };
+
+import LogoImage from '@assets/images/logo-text.svg';
 
 export function Sidebar({ onClose }: SidebarProps) {
 	const insets = useSafeAreaInsets();
@@ -148,37 +161,58 @@ export function Sidebar({ onClose }: SidebarProps) {
 			key: 'home',
 			label: 'Início',
 			Icon: House,
-			onPress: () => { onClose(); navigate('Home'); },
+			onPress: () => {
+				onClose();
+				navigate('Home');
+			},
 		},
 		{
 			key: 'cassino',
 			label: 'Cassino',
 			Icon: Dices,
-			onPress: () => { onClose(); navigate('Home'); },
+			onPress: () => {
+				onClose();
+				navigate('Home');
+			},
 		},
 		{
 			key: 'esportes',
 			label: 'Esportes',
 			Icon: Trophy,
-			onPress: () => { onClose(); navigate('GameHome'); },
+			onPress: () => {
+				onClose();
+				navigate('GameHome');
+			},
 		},
 		{
 			key: 'apostas',
 			label: 'Apostas',
 			Icon: ClipboardList,
-			onPress: () => { requireAuth(() => { onClose(); }); },
+			onPress: () => {
+				requireAuth(() => {
+					onClose();
+				});
+			},
 		},
 		{
 			key: 'promocoes',
 			label: 'Promoções',
 			Icon: Gift,
-			onPress: () => { requireAuth(() => { onClose(); navigate('Promotions'); }); },
+			onPress: () => {
+				requireAuth(() => {
+					onClose();
+					navigate('Promotions');
+				});
+			},
 		},
 		{
 			key: 'support',
 			label: 'Suporte',
 			Icon: HelpCircle,
-			onPress: () => { onClose(); navigate('Support'); },
+			onPress: () => {
+				onClose();
+				navigate('Support');
+			},
 		},
 	];
 
@@ -186,31 +220,15 @@ export function Sidebar({ onClose }: SidebarProps) {
 
 	return (
 		<SS.root>
-			<SS.header style={{ paddingTop: Math.max(insets.top, 16) + 8 }}>
-				<SS.closeBtn onPress={onClose}>
-					<X size={20} color={lightColors.textMuted} strokeWidth={2} />
-				</SS.closeBtn>
+			<SS.header style={{ paddingTop: Math.max(insets.top, 12) }}>
+				<LogoImage width={95} height={32} />
 
-				<SS.userSection>
-					<SS.avatar>
-						<SS.avatarInitial>{initial}</SS.avatarInitial>
-					</SS.avatar>
-					<SS.root style={styles.flex}>
-						<SS.userName numberOfLines={1}>
-							{user?.name ?? 'Visitante'}
-						</SS.userName>
-						<SS.userSubtitle numberOfLines={1}>
-							{user ? 'Minha conta' : 'Faça login para continuar'}
-						</SS.userSubtitle>
-					</SS.root>
-				</SS.userSection>
+				<SS.closeBtn onPress={onClose}>
+					<X size={28} color={lightColors.textMuted} strokeWidth={2} />
+				</SS.closeBtn>
 			</SS.header>
 
-			<ScrollView
-				style={styles.flex}
-				contentContainerStyle={styles.scrollContent}
-				showsVerticalScrollIndicator={false}
-			>
+			<ScrollView style={styles.flex} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 				{NAV_ITEMS.map((item) => (
 					<SS.navItem key={item.key} onPress={item.onPress}>
 						<item.Icon size={20} color={lightColors.textSecondary} strokeWidth={1.8} />
@@ -220,7 +238,12 @@ export function Sidebar({ onClose }: SidebarProps) {
 
 				<SS.divider />
 
-				<SS.navItem onPress={() => { onClose(); navigate('Settings' as any); }}>
+				<SS.navItem
+					onPress={() => {
+						onClose();
+						navigate('Settings' as any);
+					}}
+				>
 					<Settings size={20} color={lightColors.textMuted} strokeWidth={1.8} />
 					<SS.navLabel>Configurações</SS.navLabel>
 				</SS.navItem>
@@ -228,14 +251,10 @@ export function Sidebar({ onClose }: SidebarProps) {
 
 			<SS.footer style={{ paddingBottom: Math.max(insets.bottom, 16) }}>
 				<SS.divider />
-				<TouchableOpacity
-					style={styles.logoutBtn}
-					activeOpacity={0.7}
-					onPress={handleSignOut}
-				>
-					<LogOut size={20} color={lightColors.error} strokeWidth={1.8} />
-					<SS.navLabel style={styles.logoutLabel}>Sair</SS.navLabel>
-				</TouchableOpacity>
+				<SS.logoutBtn onPress={handleSignOut}>
+					<LogOut size={24} color={lightColors.error} strokeWidth={2} />
+					<SS.logoutLabel>Sair</SS.logoutLabel>
+				</SS.logoutBtn>
 			</SS.footer>
 		</SS.root>
 	);
@@ -248,16 +267,6 @@ const styles = StyleSheet.create({
 	},
 	scrollContent: {
 		paddingVertical: 8,
-		paddingHorizontal: 8,
-	},
-	logoutBtn: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: 16,
-		paddingVertical: 12,
-		paddingHorizontal: 20,
-	},
-	logoutLabel: {
-		color: lightColors.error,
+		gap: 18,
 	},
 });

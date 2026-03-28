@@ -68,10 +68,10 @@ export default function ReelsEsportesScreen() {
 						style={{
 							position: 'absolute',
 							left: 0,
-							top: 0,
+							top: 60,
 							bottom: 0,
 							width: '15%',
-							zIndex: 10,
+							zIndex: 5,
 						}}
 					/>
 
@@ -81,10 +81,10 @@ export default function ReelsEsportesScreen() {
 						style={{
 							position: 'absolute',
 							right: 0,
-							top: 0,
+							top: 60,
 							bottom: 0,
 							width: '15%',
-							zIndex: 10,
+							zIndex: 5,
 						}}
 					/>
 

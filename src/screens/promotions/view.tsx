@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ArrowLeft } from 'lucide-react-native';
 import { ButtonBase } from '@/components/Button';
-import { SectionHeader } from '@/screens/home/Pages/homeCassino/components/SectionHeader';
+import { SectionHeader } from '@/components/SectionHeader';
 import { fontFamily, lightColors } from '@/stampd.config';
 import { PromotionCard } from './components/PromotionCard';
 import { PromotionFilterChips } from './components/PromotionFilterChips';
@@ -32,10 +32,8 @@ export default function PromotionsScreen() {
 	} = usePromotionsViewModel();
 
 	const renderCard = useCallback(
-		({ item }: { item: PromotionCardViewModel }) => (
-			<PromotionCard card={item} onPress={handleOpenPromotion} />
-		),
-		[handleOpenPromotion],
+		({ item }: { item: PromotionCardViewModel }) => <PromotionCard card={item} onPress={handleOpenPromotion} />,
+		[handleOpenPromotion]
 	);
 
 	const keyExtractor = useCallback((item: PromotionCardViewModel) => item.id, []);
@@ -54,8 +52,7 @@ export default function PromotionsScreen() {
 				<View style={styles.headerCopy}>
 					<Text style={styles.headerTitle}>{screen?.headerTitle ?? 'Promoções'}</Text>
 					<Text style={styles.headerDescription}>
-						{screen?.headerDescription ??
-							'Campanhas especiais, bônus e benefícios pensados para o seu jogo no mobile.'}
+						{screen?.headerDescription ?? 'Campanhas especiais, bônus e benefícios pensados para o seu jogo no mobile.'}
 					</Text>
 				</View>
 			</View>
@@ -81,9 +78,7 @@ export default function PromotionsScreen() {
 					ItemSeparatorComponent={renderSeparator}
 					ListHeaderComponent={
 						<View style={styles.headerContent}>
-							{screen.hero && (
-								<PromotionsHero hero={screen.hero} onPress={handleOpenPromotion} />
-							)}
+							{screen.hero && <PromotionsHero hero={screen.hero} onPress={handleOpenPromotion} />}
 							<PromotionFilterChips
 								filters={screen.filters}
 								selectedFilter={selectedCategory}
@@ -137,12 +132,7 @@ interface PromotionsFeedbackStateProps {
 	onAction?: () => void;
 }
 
-function PromotionsFeedbackState({
-	title,
-	description,
-	actionLabel,
-	onAction,
-}: PromotionsFeedbackStateProps) {
+function PromotionsFeedbackState({ title, description, actionLabel, onAction }: PromotionsFeedbackStateProps) {
 	return (
 		<View style={styles.feedbackCard}>
 			<Text style={styles.feedbackTitle}>{title}</Text>

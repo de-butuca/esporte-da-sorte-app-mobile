@@ -116,6 +116,7 @@ setThemeMode(ThemeMode.DARK);
 
 ### Regras stampd
 
+- **SEMPRE importar `lightColors`, `fontFamily`, `shadows` de `@/stampd.config`** — este é o arquivo canônico de design tokens do projeto. NUNCA importar de `@/theme/design-tokens`
 - Use `theme.spacing.*`, `theme.radius.*`, `theme.size.*` para tokens estáticos (custo zero)
 - Use `theme.colors.*` para cores que mudam entre temas
 - Use `variants` ao invés de condicionais para variações visuais fixas
@@ -123,6 +124,12 @@ setThemeMode(ThemeMode.DARK);
 - Inclua `stampd-types.d.ts` no tsconfig (já configurado)
 - Plugin stampd DEVE vir antes de `react-native-reanimated/plugin` no babel.config.js
 - Exportar styled components com namespace: `export const BBS = { container, Text }` (Button Base Styled)
+
+### Import padrão de tokens
+
+```tsx
+import { lightColors, fontFamily, shadows } from '@/stampd.config';
+```
 
 ## Design Tokens (cores principais)
 
@@ -132,17 +139,19 @@ setThemeMode(ThemeMode.DARK);
 | `background` | #01003A | Background geral dark |
 | `bgNav` | #02003D | Background navegação |
 | `bgCard` | #0A0F2E | Background cards |
+| `bgSecondary` | #101828 | Background secundário |
 | `accent` | #38E67D | Verde destaque, CTAs |
 | `textPrimary` | #FFFFFF | Texto principal |
 | `textSecondary` | #F0F0F0 | Texto secundário |
 | `textMuted` | #A0A0B0 | Texto sutil |
 | `textInactive` | #6B6B8A | Texto inativo |
 | `live` | #FF3B3B | Indicador ao vivo |
+| `success` | #22C55E | Sucesso |
 | `error` | #B3261E | Erros |
 
 ## Shadows
 
-4 níveis (`shadows.level1` a `level4`) com valores platform-specific (iOS shadowColor/Android elevation). Importar de `@/theme/design-tokens`.
+4 níveis (`shadows.level1` a `level4`) com valores platform-specific (iOS shadowColor/Android elevation). Importar de `@/stampd.config`.
 
 ## Convenções de código
 
@@ -160,7 +169,8 @@ setThemeMode(ThemeMode.DARK);
 - Usar stampd `Styled.*` para componentes reutilizáveis com variantes
 - `StyleSheet.create()` para screens e componentes simples
 - Nunca hardcodar cores - usar design tokens ou `theme.colors.*`
-- Shadows via `shadows.level1-4` do design-tokens
+- Shadows via `shadows.level1-4` de `@/stampd.config`
+- Cores e fonts sempre de `@/stampd.config` (`lightColors`, `fontFamily`)
 
 ### React Native - Boas Práticas
 

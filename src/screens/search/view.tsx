@@ -1,18 +1,10 @@
 import React from 'react';
-import {
-	ActivityIndicator,
-	ScrollView,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Search as SearchIcon, X } from 'lucide-react-native';
 import { ButtonBase } from '@/components/Button';
-import { SectionHeader } from '@/screens/home/Pages/homeCassino/components/SectionHeader';
+import { SectionHeader } from '@/components/SectionHeader';
 import { fontFamily, lightColors } from '@/stampd.config';
 import { SearchEmptyState } from './components/SearchEmptyState';
 import { SearchLeagueCard } from './components/SearchLeagueCard';
@@ -77,11 +69,7 @@ export default function SearchScreen() {
 				</View>
 			</View>
 
-			<SearchSportTabs
-				sports={sports}
-				selectedSportSlug={activeSportSlug}
-				onSelectSport={handleSelectSport}
-			/>
+			<SearchSportTabs sports={sports} selectedSportSlug={activeSportSlug} onSelectSport={handleSelectSport} />
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
@@ -92,18 +80,14 @@ export default function SearchScreen() {
 					<View style={styles.feedbackCard}>
 						<ActivityIndicator size="large" color={lightColors.accent} />
 						<Text style={styles.feedbackTitle}>Carregando busca</Text>
-						<Text style={styles.feedbackDescription}>
-							Estamos preparando ligas, jogos e sugestoes para voce.
-						</Text>
+						<Text style={styles.feedbackDescription}>Estamos preparando ligas, jogos e sugestoes para voce.</Text>
 					</View>
 				) : null}
 
 				{!isLoading && isError ? (
 					<View style={styles.feedbackCard}>
 						<Text style={styles.feedbackTitle}>Nao foi possivel carregar a busca</Text>
-						<Text style={styles.feedbackDescription}>
-							Tente novamente para recarregar os dados mockados da tela.
-						</Text>
+						<Text style={styles.feedbackDescription}>Tente novamente para recarregar os dados mockados da tela.</Text>
 						<ButtonBase
 							text="Tentar novamente"
 							size="sm"
@@ -117,18 +101,12 @@ export default function SearchScreen() {
 
 				{!isLoading && !isError && hasTypedSearch ? (
 					<>
-						<Text style={styles.resultsLabel}>
-							{`${searchResults.length} resultados para "${trimmedSearchValue}"`}
-						</Text>
+						<Text style={styles.resultsLabel}>{`${searchResults.length} resultados para "${trimmedSearchValue}"`}</Text>
 
 						{searchResults.length ? (
 							<View style={styles.cardsList}>
 								{searchResults.map((league) => (
-									<SearchLeagueCard
-										key={league.id}
-										league={league}
-										onPress={handleOpenLeague}
-									/>
+									<SearchLeagueCard key={league.id} league={league} onPress={handleOpenLeague} />
 								))}
 							</View>
 						) : (
@@ -145,20 +123,13 @@ export default function SearchScreen() {
 									<View style={styles.inlineHeaderTitleWrap}>
 										<Text style={styles.inlineHeaderTitle}>Buscas recentes</Text>
 									</View>
-									<TouchableOpacity
-										onPress={handleClearRecentSearches}
-										activeOpacity={0.8}
-									>
+									<TouchableOpacity onPress={handleClearRecentSearches} activeOpacity={0.8}>
 										<Text style={styles.inlineHeaderAction}>Limpar tudo</Text>
 									</TouchableOpacity>
 								</View>
 								<View style={styles.recentList}>
 									{recentSearches.map((searchTerm) => (
-										<SearchRecentItem
-											key={searchTerm}
-											label={searchTerm}
-											onPress={handleSelectRecentSearch}
-										/>
+										<SearchRecentItem key={searchTerm} label={searchTerm} onPress={handleSelectRecentSearch} />
 									))}
 								</View>
 							</View>
@@ -168,10 +139,7 @@ export default function SearchScreen() {
 							<View style={styles.sectionHeaderWrap}>
 								<SectionHeader title="Em alta agora" hasLive />
 							</View>
-							<SearchTopicChips
-								topics={trendingTopics}
-								onPressTopic={handleSelectTrendingTopic}
-							/>
+							<SearchTopicChips topics={trendingTopics} onPressTopic={handleSelectTrendingTopic} />
 						</View>
 
 						<View style={styles.sectionBlock}>
@@ -180,11 +148,7 @@ export default function SearchScreen() {
 							</View>
 							<View style={styles.cardsList}>
 								{highlightedLeagues.map((league) => (
-									<SearchLeagueCard
-										key={league.id}
-										league={league}
-										onPress={handleOpenLeague}
-									/>
+									<SearchLeagueCard key={league.id} league={league} onPress={handleOpenLeague} />
 								))}
 							</View>
 						</View>
