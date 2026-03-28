@@ -31,7 +31,7 @@ function InstructionCard({ icon, title, description, colors }: InstructionCardPr
 export default function FaceVerificationScreen() {
 	const insets = useSafeAreaInsets();
 	const { theme } = useStampdUI();
-	const { goBack, canGoBack } = useAppNavigation();
+	const { goBack, canGoBack, navigate } = useAppNavigation();
 
 	const c = {
 		bg: theme.colors.background,
@@ -112,10 +112,7 @@ export default function FaceVerificationScreen() {
 				<TouchableOpacity
 					style={[styles.primaryBtn, { backgroundColor: c.accent }]}
 					activeOpacity={0.8}
-					onPress={() => {
-						// TODO: integrar com câmera/SDK de verificação facial
-						if (__DEV__) console.log('Iniciar verificação facial');
-					}}
+					onPress={() => navigate('FaceCapture')}
 				>
 					<Text style={[styles.primaryBtnText, { color: c.bg }]}>Iniciar Verificação</Text>
 				</TouchableOpacity>
