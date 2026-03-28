@@ -7,6 +7,7 @@ import { HomeHeader, CategoryTab } from './Pages/homeCassino/components/HomeHead
 import { BottomNavBar, NavTab } from '@/components/BottomNavBar';
 import { HomeCassino } from './Pages/homeCassino/view';
 import { HomeEsportes } from './Pages/homeEsportes/view';
+import { HomeStyled } from './home.styled';
 
 export default function HomeScreen() {
 	const [activeTab, setActiveTab] = useState<NavTab>('home');
@@ -28,7 +29,7 @@ export default function HomeScreen() {
 	);
 
 	return (
-		<View style={styles.root}>
+		<HomeStyled.Root>
 			<HomeHeader scrollY={scrollY} activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
 
 			<Animated.ScrollView
@@ -42,15 +43,11 @@ export default function HomeScreen() {
 			</Animated.ScrollView>
 
 			<BottomNavBar activeTab={activeTab} onTabPress={setActiveTab} />
-		</View>
+		</HomeStyled.Root>
 	);
 }
 
 const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-		backgroundColor: lightColors.background,
-	},
 	scroll: {
 		flex: 1,
 	},

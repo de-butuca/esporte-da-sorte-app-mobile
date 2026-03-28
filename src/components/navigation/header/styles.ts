@@ -1,4 +1,3 @@
-import { shadows } from '@/stampd.config';
 import { Styled } from 'stampd/styled';
 
 const Container = Styled.View({

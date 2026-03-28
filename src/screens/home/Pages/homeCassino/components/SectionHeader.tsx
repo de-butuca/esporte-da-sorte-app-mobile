@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { TouchableOpacity } from 'react-native';
+import { SHS } from '../homeCassino.styled';
 
 interface SectionHeaderProps {
 	title: string;
@@ -12,46 +11,16 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ title, count, hasLive, onSeeAll }: SectionHeaderProps) {
 	return (
-		<View style={styles.container}>
-			<View style={styles.titleRow}>
-				{hasLive && <View style={styles.liveDot} />}
-				<Text style={styles.title}>{title}</Text>
-			</View>
+		<SHS.container>
+			<SHS.titleRow>
+				{hasLive && <SHS.liveDot />}
+				<SHS.title>{title}</SHS.title>
+			</SHS.titleRow>
 			{count !== undefined && (
 				<TouchableOpacity onPress={onSeeAll} activeOpacity={0.7}>
-					<Text style={styles.seeAll}>Ver todos →</Text>
+					<SHS.seeAll>Ver todos →</SHS.seeAll>
 				</TouchableOpacity>
 			)}
-		</View>
+		</SHS.container>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		paddingHorizontal: RFValue(20),
-	},
-	titleRow: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: RFValue(8),
-	},
-	liveDot: {
-		width: RFValue(8),
-		height: RFValue(8),
-		borderRadius: RFValue(4),
-		backgroundColor: lightColors.live,
-	},
-	title: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(18),
-		color: lightColors.textPrimary,
-	},
-	seeAll: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(13),
-		color: lightColors.accent,
-	},
-});

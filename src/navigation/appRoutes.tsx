@@ -7,6 +7,7 @@ import { lightColors } from '@/stampd.config';
 import HomeScreen from '@/screens/home/view';
 import GameHomeScreen from '@/screens/game-home/view';
 import LoginScreen from '@/screens/login/login.view';
+import SettingsScreen from '@/screens/settings/view';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,11 @@ export function AppStack() {
 					headerShown: false,
 					animation: 'slide_from_bottom',
 				}}
+			/>
+			<Stack.Screen
+				name="Settings"
+				component={SettingsScreen}
+				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>
 	);

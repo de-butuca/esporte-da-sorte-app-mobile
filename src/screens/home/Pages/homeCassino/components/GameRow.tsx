@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { GameCard } from './GameCard';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
+import { GAME_ROW_CONTENT_STYLE } from '../homeCassino.styled';
 
 interface Game {
 	id: string;
@@ -24,11 +25,8 @@ export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRo
 
 	const handleGamePress = useCallback((game: Game) => {
 		const category = game.badge === 'live' ? 'live' : 'casino';
-
 		guardNavigation(category, () => {
-			if (onGamePress) {
-				onGamePress(game.id);
-			}
+			if (onGamePress) onGamePress(game.id);
 		});
 	}, [guardNavigation, onGamePress]);
 
@@ -52,15 +50,8 @@ export function GameRow({ games, cardWidth = RFValue(130), onGamePress }: GameRo
 			keyExtractor={keyExtractor}
 			horizontal
 			showsHorizontalScrollIndicator={false}
-			contentContainerStyle={styles.content}
+			contentContainerStyle={GAME_ROW_CONTENT_STYLE}
 			renderItem={renderItem}
 		/>
 	);
 }
-
-const styles = StyleSheet.create({
-	content: {
-		paddingHorizontal: RFValue(20),
-		gap: RFValue(12),
-	},
-});

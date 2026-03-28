@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { ImageSourcePropType, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { fontFamily, lightColors } from '@/stampd.config';
+import { GCS } from '../homeCassino.styled';
 
 type BadgeType = 'live' | 'new' | 'none';
 
@@ -22,112 +21,39 @@ export const GameCard = React.memo(function GameCard({
 	provider,
 	badge = 'none',
 	players,
-	width = RFValue(130),
+	width,
 	onPress,
 }: GameCardProps) {
-	const containerStyle = useMemo(() => [styles.container, { width }], [width]);
-	const thumbnailStyle = useMemo(() => [styles.thumbnail, { width }], [width]);
-
 	return (
-		<TouchableOpacity
-			style={containerStyle}
-			activeOpacity={0.8}
-			onPress={onPress}
-		>
-			<View style={thumbnailStyle}>
+		<GCS.container {...{ width } as any} onPress={onPress}>
+			<GCS.thumbnail {...{ width } as any}>
 				<Image source={image} style={styles.thumbnailImage} contentFit="cover" />
 				{badge === 'live' && (
-					<View style={[styles.badge, styles.badgeLive]}>
-						<View style={styles.liveIndicator} />
-						<Text style={styles.badgeLiveText}>Ao vivo</Text>
-					</View>
+					<GCS.badge type="live">
+						<GCS.liveIndicator />
+						<GCS.badgeText type="live">Ao vivo</GCS.badgeText>
+					</GCS.badge>
 				)}
 				{badge === 'new' && (
-					<View style={[styles.badge, styles.badgeNew]}>
-						<Text style={styles.badgeNewText}>Novo</Text>
-					</View>
+					<GCS.badge type="new">
+						<GCS.badgeText type="new">Novo</GCS.badgeText>
+					</GCS.badge>
 				)}
 				{players && (
-					<View style={styles.players}>
-						<Text style={styles.playersText}>{players}</Text>
-					</View>
+					<GCS.players>
+						<GCS.playersText>{players}</GCS.playersText>
+					</GCS.players>
 				)}
-			</View>
-			<Text style={styles.name} numberOfLines={1}>{name}</Text>
-			<Text style={styles.provider} numberOfLines={1}>{provider}</Text>
-		</TouchableOpacity>
+			</GCS.thumbnail>
+			<GCS.name numberOfLines={1}>{name}</GCS.name>
+			<GCS.provider numberOfLines={1}>{provider}</GCS.provider>
+		</GCS.container>
 	);
 });
 
 const styles = StyleSheet.create({
-	container: {
-		gap: RFValue(6),
-	},
-	thumbnail: {
-		height: RFValue(130),
-		borderRadius: RFValue(16),
-		overflow: 'hidden',
-		backgroundColor: lightColors.bgCard,
-	},
 	thumbnailImage: {
 		width: '100%',
 		height: '100%',
-	},
-	badge: {
-		position: 'absolute',
-		top: RFValue(8),
-		left: RFValue(8),
-		flexDirection: 'row',
-		alignItems: 'center',
-		paddingHorizontal: RFValue(8),
-		paddingVertical: RFValue(4),
-		borderRadius: RFValue(8),
-		gap: RFValue(4),
-	},
-	badgeLive: {
-		backgroundColor: lightColors.live,
-	},
-	liveIndicator: {
-		width: 5,
-		height: 5,
-		borderRadius: 3,
-		backgroundColor: lightColors.textPrimary,
-	},
-	badgeLiveText: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(9),
-		color: lightColors.textPrimary,
-	},
-	badgeNew: {
-		backgroundColor: lightColors.accent,
-	},
-	badgeNewText: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(9),
-		color: lightColors.bgNav,
-	},
-	players: {
-		position: 'absolute',
-		bottom: RFValue(8),
-		left: RFValue(8),
-		backgroundColor: 'rgba(0,0,0,0.5)',
-		paddingHorizontal: RFValue(8),
-		paddingVertical: RFValue(3),
-		borderRadius: RFValue(20),
-	},
-	playersText: {
-		fontFamily: fontFamily.medium,
-		fontSize: RFValue(8),
-		color: lightColors.textPrimary,
-	},
-	name: {
-		fontFamily: fontFamily.bold,
-		fontSize: RFValue(11),
-		color: lightColors.textPrimary,
-	},
-	provider: {
-		fontFamily: fontFamily.medium,
-		fontSize: RFValue(9),
-		color: lightColors.textMuted,
 	},
 });

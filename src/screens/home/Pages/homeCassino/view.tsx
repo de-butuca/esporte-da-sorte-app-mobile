@@ -1,12 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { useCallback } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { BannerCarousel } from './components/BannerCarousel';
 import { GameRow } from './components/GameRow';
 import { PromoBanner } from './components/PromoBanner';
 import { SectionHeader } from './components/SectionHeader';
-import { lightColors } from '@/stampd.config';
 import { useAuthGuard } from '@/core/auth/useAuthGuard';
-import { useCallback } from 'react';
+import { HCS } from './homeCassino.styled';
 
 const GAME_THUMB_1 = require('@assets/images/games/game-thumbnail-1.png');
 const GAME_THUMB_2 = require('@assets/images/games/game-thumbnail-2.png');
@@ -28,38 +27,10 @@ const TRENDING_GAMES = [
 ];
 
 const NEW_GAMES = [
-	{
-		id: '1',
-		name: 'Game Name',
-		provider: 'Provider',
-		image: GAME_THUMB_2,
-		badge: 'new' as const,
-		players: '1.2k online',
-	},
-	{
-		id: '2',
-		name: 'Game Name',
-		provider: 'Provider',
-		image: GAME_THUMB_2,
-		badge: 'new' as const,
-		players: '1.2k online',
-	},
-	{
-		id: '3',
-		name: 'Game Name',
-		provider: 'Provider',
-		image: GAME_THUMB_2,
-		badge: 'new' as const,
-		players: '1.2k online',
-	},
-	{
-		id: '4',
-		name: 'Game Name',
-		provider: 'Provider',
-		image: GAME_THUMB_2,
-		badge: 'new' as const,
-		players: '1.2k online',
-	},
+	{ id: '1', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '2', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '3', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
+	{ id: '4', name: 'Game Name', provider: 'Provider', image: GAME_THUMB_2, badge: 'new' as const, players: '1.2k online' },
 ];
 
 export function HomeCassino() {
@@ -73,42 +44,24 @@ export function HomeCassino() {
 		},
 		[requireAuth]
 	);
+
 	return (
 		<>
 			<BannerCarousel />
-			<View style={styles.section}>
+			<HCS.section>
 				<SectionHeader title="Ao vivo" count={12} hasLive />
 				<GameRow games={LIVE_GAMES} cardWidth={RFValue(95)} onGamePress={handleGamePress} />
-			</View>
-			<View style={styles.section}>
+			</HCS.section>
+			<HCS.section>
 				<SectionHeader title="Cassino em alta" count={12} />
 				<GameRow games={TRENDING_GAMES} onGamePress={handleGamePress} />
-			</View>
+			</HCS.section>
 			<PromoBanner />
-			<View style={styles.section}>
+			<HCS.section>
 				<SectionHeader title="Novos cassinos" count={12} />
 				<GameRow games={NEW_GAMES} onGamePress={handleGamePress} />
-			</View>
-			<View style={styles.bottomSpacer} />
+			</HCS.section>
+			<HCS.bottomSpacer />
 		</>
 	);
 }
-const styles = StyleSheet.create({
-	root: {
-		flex: 1,
-		backgroundColor: lightColors.background,
-	},
-	scroll: {
-		flex: 1,
-	},
-	scrollContent: {
-		gap: RFValue(20),
-		paddingTop: RFValue(20),
-	},
-	section: {
-		gap: RFValue(12),
-	},
-	bottomSpacer: {
-		height: RFValue(16),
-	},
-});

@@ -80,7 +80,7 @@ declare global {
       onPrimary: "black";
       secondary: "#625B71";
       onSecondary: "#FFFFFF";
-      background: "#01003A";
+      background: "#dddddd";
       onBackground: "#FFFFFF";
       bgNav: "#02003D";
       bgCard: "#0A0F2E";
