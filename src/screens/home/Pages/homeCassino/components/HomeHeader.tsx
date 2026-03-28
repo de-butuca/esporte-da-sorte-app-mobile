@@ -3,7 +3,8 @@ import { View, Image, StyleSheet, LayoutChangeEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Search, Settings } from 'lucide-react-native';
-import Logo from '@assets/images/logo-square.svg';
+import LogoVerde from '@assets/esportesDaSorteExtensoVerde.svg';
+import LogoBranco from '@assets/esportesDaSorteExtensoBranco.svg';
 import Animated, {
 	useAnimatedStyle,
 	SharedValue,
@@ -77,7 +78,11 @@ export function HomeHeader({ scrollY }: HomeHeaderProps) {
 	return (
 		<View style={containerStyle}>
 			<HHS.topRow>
-				<Logo width={RFValue(80)} height={RFValue(28)} />
+				{activeCategory === 'esportes' ? (
+					<LogoVerde width={92} height={32} />
+				) : (
+					<LogoBranco width={101} height={35} />
+				)}
 
 				<HHS.actions>
 					<HHS.iconBtn>
