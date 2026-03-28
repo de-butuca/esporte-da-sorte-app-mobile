@@ -64,7 +64,6 @@ class NativeSplashView: UIView {
       s.fillColor = UIColor.white.cgColor
       sportesGroup.addSublayer(s)
     }
-    // anchorPoint (0,0) so width shrinks from the RIGHT (like HTML clipRect)
     sportesMaskLayer.anchorPoint = CGPoint(x: 0, y: 0)
     sportesMaskLayer.position = CGPoint(x: 0, y: 0)
     sportesMaskLayer.bounds = CGRect(x: 0, y: 0, width: svgW, height: 248 * sy)
@@ -80,7 +79,6 @@ class NativeSplashView: UIView {
       s.fillColor = UIColor.white.cgColor
       daSorteGroup.addSublayer(s)
     }
-    // anchorPoint (0,0) so width shrinks from the RIGHT
     daSorteMaskLayer.anchorPoint = CGPoint(x: 0, y: 0)
     daSorteMaskLayer.position = CGPoint(x: 0, y: 226 * sy)
     daSorteMaskLayer.bounds = CGRect(x: 0, y: 0, width: svgW, height: 193 * sy)
@@ -135,8 +133,6 @@ class NativeSplashView: UIView {
 
     DispatchQueue.main.asyncAfter(deadline: .now() + p1 + p2 + p3 + p4) { [weak self] in
       guard let self = self else { return }
-      // HTML: translateX(137px) translateY(32px) on a 340px-wide SVG
-      // Scale from HTML display size to our display size
       let displayScale = self.svgW / 340
       let a = CABasicAnimation(keyPath: "transform")
       a.toValue = NSValue(caTransform3D: CATransform3DMakeTranslation(137 * displayScale, 32 * displayScale, 0))
@@ -145,7 +141,6 @@ class NativeSplashView: UIView {
       self.containerLayer.add(a, forKey: "move")
     }
 
-    // Auto-hide after animation completes (fallback if JS can't call hide)
     let total = p1 + p2 + p3 + p4 + p5 + 0.3
     DispatchQueue.main.asyncAfter(deadline: .now() + total) { [weak self] in
       self?.hide(animated: true)

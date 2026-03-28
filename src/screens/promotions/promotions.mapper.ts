@@ -18,7 +18,7 @@ const BONUS_FALLBACK = require('@assets/images/banners/banner-3.png');
 const SPORTS_FALLBACK = require('@assets/images/banners/banner-2.png');
 const CASINO_FALLBACK = require('@assets/images/banners/banner-4.png');
 
-const TICKET_ICON = require('@assets/images/icons/ticket-percent.png');
+const TICKET_ICON = require('@assets/images/icons/ticket-percent.svg');
 const SPORTS_ICON = require('@assets/images/icons/soccer-ball-icon.png');
 const CASINO_ICON = require('@assets/images/icons/cassino-coin-icon.png');
 

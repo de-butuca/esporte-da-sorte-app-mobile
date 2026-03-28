@@ -58,7 +58,7 @@ export function HeaderRouter({ back, title }: IHeaderRouterProps) {
 					<Logo width={32} height={32} />
 				</HS.BodyStart>
 
-				<HS.BodyMiddle>{/* centro */}</HS.BodyMiddle>
+				<HS.BodyMiddle></HS.BodyMiddle>
 
 				<HS.BodyEnd>
 					<ButtonBase text="Entrar" onPress={NOOP} size="sm" />

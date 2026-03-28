@@ -23,7 +23,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const FLAG_BRA = "🇧🇷";
 const FLAG_FRA = "🇫🇷";
 
-/* ───────── Stat item ───────── */
 function StatItem({ icon, value }: { icon: string; value: string }) {
   return (
     <View style={styles.statItem}>
@@ -33,7 +32,6 @@ function StatItem({ icon, value }: { icon: string; value: string }) {
   );
 }
 
-/* ───────── Odds button ───────── */
 function OddsButton({ label, odds }: { label: string; odds: string }) {
   return (
     <Pressable style={styles.oddsButton}>
@@ -43,7 +41,6 @@ function OddsButton({ label, odds }: { label: string; odds: string }) {
   );
 }
 
-/* ───────── Main screen ───────── */
 export default function GameHomeScreen() {
   const insets = useSafeAreaInsets();
   const topInset = insets.top;
@@ -80,7 +77,6 @@ export default function GameHomeScreen() {
         scrollEventThrottle={16}
         bounces={false}
       >
-        {/* ── Top bar (azul) ── */}
         <View style={[styles.topBarWrap, { paddingTop: topInset }]}>
           <View style={styles.topBar}>
             <Pressable style={styles.topBtn} onPress={() => navigation.goBack()}>
@@ -97,14 +93,11 @@ export default function GameHomeScreen() {
           </View>
         </View>
 
-        {/* ── Match info card (branco) ── */}
         <View style={styles.matchCard}>
-          {/* Time badge */}
           <View style={styles.timeBadge}>
             <Text style={styles.timeBadgeText}>73:06</Text>
           </View>
 
-          {/* Teams + Score */}
           <View style={styles.teamsRow}>
             <View style={styles.teamSide}>
               <Text style={styles.teamName}>Brasil</Text>
@@ -119,10 +112,8 @@ export default function GameHomeScreen() {
             </View>
           </View>
 
-          {/* Goal scorers */}
           <Text style={styles.goalScorers}>⚽ 32' K. Mbappe   65' H. Ekitike</Text>
 
-          {/* Stats row */}
           <View style={styles.statsRow}>
             <StatItem icon="🟨" value="2-1" />
             <StatItem icon="🟥" value="0-1" />
@@ -136,14 +127,12 @@ export default function GameHomeScreen() {
 
         </View>
 
-        {/* ── Sportradar Widget ── */}
         <SportradarLMT
           matchId="67613698"
           height={280}
           backgroundColor="#F0F0F0"
         />
 
-        {/* ── Bottom tabs ── */}
         <View style={[styles.bottomTabsRow, { marginTop: -20 }]}>
           {tabs.map((t) => (
             <Pressable
@@ -158,9 +147,7 @@ export default function GameHomeScreen() {
           ))}
         </View>
 
-        {/* ── Markets section ── */}
         <View style={styles.marketsSection}>
-          {/* Resultado Final */}
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Resultado Final</Text>
@@ -176,7 +163,6 @@ export default function GameHomeScreen() {
             </View>
           </View>
 
-          {/* Total de Gols */}
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <View style={styles.marketTitleRow}>
@@ -193,7 +179,6 @@ export default function GameHomeScreen() {
             </View>
           </View>
 
-          {/* Ambas Marcam */}
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Ambas Marcam</Text>
@@ -205,7 +190,6 @@ export default function GameHomeScreen() {
             </View>
           </View>
 
-          {/* Handicap */}
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <View style={styles.marketTitleRow}>
@@ -222,7 +206,6 @@ export default function GameHomeScreen() {
             </View>
           </View>
 
-          {/* Escanteios */}
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Total de Escanteios</Text>
@@ -234,7 +217,6 @@ export default function GameHomeScreen() {
             </View>
           </View>
 
-          {/* Próximo Gol */}
           <View style={styles.marketCard}>
             <View style={styles.marketCardHeader}>
               <Text style={styles.marketCardTitle}>Próximo Gol</Text>
@@ -251,7 +233,6 @@ export default function GameHomeScreen() {
         <View style={{ height: 120 }} />
       </Animated.ScrollView>
 
-      {/* ── Sticky NavBar (animated) ── */}
       <Animated.View
         pointerEvents="box-none"
         style={[
@@ -298,8 +279,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-
-  /* Top bar (azul) */
   topBarWrap: {
     backgroundColor: "#01003A",
   },
@@ -313,8 +292,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.1)",
     alignItems: "center", justifyContent: "center",
   },
-
-  /* Match card (branco) */
   matchCard: {
     backgroundColor: "#fff",
     paddingHorizontal: 16, paddingVertical: 16,
@@ -344,8 +321,6 @@ const styles = StyleSheet.create({
   goalScorers: {
     fontFamily: "Inter_700Bold", fontSize: 11, color: "#666",
   },
-
-  /* Stats row */
   statsRow: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
     gap: 16, paddingVertical: 8,
@@ -362,8 +337,6 @@ const styles = StyleSheet.create({
   statValue: {
     fontFamily: "Inter_700Bold", fontSize: 12, color: "#01003A",
   },
-
-  /* Event ticker */
   eventTicker: {
     flexDirection: "row", alignItems: "center", gap: 8,
     backgroundColor: "#F0F0F0", borderRadius: 10,
@@ -374,8 +347,6 @@ const styles = StyleSheet.create({
   eventText: {
     flex: 1, fontFamily: "Inter_700Bold", fontSize: 11, color: "#333",
   },
-
-  /* Campo / Estatísticas tabs */
   fieldTabsRow: {
     flexDirection: "row", gap: 8,
     paddingHorizontal: 16, paddingVertical: 10,
@@ -395,8 +366,6 @@ const styles = StyleSheet.create({
   fieldTabText: {
     fontFamily: "Inter_700Bold", fontSize: 14, color: "#01003A",
   },
-
-  /* Bottom tabs */
   bottomTabsRow: {
     flexDirection: "row",
     backgroundColor: "#fff",
@@ -416,8 +385,6 @@ const styles = StyleSheet.create({
   bottomTabTextActive: {
     color: "#fff",
   },
-
-  /* Markets */
   marketsSection: {
     paddingHorizontal: 12, paddingTop: 8, gap: 8,
   },
@@ -455,8 +422,6 @@ const styles = StyleSheet.create({
   oddsValue: {
     fontFamily: "Inter_700Bold", fontSize: 15, color: "#01003A", fontWeight: "900",
   },
-
-  /* Sticky navbar */
   stickyNav: {
     position: "absolute", top: 0, left: 0, right: 0,
     flexDirection: "row", alignItems: "center",

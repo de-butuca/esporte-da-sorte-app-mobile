@@ -147,6 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,
-    pointerEvents: "box-none", // allows scroll under overlay
+    pointerEvents: "box-none",
   },
 });

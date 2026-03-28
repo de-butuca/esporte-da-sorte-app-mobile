@@ -1,8 +1,3 @@
-// ============================================================
-// Casino Service — Interface + mock implementation
-// for casino games, tags, iframe games, demo launch
-// ============================================================
-
 import { OdinResponse } from '../models/common.models';
 import {
   CasinoGamesTagsResponse,
@@ -23,38 +18,16 @@ import {
   mockLaunchDemo,
 } from '../mocks/casino.mocks';
 
-// ---- Interface ----
-
-/**
- * Contrato de serviço para endpoints de cassino:
- * jogos, tags, categorias, demo e iframe.
- */
 export interface ICasinoService {
-  /** GET /api/user/casinoapi/games/tags */
   getCasinoGamesTags(): Promise<CasinoGamesTagsResponse>;
-
-  /** GET /api/user/casinoapi/tags */
   getCasinoTags(): Promise<CasinoTagsResponse>;
-
-  /** GET /api/user/casinoapi/getReservedCategories */
   getReservedCategories(): Promise<ReservedCategoryResponse>;
-
-  /** GET /api/user/casinoapi/getReservedGames */
   getReservedGames(): Promise<ReservedGameResponse>;
-
-  /** POST /api/user/casinoapi/openDemoGame */
   openDemoGame(body: unknown): Promise<OpenGame>;
-
-  /** GET /api/generic/iframe/game-list */
   getIframeGameList(): Promise<OdinResponse<GameListRecord[]>>;
-
-  /** POST /api/generic/iframe/launch-demo */
   launchDemo(body: unknown): Promise<OdinResponse<LaunchGame>>;
 }
 
-// ---- Mock Implementation ----
-
-/** Implementação mock de `ICasinoService`. Retorna dados estáticos de `casino.mocks.ts`. */
 export class MockCasinoService implements ICasinoService {
   async getCasinoGamesTags(): Promise<CasinoGamesTagsResponse> {
     return mockCasinoGamesTags;

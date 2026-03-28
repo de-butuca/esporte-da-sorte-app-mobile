@@ -1,12 +1,3 @@
-// ============================================================
-// Config Models — Trader config, app settings, registration,
-//                 country, currency, CMS, notifications
-// Generated from OpenAPI spec (Casino API v1.0.0)
-// ============================================================
-
-// ---- Application Settings ----
-
-/** Parâmetro de configuração da aplicação (ex.: GTM ID, Hotjar, reCAPTCHA). */
 export interface ApplicationSetting {
   parameter?: string;
   parameterDescription?: string;
@@ -14,13 +5,6 @@ export interface ApplicationSetting {
   project?: string;
 }
 
-// ---- Trader Defaults (huge config object) ----
-
-/**
- * Configuração central do trader com 150+ propriedades.
- * Controla funcionalidades (cassino, multi-bet, streaming),
- * URLs da API, limites de idade, métodos de login, e feature flags.
- */
 export interface TraderDefaults {
   cDT?: number;
   dCI?: number;
@@ -263,9 +247,6 @@ export interface TraderDefaults {
   showLoginMessage?: boolean;
 }
 
-// ---- Trader Modules ----
-
-/** Módulo de conteúdo do trader (seções da homepage/landing). */
 export interface Module {
   moduleId?: number;
   moduleName?: string;
@@ -280,7 +261,6 @@ export interface Module {
   traderModules?: TraderModules[];
 }
 
-/** Dados detalhados de um módulo (liga, partida, seleção vinculada). */
 export interface ModuleData {
   moduleDataId?: number;
   moduleId?: number;
@@ -307,7 +287,6 @@ export interface ModuleData {
   readyCoupon?: ReadyCoupon[];
 }
 
-/** Cupom pré-montado vinculado a um módulo (ready coupon). */
 export interface ReadyCoupon {
   readyCouponId?: number;
   fixtureId?: number;
@@ -321,7 +300,6 @@ export interface ReadyCoupon {
   moduleDataId?: number;
 }
 
-/** Configuração de módulo por trader com visibilidade e ordem por dispositivo. */
 export interface TraderModules {
   traderModuleId?: number;
   traderId?: number;
@@ -338,9 +316,6 @@ export interface TraderModules {
   orderInMobile?: number;
 }
 
-// ---- Trader Navbar ----
-
-/** Item de menu de navegação. Suporta sub-menus recursivos via `sub_menu`. */
 export interface TraderNavbarMenu {
   menu_name?: string;
   order?: number;
@@ -351,9 +326,6 @@ export interface TraderNavbarMenu {
   sub_menu?: TraderNavbarMenu[];
 }
 
-// ---- Odd Display Types ----
-
-/** Tipo de exibição de odds (Decimal, Fractional, American). */
 export interface TraderOddDisplayType {
   oddDisplayTypeId?: number;
   oddDisplayTypeName?: string;
@@ -365,9 +337,6 @@ export interface TraderOddDisplayType {
   webMultiKey?: string;
 }
 
-// ---- Trader Pages ----
-
-/** Título e metas SEO de uma página do trader. */
 export interface TraderPageTitleMeta {
   traderPageTitleAndMetaId?: number;
   traderId?: number;
@@ -378,7 +347,6 @@ export interface TraderPageTitleMeta {
   traderPageMasterIdKey?: number;
 }
 
-/** Página mestra com código, descrição e timestamps de criação/atualização. */
 export interface TraderPagesMaster {
   traderPageMasterId?: number;
   pageCode?: string;
@@ -389,9 +357,6 @@ export interface TraderPagesMaster {
   updateDate?: number;
 }
 
-// ---- Trader Password Validation ----
-
-/** Regras de validação de senha (minúsculas, maiúsculas, dígitos, comprimento). */
 export interface TraderPasswordValidation {
   isLowerCase?: boolean;
   isUpperCase?: boolean;
@@ -400,9 +365,6 @@ export interface TraderPasswordValidation {
   isOnlyDigit?: boolean;
 }
 
-// ---- Third Party Accounts ----
-
-/** Conta de terceiros habilitada para login social (Google, Facebook). */
 export interface TraderThirdPartyAccount {
   traderThirdPartyAccountId?: number;
   traderId?: number;
@@ -411,7 +373,6 @@ export interface TraderThirdPartyAccount {
   thirdPartyAccountType?: ThirdPartyAccountType;
 }
 
-/** Tipo de conta de terceiros (Google, Facebook, Apple, etc.). */
 export interface ThirdPartyAccountType {
   thirdPartyAccountTypeId?: number;
   accountTypeName?: string;
@@ -419,9 +380,6 @@ export interface ThirdPartyAccountType {
   isActive?: boolean;
 }
 
-// ---- Trader Register Fields ----
-
-/** Campo do formulário de cadastro com ordem, obrigatoriedade e grupo. */
 export interface TraderRegisterField {
   traderRegisterFieldId?: number;
   traderId?: number;
@@ -441,9 +399,6 @@ export interface TraderRegisterField {
   minimal?: boolean;
 }
 
-// ---- Notifications ----
-
-/** Tipo de notificação disponível para o cliente (email, SMS, push). */
 export interface TraderCustomerNotificationType {
   traderCustNotificationTypeId?: number;
   customerNotificationTypeId?: number;
@@ -453,16 +408,12 @@ export interface TraderCustomerNotificationType {
   description?: string;
 }
 
-// ---- League / Favourite Teams ----
-
-/** Liga com lista de times favoritos disponíveis para seleção no perfil do usuário. */
 export interface League {
   leagueId?: number;
   leagueName?: string;
   traderFavouriteTeams?: TraderFavouriteTeam[];
 }
 
-/** Time favorito vinculado a uma liga. */
 export interface TraderFavouriteTeam {
   traderFavouriteTeamId?: number;
   traderId?: number;
@@ -473,9 +424,6 @@ export interface TraderFavouriteTeam {
   leagueId?: number;
 }
 
-// ---- Country ----
-
-/** País disponível para cadastro com idade mínima e código telefônico. */
 export interface WebCountry {
   countryId?: number;
   countryName?: string;
@@ -487,9 +435,6 @@ export interface WebCountry {
   languageId?: number;
 }
 
-// ---- Currency ----
-
-/** Moeda da plataforma com código ISO 4217 e símbolo. */
 export interface Currency {
   currencyId?: number;
   currencyCode?: string;
@@ -501,7 +446,6 @@ export interface Currency {
   isSignUpEnabled?: boolean;
 }
 
-/** Resultado de cálculo de câmbio entre moedas. */
 export interface CurrencyExchange {
   from?: number;
   to?: number;
@@ -509,9 +453,6 @@ export interface CurrencyExchange {
   result?: number;
 }
 
-// ---- Multilanguage ----
-
-/** Entrada de tradução (i18n) com chave, valor e idioma. */
 export interface WebMultiLanguage {
   multilanguageId?: number;
   typeName?: string;
@@ -521,16 +462,10 @@ export interface WebMultiLanguage {
   traderId?: number;
 }
 
-// ---- Geolocation ----
-
-/** Resposta de licença de geolocalização. */
 export interface GeolocationLicenseResponse {
   newLicense?: string;
 }
 
-// ---- CMS / Dynamic Content ----
-
-/** Conteúdo dinâmico do CMS (páginas de termos, políticas, promoções). */
 export interface TraderDynamicContent {
   traderDynamicContentId?: number;
   code?: string;
@@ -546,10 +481,6 @@ export interface TraderDynamicContent {
   onlyLoggedUsers?: boolean;
 }
 
-/**
- * Módulo de eventos customizados com dados completos de partida,
- * odds, seleção e hierarquia (esporte → categoria → liga → temporada).
- */
 export interface CustomEventsModule {
   customEventsModuleId?: number;
   traderId?: number;
@@ -603,7 +534,6 @@ export interface CustomEventsModule {
   seasonCustom?: boolean;
 }
 
-/** Notícia ou promoção exibida no site com título, imagens, conteúdo HTML e tipo. */
 export interface News {
   newsId?: number;
   traderId?: number;
@@ -629,15 +559,11 @@ export interface News {
   target?: string;
 }
 
-/** Tipo de notícia (promoção, cassino, esportes, geral). */
 export interface NewsType {
   newsTypeId?: number;
   typeName?: string;
 }
 
-// ---- Web Module Content (inline schema) ----
-
-/** Conteúdo HTML de um módulo web (banners, seções customizadas). */
 export interface WebModuleContent {
   traderWebModuleId?: number;
   webModuleId?: number;
@@ -653,7 +579,6 @@ export interface WebModuleContent {
   isPrintable?: boolean;
 }
 
-/** Definição de um módulo web com código, nome e status. */
 export interface WebModule {
   webModuleId?: number;
   moduleCode?: string;
@@ -662,9 +587,6 @@ export interface WebModule {
   isPrintable?: boolean;
 }
 
-// ---- Registration ----
-
-/** Dados do cliente retornados por consulta de CPF. */
 export interface CustomerResponse {
   firstName?: string;
   secondName?: string;
@@ -674,7 +596,6 @@ export interface CustomerResponse {
   pep?: boolean;
 }
 
-/** Tipo de documento de identidade aceito pelo trader (RG, CPF, Passaporte). */
 export interface TraderIdentityTypes {
   traderId?: number;
   identityTypeId?: number;
@@ -682,7 +603,6 @@ export interface TraderIdentityTypes {
   isActive?: number;
 }
 
-/** Instituição financeira para dados bancários no cadastro. */
 export interface TraderInstitution {
   traderInstitutionId?: number;
   institution?: string;
@@ -690,7 +610,6 @@ export interface TraderInstitution {
   orderBy?: number;
 }
 
-/** Status profissional para cadastro (Empregado, Autônomo, etc.). */
 export interface TraderProfessionalStatus {
   professionalStatusId?: number;
   professionalStatus?: string;
@@ -698,9 +617,6 @@ export interface TraderProfessionalStatus {
   orderBy?: number;
 }
 
-// ---- Multi-Bet Bonus ----
-
-/** Taxas de bônus para apostas múltiplas, com faixas por quantidade de eventos. */
 export interface MultiBetGetRateResponse {
   mbBonusId?: number;
   rate?: number;
@@ -709,7 +625,6 @@ export interface MultiBetGetRateResponse {
   minOddAtCoupon?: number;
 }
 
-/** Faixa de bônus individual: mín/máx eventos e percentual de bônus. */
 export interface MultiBetBonusRate {
   mbBonusRateId?: number;
   mbBonusId?: number;

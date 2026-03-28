@@ -1,8 +1,3 @@
-// ============================================================
-// Config Mocks — Realistic mock data for trader config,
-//                registration, CMS, country, currency APIs
-// ============================================================
-
 import { OdinResponse } from '../models/common.models';
 import {
   ApplicationSetting,
@@ -31,9 +26,6 @@ import {
   WebModuleContent,
 } from '../models/config.models';
 
-// ---- Application Settings ----
-
-/** Mock de parâmetros da aplicação: GTM, Hotjar, Pixel, reCAPTCHA, CDN. */
 export const mockApplicationSettings: OdinResponse<ApplicationSetting[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -46,9 +38,6 @@ export const mockApplicationSettings: OdinResponse<ApplicationSetting[]> = {
   ],
 };
 
-// ---- Trader Defaults ----
-
-/** Mock de configuração geral do trader com 40+ campos-chave (URLs, flags, limites). */
 export const mockTraderDefaults: OdinResponse<TraderDefaults> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -114,9 +103,6 @@ export const mockTraderDefaults: OdinResponse<TraderDefaults> = {
   },
 };
 
-// ---- Trader Modules ----
-
-/** Mock de módulos do trader: Sports Highlights, Casino Featured, Live Events. */
 export const mockTraderModules: OdinResponse<Module[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -244,9 +230,6 @@ export const mockTraderModules: OdinResponse<Module[]> = {
   ],
 };
 
-// ---- Navbar ----
-
-/** Mock de navbar: Esportes, Ao Vivo, Cassino, Promoções, Ajuda (com sub-menus). */
 export const mockTraderNavbar: OdinResponse<TraderNavbarMenu[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -270,9 +253,6 @@ export const mockTraderNavbar: OdinResponse<TraderNavbarMenu[]> = {
   ],
 };
 
-// ---- Odd Display Types ----
-
-/** Mock de tipos de exibição de odds: Decimal, Fractional, American. */
 export const mockOddDisplayTypes: OdinResponse<TraderOddDisplayType[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -283,9 +263,6 @@ export const mockOddDisplayTypes: OdinResponse<TraderOddDisplayType[]> = {
   ],
 };
 
-// ---- Trader Pages ----
-
-/** Mock de páginas SEO: Home e Sports com títulos e metas. */
 export const mockTraderPages: OdinResponse<TraderPageTitleMeta[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -309,9 +286,6 @@ export const mockTraderPages: OdinResponse<TraderPageTitleMeta[]> = {
   ],
 };
 
-// ---- Password Validation ----
-
-/** Mock de regras de validação de senha: min 8 chars, lower+upper+digit. */
 export const mockPasswordValidation: OdinResponse<TraderPasswordValidation> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -324,9 +298,6 @@ export const mockPasswordValidation: OdinResponse<TraderPasswordValidation> = {
   },
 };
 
-// ---- Third Party Accounts ----
-
-/** Mock de contas de terceiros: Google e Facebook ativos. */
 export const mockThirdPartyAccounts: OdinResponse<TraderThirdPartyAccount[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -336,9 +307,6 @@ export const mockThirdPartyAccounts: OdinResponse<TraderThirdPartyAccount[]> = {
   ],
 };
 
-// ---- Register Fields ----
-
-/** Mock de campos de cadastro: username, email, password, document, firstName, lastName, phone, birthdate. */
 export const mockRegisterFields: OdinResponse<TraderRegisterField[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -354,9 +322,6 @@ export const mockRegisterFields: OdinResponse<TraderRegisterField[]> = {
   ],
 };
 
-// ---- Notifications ----
-
-/** Mock de tipos de notificação: E-mail, SMS, Push. */
 export const mockNotifications: OdinResponse<TraderCustomerNotificationType[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -367,9 +332,6 @@ export const mockNotifications: OdinResponse<TraderCustomerNotificationType[]> =
   ],
 };
 
-// ---- Favourite Teams ----
-
-/** Mock de times favoritos: Brasileirão (Flamengo, Palmeiras, Corinthians) e La Liga (Barcelona, Real Madrid, Atlético). */
 export const mockFavoriteTeams: OdinResponse<League[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -395,9 +357,6 @@ export const mockFavoriteTeams: OdinResponse<League[]> = {
   ],
 };
 
-// ---- Countries ----
-
-/** Mock de países: Brasil, Portugal, Moçambique, Angola, EUA. */
 export const mockCountries: OdinResponse<WebCountry[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -410,9 +369,6 @@ export const mockCountries: OdinResponse<WebCountry[]> = {
   ],
 };
 
-// ---- Currencies ----
-
-/** Mock de moedas: BRL, USD, EUR, MZN. */
 export const mockCurrencies: OdinResponse<Currency[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -424,18 +380,12 @@ export const mockCurrencies: OdinResponse<Currency[]> = {
   ],
 };
 
-// ---- Currency Calculation ----
-
-/** Mock de cálculo de câmbio: 100 BRL → 19.50 USD. */
 export const mockCurrencyCalculation: OdinResponse<Currency> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
   data: { currencyId: 1, currencyCode: 'USD', currencyName: 'US Dollar', currencySymbol: '$' },
 };
 
-// ---- Multilanguage ----
-
-/** Mock de traduções (i18n): 7 entradas em português (labels, titles, messages). */
 export const mockMultilanguages: OdinResponse<WebMultiLanguage[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -450,18 +400,12 @@ export const mockMultilanguages: OdinResponse<WebMultiLanguage[]> = {
   ],
 };
 
-// ---- Geolocation License ----
-
-/** Mock de licença de geolocalização com token newLicense. */
 export const mockGeolocationLicense: OdinResponse<GeolocationLicenseResponse> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
   data: { newLicense: 'SGL-BR-2026-04821' },
 };
 
-// ---- Dynamic Content ----
-
-/** Catálogo de conteúdos CMS usado por `getContentByCode`. */
 export const mockDynamicContentCatalog: TraderDynamicContent[] = [
   {
     traderDynamicContentId: 8001,
@@ -487,16 +431,12 @@ export const mockDynamicContentCatalog: TraderDynamicContent[] = [
   },
 ];
 
-/** Mock de conteúdo dinâmico CMS: payload padrão com foco em promoções. */
 export const mockDynamicContent: OdinResponse<TraderDynamicContent> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
   data: mockDynamicContentCatalog[0],
 };
 
-// ---- Custom Events Modules ----
-
-/** Mock de módulos de eventos customizados: 1 evento com odds e seleção. */
 export const mockCustomEventsModules: OdinResponse<CustomEventsModule[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -530,9 +470,6 @@ export const mockCustomEventsModules: OdinResponse<CustomEventsModule[]> = {
   ],
 };
 
-// ---- News ----
-
-/** Mock de notícias/promoções: Copa do Mundo 2026 e promoção de cassino. */
 export const mockNews: OdinResponse<News[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -630,18 +567,12 @@ export const mockNews: OdinResponse<News[]> = {
   ],
 };
 
-// ---- Web Module Codes ----
-
-/** Mock de códigos de módulos web ativos: hero-banner, footer, sidebar, promo-bar, cookie-bar. */
 export const mockWebModuleCodes: { success: boolean; responseCodes: Array<{ responseCode: number; responseKey: string; responseMessage: string }>; data: string[] } = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
   data: ['cookie-policy-notif-bottom', 'sportsbet', 'footer-text', 'responsible-gaming', 'terms-conditions'],
 };
 
-// ---- Web Module Content ----
-
-/** Mock de conteúdo HTML de módulo web: hero-banner com HTML e CSS inline. */
 export const mockWebModuleContent: { success: boolean; responseCodes: Array<{ responseCode: number; responseKey: string; responseMessage: string }>; data: WebModuleContent[] } = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -708,9 +639,6 @@ export const mockWebModuleContent: { success: boolean; responseCodes: Array<{ re
   ],
 };
 
-// ---- Registration: Customer by CPF ----
-
-/** Mock de dados de cliente por CPF: João Carlos Silva, nascido 1990-05-15. */
 export const mockCustomerByCpf: OdinResponse<CustomerResponse> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -724,9 +652,6 @@ export const mockCustomerByCpf: OdinResponse<CustomerResponse> = {
   },
 };
 
-// ---- Registration: Identity Types ----
-
-/** Mock de tipos de documento aceitos: RG, CPF, Passaporte. */
 export const mockIdentityTypes: OdinResponse<TraderIdentityTypes[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -737,9 +662,6 @@ export const mockIdentityTypes: OdinResponse<TraderIdentityTypes[]> = {
   ],
 };
 
-// ---- Registration: Institutions ----
-
-/** Mock de instituições financeiras: Banco do Brasil, Itaú, Bradesco, Caixa, Nubank. */
 export const mockInstitutions: OdinResponse<TraderInstitution[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -752,9 +674,6 @@ export const mockInstitutions: OdinResponse<TraderInstitution[]> = {
   ],
 };
 
-// ---- Registration: Professional Statuses ----
-
-/** Mock de status profissionais: Empregado, Autônomo, Estudante, Aposentado, Desempregado. */
 export const mockProfessionalStatuses: OdinResponse<TraderProfessionalStatus[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -767,9 +686,6 @@ export const mockProfessionalStatuses: OdinResponse<TraderProfessionalStatus[]> 
   ],
 };
 
-// ---- Multi-Bet Bonus Rates ----
-
-/** Mock de taxas de multi-bet bonus: 3-4 eventos = 5%, 5-7 = 10%, 8-10 = 15%, 11+ = 20%. */
 export const mockMultiBetRates: OdinResponse<MultiBetGetRateResponse> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -788,27 +704,21 @@ export const mockMultiBetRates: OdinResponse<MultiBetGetRateResponse> = {
   },
 };
 
-// ---- Validation (CPF, email, username) — only responseCodes ----
-
-/** Mock de validação bem-sucedida (CPF/email/username válido). */
 export const mockValidationSuccess: OdinResponse = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
 };
 
-/** Mock de validação com erro: CPF já cadastrado. */
 export const mockValidationCpfExists: OdinResponse = {
   success: false,
   responseCodes: [{ responseCode: 28, responseKey: 'EXISTING_CPF_NUMBER', responseMessage: 'CPF já cadastrado.' }],
 };
 
-/** Mock de validação com erro: e-mail já utilizado. */
 export const mockValidationEmailUsed: OdinResponse = {
   success: false,
   responseCodes: [{ responseCode: 26, responseKey: 'USER_EMAIL_USED', responseMessage: 'E-mail já cadastrado.' }],
 };
 
-/** Mock de validação com erro: nome de usuário já utilizado. */
 export const mockValidationUsernameUsed: OdinResponse = {
   success: false,
   responseCodes: [{ responseCode: 25, responseKey: 'USERNAME_USED', responseMessage: 'Nome de usuário já em uso.' }],

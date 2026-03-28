@@ -1,4 +1,3 @@
-// src/api/ApiRepositoryContext.tsx
 import { IAuthRepository } from "@/domain/auth/IAuthRepository"
 import { AuthRepository } from "@/infra/AuthRepository"
 import React, { createContext, ReactNode, useContext, useMemo } from "react"
@@ -10,7 +9,6 @@ type ApiRepositories = {
 const ApiRepositoryContext = createContext<ApiRepositories | undefined>(undefined)
 
 export const ApiRepositoryProvider = ({ children }: { children: ReactNode }) => {
-	// Criando instâncias dos repositórios
 	const repositories = useMemo(
 		() => ({
 			AuthRepository: new AuthRepository(),
@@ -21,7 +19,6 @@ export const ApiRepositoryProvider = ({ children }: { children: ReactNode }) => 
 	return <ApiRepositoryContext.Provider value={repositories}>{children}</ApiRepositoryContext.Provider>
 }
 
-// Hook para consumir o contexto
 export const useApiRepository = (): ApiRepositories => {
 	const context = useContext(ApiRepositoryContext)
 	if (!context) {

@@ -1,6 +1,5 @@
-import { AppState, AppStateStatus, Platform } from "react-native";
+import { AppState, AppStateStatus, NativeModules, Platform } from "react-native";
 
-// Lazy load — only import on Android where native module exists
 let Notifications: typeof import("expo-notifications") | null = null;
 
 function getNotifications() {
@@ -43,6 +42,18 @@ const EXIT_MESSAGES = [
 
 let appStateSubscription: ReturnType<typeof AppState.addEventListener> | null =
   null;
+
+let hasSpunRoulette = false;
+let bannerShown = false;
+let onRouletteOpenCb: (() => void) | null = null;
+
+export function markRouletteSpun() {
+  hasSpunRoulette = true;
+}
+
+export function setOnRouletteOpen(cb: (() => void) | null) {
+  onRouletteOpenCb = cb;
+}
 
 function getRandomExitMessage() {
   return EXIT_MESSAGES[Math.floor(Math.random() * EXIT_MESSAGES.length)];
@@ -89,7 +100,10 @@ async function cancelAllPromoNotifications() {
   if (!N) return;
   const ids = [
     EXIT_NOTIFICATION_ID,
-    ...Array.from({ length: 4 }, (_, i) => `${RECURRING_NOTIFICATION_PREFIX}${i + 1}`),
+    ...Array.from(
+      { length: 4 },
+      (_, i) => `${RECURRING_NOTIFICATION_PREFIX}${i + 1}`
+    ),
   ];
 
   await Promise.all(
@@ -97,6 +111,25 @@ async function cancelAllPromoNotifications() {
       N.cancelScheduledNotificationAsync(id).catch(() => {})
     )
   );
+}
+
+function showBannerIfNeeded() {
+  if (hasSpunRoulette || bannerShown) return;
+  bannerShown = true;
+  NativeModules.BannerNotification?.show(
+    "Ganhe até R$ 1.000.000,00! 🎰",
+    "Gire a roleta agora e concorra a prêmios incríveis!"
+  );
+}
+
+async function checkPendingRouletteAction() {
+  try {
+    const pending =
+      await NativeModules.BannerNotification?.consumePendingAction();
+    if (pending) {
+      onRouletteOpenCb?.();
+    }
+  } catch {}
 }
 
 export async function requestNotificationPermissions(): Promise<boolean> {
@@ -123,8 +156,10 @@ export function setupAppLifecycleNotifications() {
         (nextState === "background" || nextState === "inactive")
       ) {
         await scheduleExitNotifications();
+        showBannerIfNeeded();
       } else if (nextState === "active") {
         await cancelAllPromoNotifications();
+        checkPendingRouletteAction();
       }
       previousState = nextState;
     }

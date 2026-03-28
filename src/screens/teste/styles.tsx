@@ -42,7 +42,6 @@ export const Box = Styled.View({
 	},
 });
 
-// TEXTO com variants
 export const Label = Styled.Text({
 	style: {
 		color: 'white',
@@ -66,7 +65,6 @@ export const Label = Styled.Text({
 	},
 });
 
-// BOTÃO
 export const Button = Styled.TouchableOpacity({
 	style: ({ theme }) => ({ padding: theme.size.s10, borderRadius: 10, backgroundColor: '#111', marginTop: 20 }),
 
@@ -106,7 +104,6 @@ function Button2(params: any) {
 	);
 }
 
-// TEXTO BOTÃO
 export const ButtonText = Styled.Text({
 	style: {
 		color: 'white',

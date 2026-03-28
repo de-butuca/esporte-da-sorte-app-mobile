@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
 	},
 });
 
-// Simple error boundary
 class ErrorBoundary extends React.Component<{ children: React.ReactNode; onError: () => void }> {
 	componentDidCatch() {
 		this.props.onError();

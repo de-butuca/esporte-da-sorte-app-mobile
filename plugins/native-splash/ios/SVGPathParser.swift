@@ -11,7 +11,6 @@ struct SVGPathParser {
     var lastControlPoint: CGPoint? = nil
 
     func scanNumber() -> CGFloat? {
-      // skip optional comma/whitespace
       scanner.charactersToBeSkipped = CharacterSet.whitespaces.union(.init(charactersIn: ","))
       if let value = scanner.scanDouble() {
         return CGFloat(value)
@@ -27,17 +26,13 @@ struct SVGPathParser {
     while !scanner.isAtEnd {
       var command: Character = lastCommand
 
-      // Try to scan a command letter
       let savedIndex = scanner.currentIndex
       if let ch = scanner.scanCharacter() {
         if "MmLlCcSsQqTtAaHhVvZz".contains(ch) {
           command = ch
         } else {
-          // Not a command, rewind
           scanner.currentIndex = savedIndex
-          // Implicit repeat of last command
           command = lastCommand
-          // After M, implicit repeat becomes L
           if command == "M" { command = "L" }
           if command == "m" { command = "l" }
         }
@@ -207,7 +202,6 @@ struct SVGPathParser {
         lastCommand = command
 
       default:
-        // skip unknown
         break
       }
     }

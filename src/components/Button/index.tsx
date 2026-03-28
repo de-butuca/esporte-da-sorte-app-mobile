@@ -40,7 +40,7 @@ export function ButtonBase({
 				<ActivityIndicator color={loaderColor} size={30} />
 			) : (
 				<View style={styles.content}>
-					<BBS.Text style={textStyle}>{text}</BBS.Text>
+					<BBS.Label style={textStyle}>{text}</BBS.Label>
 					{rightIcon ? <View style={styles.iconWrap}>{rightIcon}</View> : null}
 				</View>
 			)}

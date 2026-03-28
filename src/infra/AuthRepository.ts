@@ -3,7 +3,6 @@ import { IAuthRepository } from '@/domain/auth/IAuthRepository';
 
 export class AuthRepository implements IAuthRepository {
 	async login({ login }: { login: string }): Promise<loginReponse> {
-		// Simulando uma chamada de API para login
 		return new Promise((resolve) => {
 			setTimeout(() => {
 				return resolve({
@@ -16,7 +15,6 @@ export class AuthRepository implements IAuthRepository {
 		});
 	}
 	async logout(): Promise<void> {
-		// Simulando uma chamada de API para logout
 		return new Promise((resolve) => {
 			setTimeout(() => {
 				console.log(`Usuário deslogado com sucesso!`);

@@ -1,19 +1,9 @@
-// ============================================================
-// Betting Models — Coupons, popular odds, booking, verify
-//                  ticket, play result, jackpots
-// Generated from OpenAPI spec (Casino API v1.0.0)
-// ============================================================
-
-// ---- Coupon / Bet Placement ----
-
-/** Odd jogada dentro de um cupom de aposta. */
 export interface PlayedOdd {
   fo?: number;
   ba?: boolean;
   fr?: number;
 }
 
-/** Cupom individual com valor apostado, moeda e odds selecionadas. */
 export interface Coupon {
   pa?: number;
   ci?: number;
@@ -23,7 +13,6 @@ export interface Coupon {
   po?: PlayedOdd[];
 }
 
-/** Wrapper de cupom para envio (contém múltiplos cupons e configurações). */
 export interface CouponWrapper {
   cps?: Coupon[];
   ip?: boolean;
@@ -35,9 +24,6 @@ export interface CouponWrapper {
   dev?: string;
 }
 
-// ---- Popular Odds ----
-
-/** Odd popular em destaque com dados de partida, valor da odd e seleção. */
 export interface PopularOddDto {
   fId?: number;
   hcN?: string;
@@ -59,18 +45,13 @@ export interface PopularOddDto {
   fixtureInfo?: string;
 }
 
-// ---- Verify Ticket ----
-
-/** Status de aposta: O=Open, W=Won, L=Lost, w=Won-minor, I=Invalid, V=Void, D=Draw/Deleted. */
 export type SportBetStatusTypeEnum = 'O' | 'W' | 'L' | 'w' | 'I' | 'V' | 'D';
 
-/** Resultado de verificação de bilhete com detalhes e dados do bilhete principal. */
 export interface VerifyTicketResult {
   verifyTicketDetailResults?: VerifyTicketDetailResult[];
   sportBetMaster?: SportBetMaster;
 }
 
-/** Detalhe individual de uma aposta dentro de um bilhete verificado. */
 export interface VerifyTicketDetailResult {
   sportBetDetailId?: number;
   sbSportBetId?: number;
@@ -118,7 +99,6 @@ export interface VerifyTicketDetailResult {
   sportBetStatusEnumType?: SportBetStatusTypeEnum;
 }
 
-/** Promoção associada a um cupom (freebet, bônus, desconto). */
 export interface PromotionCoupon {
   sportBetMasterId?: number;
   freebetId?: number;
@@ -130,7 +110,6 @@ export interface PromotionCoupon {
   totalAmount?: number;
 }
 
-/** Bilhete de aposta principal com valores, status, totais e dados de promoção. */
 export interface SportBetMaster {
   sportBetMasterId?: number;
   customerId?: number;
@@ -165,12 +144,8 @@ export interface SportBetMaster {
   promotionCoupon?: PromotionCoupon;
 }
 
-// ---- Sports Bet Play Result ----
-
-/** Tipo de promoção aplicável: freebet, bônus, desconto, cassino ou outros. */
 export type PromotionType = 'FREEBET' | 'BONUS' | 'DISCOUNT' | 'CASINO_BONUS' | 'OTHERS';
 
-/** Promoção reclamável após aposta (freebet, bônus de cassino, etc.). */
 export interface ClaimablePromotion {
   id?: number;
   name?: string;
@@ -178,12 +153,9 @@ export interface ClaimablePromotion {
   promotionType?: PromotionType;
 }
 
-/** Resultado de multi-bet bonus — schema sem propriedades no OpenAPI. */
 export interface MbbResult {
-  // Placeholder — schema has no properties
 }
 
-/** Resultado individual de um cupom após aposta (odds, valores, partida). */
 export interface CouponPlayResult {
   playedAmount?: number;
   playedOdd?: number;
@@ -225,7 +197,6 @@ export interface CouponPlayResult {
   isBetBuilder?: boolean;
 }
 
-/** Resultado completo de aposta com cupons, valores totais e promoções. */
 export interface SportsBetPlayResult {
   couponPlayResults?: CouponPlayResult[];
   sportsBetMasterId?: number;
@@ -249,23 +220,18 @@ export interface SportsBetPlayResult {
   claimablePromotions?: ClaimablePromotion[];
 }
 
-// ---- Jackpots ----
-
-/** Valores dos jackpots do provedor Fugaso (mini, midi, maxi). */
 export interface FugasoJackpots {
   errorCode?: number;
   description?: string;
   jackpots?: FugasoJackpot;
 }
 
-/** Valores individuais dos níveis de jackpot Fugaso. */
 export interface FugasoJackpot {
   mini?: number;
   midi?: number;
   maxi?: number;
 }
 
-/** Jackpot esportivo com prêmio, eventos, consolações e resultados. */
 export interface Jackpot {
   jackpotId?: number;
   traderId?: number;
@@ -299,7 +265,6 @@ export interface Jackpot {
   results?: JackpotResult[];
 }
 
-/** Prêmio de consolação do jackpot por quantidade de acertos. */
 export interface JackpotConsolations {
   jackpotConsolationId?: number;
   jackpotId?: number;
@@ -307,7 +272,6 @@ export interface JackpotConsolations {
   totalPrize?: number;
 }
 
-/** Partida vinculada ao jackpot com ordem e dados de localização. */
 export interface JackpotFocusedFixtures {
   jackpotFocusedFixtureId?: number;
   jackpotId?: number;
@@ -320,7 +284,6 @@ export interface JackpotFocusedFixtures {
   fixtureStartDate?: number;
 }
 
-/** Resultado de um sorteio de jackpot (vencedores, prêmio, acertos). */
 export interface JackpotResult {
   jackpotResultId?: number;
   jackpotId?: number;
@@ -330,7 +293,6 @@ export interface JackpotResult {
   prize?: number;
 }
 
-/** Detalhe de resultado de jackpot com partida, placar e competidores. */
 export interface JackpotResultDetail {
   fixtureId?: number;
   reserved?: boolean;
@@ -347,7 +309,6 @@ export interface JackpotResultDetail {
   fixtureScores?: FixtureScore[];
 }
 
-/** Competidor (time) com nome, país e esporte. */
 export interface Competitor {
   competitorId?: number;
   countryId?: number;
@@ -356,7 +317,6 @@ export interface Competitor {
   active?: boolean;
 }
 
-/** Placar de partida com tipo (halftime, fulltime) e valor. */
 export interface FixtureScore {
   sportTypeId?: number;
   fixtureScoreId?: number;

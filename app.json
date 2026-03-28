@@ -40,6 +40,7 @@
         "color": "#023697"
       }],
       "./plugins/native-splash-plugin",
+      "./plugins/notification-banner-plugin",
       "./plugins/android-only-notifications"
     ]
   }

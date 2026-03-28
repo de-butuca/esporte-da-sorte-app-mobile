@@ -1,8 +1,3 @@
-// ============================================================
-// Betting Mocks — Realistic mock data for popular odds,
-//                 coupons, verify ticket, jackpots
-// ============================================================
-
 import { OdinResponse } from '../models/common.models';
 import {
   PopularOddDto,
@@ -13,9 +8,6 @@ import {
   JackpotResultDetail,
 } from '../models/betting.models';
 
-// ---- Popular Odds ----
-
-/** Mock de 5 odds populares: partidas brasileiras e internacionais com odds 1X2 e Money Line. */
 export const mockPopularOdds: OdinResponse<PopularOddDto[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -113,9 +105,6 @@ export const mockPopularOdds: OdinResponse<PopularOddDto[]> = {
   ],
 };
 
-// ---- Verify Ticket ----
-
-/** Mock de verificação de bilhete: 1 bilhete com 3 apostas (Fla×Pal, Barça×Real, Lak×War), status Open. */
 export const mockVerifyTicket: OdinResponse<VerifyTicketResult> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -225,9 +214,6 @@ export const mockVerifyTicket: OdinResponse<VerifyTicketResult> = {
   },
 };
 
-// ---- Sports Bet Play Result (non-auth info) ----
-
-/** Mock de resultado de aposta com cupom, valores totais e código do bilhete. */
 export const mockSportsBetPlayResult: OdinResponse<SportsBetPlayResult> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -282,9 +268,6 @@ export const mockSportsBetPlayResult: OdinResponse<SportsBetPlayResult> = {
   },
 };
 
-// ---- Fugaso Jackpots ----
-
-/** Mock de jackpots Fugaso: mini R$ 1.250, midi R$ 15.780, maxi R$ 385.420. */
 export const mockFugasoJackpots: OdinResponse<FugasoJackpots> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -299,9 +282,6 @@ export const mockFugasoJackpots: OdinResponse<FugasoJackpots> = {
   },
 };
 
-// ---- Jackpot Result List ----
-
-/** Mock de lista de jackpots esportivos: Super Jackpot Brasileirão e Jackpot Champions League. */
 export const mockJackpotResultList: OdinResponse<Jackpot[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -390,9 +370,6 @@ export const mockJackpotResultList: OdinResponse<Jackpot[]> = {
   ],
 };
 
-// ---- Jackpot Result Details ----
-
-/** Mock de detalhes de resultado de jackpot: 3 partidas com placares (2-1, 0-3, 1-1). */
 export const mockJackpotResultDetails: OdinResponse<JackpotResultDetail[]> = {
   success: true,
   responseCodes: [{ responseCode: 1, responseKey: 'SUCCESS', responseMessage: '' }],
@@ -463,7 +440,4 @@ export const mockJackpotResultDetails: OdinResponse<JackpotResultDetail[]> = {
   ],
 };
 
-// ---- EGT Jackpot Data (plain text) ----
-
-/** Mock de dados de jackpot EGT: JSON em formato string (text/plain). */
 export const mockEgtJackpotData = '{"level1":12500.50,"level2":45000.75,"level3":125000.30,"level4":500000.00}';
