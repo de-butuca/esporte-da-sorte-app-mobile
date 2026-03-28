@@ -41,7 +41,7 @@ export function AppInitializer({ children }: IAppInitializerProps) {
 			try {
 				const [, prefs] = await Promise.all([loadSession(), loadPreferences()]);
 				if (prefs) {
-					setThemeMode(prefs.themeMode as ThemeMode);
+					// setThemeMode(prefs.themeMode as ThemeMode);
 					setHighContrast(prefs.highContrast);
 				}
 			} catch (e) {
